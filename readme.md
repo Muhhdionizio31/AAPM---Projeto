@@ -8,3 +8,5 @@ Luis Eduardo
 Davi Tomé
 Função: Desenvolvedor Frontend e Scrum Master
 Minhas expectativas com o grupo são altas, acredito na capacidade de cada integrante e disposto a auxiliar a equipe da melhor maneira e desenvolver mais conhecimentos.
+
+Eu sou o Iago, programador front-end, apaixonado por transformar ideias em interfaces que as pessoas realmente gostam de usar. Desde cedo, descobri que código não é só lógica — é também criatividade. Cada linha que escrevo carrega um pouco da minha forma de enxergar o mundo.
