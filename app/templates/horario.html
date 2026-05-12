@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Horário de Atendimento — AAPM Escola SENAI Francisco Matarazzo</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Lato:wght@300;400;700&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="/app/static/horario.css">
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav>
+  <a class="nav-logo" href="#">SENAI</a>
+  <ul class="nav-links">
+    <li><a href="index.html">Início</a></li>
+    <li><a href="horario.html" class="active">Horário de Atendimento</a></li>
+    <li><a href="fale_conosco.html">Fale Conosco</a></li>
+    <li><a href="login.html" class="btn-admin">Sou Administrador</a></li>
+  </ul>
+</nav>
+
+<!-- PAGE HEADER -->
+<div class="page-header">
+  <div class="page-header-inner">
+    <div>
+      <div class="breadcrumb"><a href="index.html">Início</a> &nbsp;/&nbsp; Horário de Atendimento</div>
+      <h1>Horário de Atendimento</h1>
+      <p>Confira quando a AAPM está disponível para atendê-lo.</p>
+    </div>
+    <div class="status-badge" id="statusBadge">
+      <div class="status-dot" id="statusDot"></div>
+      <span id="statusText">Verificando...</span>
+    </div>
+  </div>
+</div>
+
+<!-- CONTENT -->
+<div class="content">
+
+  <!-- SCHEDULE TABLE -->
+  <div class="schedule-card">
+    <div class="card-header">
+      <div class="card-header-icon">
+        <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+      </div>
+      <div>
+        <h2>Horários da Secretaria</h2>
+        <p>Sede da AAPM — Escola SENAI Francisco Matarazzo</p>
+      </div>
+    </div>
+
+    <div class="day-list" id="dayList">
+      <!-- Segunda -->
+      <div class="day-row" data-day="1">
+        <span class="day-name">Segunda-feira</span>
+        <span class="day-hours">08h00 – 12h00 &nbsp;|&nbsp; 13h00 – 17h00</span>
+      </div>
+      <!-- Terça -->
+      <div class="day-row" data-day="2">
+        <span class="day-name">Terça-feira</span>
+        <span class="day-hours">08h00 – 12h00 &nbsp;|&nbsp; 13h00 – 17h00</span>
+      </div>
+      <!-- Quarta -->
+      <div class="day-row" data-day="3">
+        <span class="day-name">Quarta-feira</span>
+        <span class="day-hours">08h00 – 12h00 &nbsp;|&nbsp; 13h00 – 17h00</span>
+      </div>
+      <!-- Quinta -->
+      <div class="day-row" data-day="4">
+        <span class="day-name">Quinta-feira</span>
+        <span class="day-hours">08h00 – 12h00 &nbsp;|&nbsp; 13h00 – 17h00</span>
+      </div>
+      <!-- Sexta -->
+      <div class="day-row" data-day="5">
+        <span class="day-name">Sexta-feira</span>
+        <span class="day-hours">08h00 – 12h00 &nbsp;|&nbsp; 13h00 – 16h00</span>
+      </div>
+      <!-- Sábado -->
+      <div class="day-row" data-day="6">
+        <span class="day-name">Sábado</span>
+        <span class="day-hours">09h00 – 13h00</span>
+      </div>
+      <!-- Domingo -->
+      <div class="day-row" data-day="0">
+        <span class="day-name">Domingo</span>
+        <span class="day-closed">Fechado</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+
+    <!-- Contato -->
+    <div class="info-card">
+      <h3>
+        <svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81 19.79 19.79 0 01.01 1.18 2 2 0 012 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 14.92z"/></svg>
+        Contato
+      </h3>
+      <div class="info-row">
+        <svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81 19.79 19.79 0 01.01 1.18 2 2 0 012 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 14.92z"/></svg>
+        <span><strong>Telefone</strong>(11) 3392-5400</span>
+      </div>
+      <div class="info-row">
+        <svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+        <span><strong>E-mail</strong>aapm@senai-fm.org.br</span>
+      </div>
+      <div class="info-row">
+        <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+        <span><strong>Endereço</strong>Rua Monsenhor Andrade, 298 — Brás, São Paulo – SP</span>
+      </div>
+      <a class="btn-whatsapp" href="https://wa.me/5511933925400" target="_blank" rel="noopener">
+        <svg viewBox="0 0 32 32"><path d="M16 .5C7.44.5.5 7.44.5 16c0 2.83.74 5.5 2.03 7.82L.5 31.5l7.87-2.06A15.43 15.43 0 0016 31.5c8.56 0 15.5-6.94 15.5-15.5S24.56.5 16 .5zm6.97 19.22c-.38-.19-2.25-1.11-2.6-1.24-.35-.13-.6-.19-.85.19s-.98 1.24-1.2 1.5c-.22.25-.44.28-.82.09a10.37 10.37 0 01-3.05-1.88 11.45 11.45 0 01-2.11-2.63c-.22-.38 0-.58.17-.77.15-.17.35-.44.53-.66.17-.22.22-.38.34-.63.12-.25.06-.47-.03-.66-.09-.19-.85-2.04-1.16-2.8-.3-.72-.6-.63-.85-.64h-.72c-.25 0-.66.09-1 .47-.35.38-1.32 1.29-1.32 3.14s1.35 3.64 1.54 3.89c.19.25 2.66 4.06 6.44 5.69 3.78 1.63 3.78 1.09 4.47 1.02.69-.06 2.25-.92 2.57-1.8.32-.88.32-1.63.22-1.8-.1-.19-.35-.28-.73-.47z"/></svg>
+        Falar pelo WhatsApp
+      </a>
+    </div>
+
+    <!-- Aviso -->
+    <div class="notice">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      <p><strong>Feriados:</strong> nos feriados nacionais e municipais o atendimento poderá ser suspenso sem aviso prévio. Consulte-nos pelo WhatsApp antes de se deslocar.</p>
+    </div>
+
+    <!-- Atendimento Online -->
+    <div class="info-card">
+      <h3>
+        <svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+        Atendimento Online
+      </h3>
+      <div class="info-row">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        <span>O atendimento por e-mail e WhatsApp ocorre em <strong style="display:inline;font-family:var(--font-head);font-weight:700;color:var(--dark);">até 1 dia útil</strong> após o contato.</span>
+      </div>
+    </div>
+
+  </aside>
+</div>
+
+<!-- FOOTER NAV -->
+<div class="footer-nav">
+  <a href="#">Informações</a><span>•</span>
+  <a href="#">Estatuto</a><span>•</span>
+  <a href="#">Horário de Atendimento</a><span>•</span>
+  <a href="#">Fale Conosco</a><span>•</span>
+  <a href="#">Política de Privacidade</a>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-brand">SENAI<small>CONECTE-SE</small></div>
+  <span class="footer-copy">Copyright 2024 © Todos os direitos reservados</span>
+  <div class="footer-links">
+    <a href="#">Horário de Atendimento</a>
+    <a href="#">Fale Conosco</a>
+  </div>
+</footer>
+
+<script src="/app/static/horario.js"></script>
+</body>
+</html>
