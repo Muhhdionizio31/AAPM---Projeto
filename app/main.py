@@ -9,6 +9,10 @@ from app.controllers import categoria_controller
 from app.controllers import produto_controller
 from dotenv import load_dotenv
 import os
+from app.database import get_db
+from sqlalchemy.orm import Session
+from app.models.categoria import Categoria
+
 
 load_dotenv()
 
@@ -81,4 +85,47 @@ def politica(
         request,
         "politica.html",
         {"request": request, "usuario": usuario}
+    )
+
+# Rota para acesso não autenticado
+@app.get("/categorias")
+def listar_categorias(
+    request: Request,
+    db: Session = Depends(get_db),
+    usuario = Depends(get_usuario_opcional)
+):
+    
+    if not usuario:
+        return RedirectResponse(
+            url="/auth/login",
+            status_code=302
+        )
+
+    return templates.TemplateResponse(
+        "categorias/index.html",
+        {
+            "request": request,
+            "usuario": usuario,
+        }
+    )
+
+@app.get("/produtos")
+def listar_produtos(
+    request: Request,
+    db: Session = Depends(get_db),
+    usuario = Depends(get_usuario_opcional)
+):
+    
+    if not usuario:
+        return RedirectResponse(
+            url="/auth/login",
+            status_code=302
+        )
+
+    return templates.TemplateResponse(
+        "produtos/index.html",
+        {
+            "request": request,
+            "usuario": usuario,
+        }
     )
