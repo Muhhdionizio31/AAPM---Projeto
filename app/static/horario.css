@@ -520,6 +520,8 @@
  .footer-copy {
      color: #555;
      font-size: 0.78rem;
+     align-items: center;
+     margin-right: 800px;
  }
 
  .footer-links {
