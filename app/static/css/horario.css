@@ -26,63 +26,65 @@
 
  /* ── NAVBAR ── */
  nav {
-     display: flex;
-     align-items: center;
-     justify-content: space-between;
-     padding: 0 40px;
-     height: 64px;
-     background: var(--white);
-     border-bottom: 2px solid var(--red);
      position: sticky;
      top: 0;
      z-index: 100;
-     box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+     background: var(--white);
+     box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+     display: flex;
+     align-items: center;
+     justify-content: space-between;
+     padding: 0 32px;
+     height: 64px;
  }
 
  .nav-logo {
-     font-family: var(--font-head);
+     font-family: 'Montserrat', sans-serif;
      font-weight: 800;
-     font-size: 1.4rem;
+     font-size: 1.5rem;
      color: var(--red);
+     letter-spacing: 1px;
      text-decoration: none;
-     letter-spacing: 2px;
+ }
+
+ .nav-logo span {
+     color: var(--black);
  }
 
  .nav-links {
-     list-style: none;
      display: flex;
-     gap: 28px;
      align-items: center;
+     gap: 8px;
+     list-style: none;
  }
 
  .nav-links a {
-     color: var(--gray);
      text-decoration: none;
-     font-size: 0.88rem;
-     font-family: var(--font-head);
+     color: var(--text-gray);
+     font-size: 0.92rem;
      font-weight: 600;
-     letter-spacing: 0.4px;
-     transition: color 0.2s;
      padding: 6px 14px;
+     border-radius: 4px;
+     transition: color var(--transition), background var(--transition);
  }
 
- .nav-links a:hover { color: var(--red); background: #fef2f4; }
-
- .nav-links a.active {
+ .nav-links a:hover {
      color: var(--red);
+     background: #fef2f4;
  }
 
- .btn-admin {
+ .nav-links .btn-admin {
      background: var(--red);
      color: var(--white) !important;
-     padding: 8px 18px;
-     border-radius: 4px;
-     transition: opacity 0.2s !important;
+     border-radius: 6px;
+     padding: 6px 16px;
+     transition: background var(--transition);
  }
 
- .btn-admin:hover {
-     opacity: 0.85;
+ .nav-links .btn-admin:hover {
+     background: var(--dark-red);
  }
+
 
  /* ── PAGE HEADER ── */
  .page-header {
