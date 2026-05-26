@@ -23,21 +23,51 @@ app.include_router(admin_controller.router)
 app.include_router(categoria_controller.router)
 app.include_router(produto_controller.router)
 
+#Rota para a página inicial
 @app.get("/")
 def home(
-    request: Request, 
+    request: Request,
     usuario = Depends(get_usuario_opcional)
-    ):
-
-    if usuario is None:
-        return templates.TemplateResponse(
-            request,
-            "index.html",
-            {"request": request}
-        )
+):
     return templates.TemplateResponse(
-            request,
-            "",
-            {"request": request, "usuario": usuario}
-        )
+        request,
+        "index.html",
+        {"request": request, "usuario": usuario}
+    )
 
+
+# Rota para o horário de atendimento
+@app.get("/horario")
+def horario(
+    request: Request,
+    usuario = Depends(get_usuario_opcional)
+):
+    return templates.TemplateResponse(
+        request,
+        "horario.html",
+        {"request": request, "usuario": usuario}
+    )
+
+# Rota para o catálogo de produtos
+@app.get("/catalogo")
+def catalogo(
+    request: Request,
+    usuario = Depends(get_usuario_opcional)
+):
+    return templates.TemplateResponse(
+        request,
+        "catalogo.html",
+        {"request": request, "usuario": usuario}
+    )
+
+# Rota para a política de privacidade 
+@app.get("/politica")
+def politica(
+    request: Request,
+    usuario = Depends(get_usuario_opcional)
+):
+    return templates.TemplateResponse(
+        request,
+        "politica.html",
+        {"request": request, "usuario": usuario}
+    )
