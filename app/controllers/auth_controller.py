@@ -116,7 +116,7 @@ def login(
         value=token,
         httponly=True,
         max_age=3600,
-        samesite="lax",F
+        samesite="lax",
         secure=True
     )
 
