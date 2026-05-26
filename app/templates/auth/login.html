@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <style>
+        :root {
+            --primary-color: #ffcc00; /* Amarelo Padrão */
+            --primary-hover: #e6b800;
+            --bg-color: #f4f4f9;
+            --text-color: #333;
+            --card-bg: #ffffff;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            color: var(--text-color);
+        }
+
+        .container {
+            background-color: var(--card-bg);
+            padding: 2.5rem;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+            border-top: 5px solid var(--primary-color);
+        }
+
+        h1 {
+            margin-bottom: 1.5rem;
+            font-size: 1.8rem;
+            text-align: center;
+            color: #222;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        input {
+            padding: 0.8rem;
+            margin-bottom: 1.2rem;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(255, 204, 0, 0.2);
+        }
+
+        .forgot-password {
+            text-align: right;
+            margin-top: -0.8rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .forgot-password a {
+            font-size: 0.8rem;
+            border: none;
+            color: #777;
+        }
+
+        button {
+            background-color: var(--primary-color);
+            color: #000;
+            border: none;
+            padding: 0.9rem;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.1s ease;
+        }
+
+        button:hover {
+            background-color: var(--primary-hover);
+        }
+
+        button:active {
+            transform: scale(0.98);
+        }
+
+        .error-msg {
+            color: #d9534f;
+            background: #fdf2f2;
+            padding: 0.5rem;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            margin-bottom: 1rem;
+            text-align: center;
+            border: 1px solid #d9534f;
+        }
+
+        p {
+            margin-top: 1.5rem;
+            text-align: center;
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        a {
+            color: #222;
+            text-decoration: none;
+            font-weight: bold;
+            border-bottom: 2px solid var(--primary-color);
+        }
+
+        a:hover {
+            color: #000;
+            background-color: var(--primary-color);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Entrar</h1>
+
+        {% if request.query_params.get('cadastro') == 'successo' %}
+            <p class="error-msg" style="background-color: #d4edda; color: #155724; border-color: #c3e6cb;">
+                Cadastro realizado com sucesso! Faça login para continuar.
+            </p>
+        {% endif %}
+        
+        <form action="/auth/login" method="post">
+            {% if error %}
+                <p class="error-msg">{{ error }}</p>
+            {% endif %}
+
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" placeholder="seu@email.com" required>
+
+            <label for="senha">Senha</label>
+            <input type="password" id="senha" name="senha" placeholder="••••••••" required>
+            
+            <div class="forgot-password">
+                <a href="/auth/recuperar-senha">Esqueceu a senha?</a>
+            </div>
+
+            <button type="submit">Entrar</button>
+        </form>
+        <p>Ainda não tem conta? <a href="/auth/cadastro">Criar Conta</a></p>
+    </div>
+
+</body>
+</html>

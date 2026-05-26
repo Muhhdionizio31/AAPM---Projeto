@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Request, Depends
+from fastapi import FastAPI, Form, Request, Depends
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import HTMLResponse, RedirectResponse
@@ -35,7 +35,6 @@ def home(
         {"request": request, "usuario": usuario}
     )
 
-
 # Rota para o horário de atendimento
 @app.get("/horario")
 def horario(
@@ -48,6 +47,7 @@ def horario(
         {"request": request, "usuario": usuario}
     )
 
+
 # Rota para o catálogo de produtos
 @app.get("/catalogo")
 def catalogo(
@@ -57,6 +57,17 @@ def catalogo(
     return templates.TemplateResponse(
         request,
         "catalogo.html",
+        {"request": request, "usuario": usuario}
+    )
+
+@app.get("/login")
+def login(
+    request: Request,
+    usuario = Depends(get_usuario_opcional)
+):
+    return templates.TemplateResponse(
+        request,
+        "auth/login.html",
         {"request": request, "usuario": usuario}
     )
 
