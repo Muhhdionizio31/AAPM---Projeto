@@ -1,147 +1,110 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
+{% extends 'base.html' %}
 
-<head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Login – AAPM Escola SENAI Francisco Matarazzo</title>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Lato:wght@300;400;700&display=swap"
-        rel="stylesheet" />
+{% block titulo %}Login — AAPM SENAI{% endblock %}
+
+{% block css %}
     <link rel="stylesheet" href="/static/css/login.css" />
-</head>
+{% endblock %}
 
-<body>
+{% block conteudo %}
+<!-- LOGIN LAYOUT -->
+<div class="login-wrapper">
 
-    <!-- NAVBAR -->
-    <nav>
-        <a class="nav-logo" href="/">SENAI</a>
-        <ul class="nav-links">
-            <li><a href="/">Início</a></li>
-            <li><a href="/horario">Horário de Atendimento</a></li>
-            <li><a href="/login" class="btn-admin">Sou Administrador</a></li>
-        </ul>
-    </nav>
-
-    <!-- LOGIN LAYOUT -->
-    <div class="login-wrapper">
-
-        <!-- LEFT: Branding -->
-        <div class="login-panel-left">
-            <div class="left-badge">AAPM</div>
-            <h1 class="left-title">Área <span>Administrativa</span><br>SENAI Matarazzo</h1>
-            <p class="left-desc">
-                Acesse o painel exclusivo para administradores da Associação de Alunos, Ex-Alunos, Pais e Mestres da
-                Escola SENAI "Francisco Matarazzo".
-            </p>
-            <div class="left-features">
-                <div class="left-feature">
-                    <div class="feature-dot"></div>
-                    <span>Gerenciamento de produtos e catálogo</span>
-                </div>
-                <div class="left-feature">
-                    <div class="feature-dot"></div>
-                    <span>Controle de pedidos e associados</span>
-                </div>
-                <div class="left-feature">
-                    <div class="feature-dot"></div>
-                    <span>Relatórios e estatísticas da associação</span>
-                </div>
+    <!-- LEFT: Branding -->
+    <div class="login-panel-left">
+        <div class="left-badge">AAPM</div>
+        <h1 class="left-title">Área <span>Administrativa</span><br>SENAI Matarazzo</h1>
+        <p class="left-desc">
+            Acesse o painel exclusivo para administradores da Associação de Alunos, Ex-Alunos, Pais e Mestres da
+            Escola SENAI "Francisco Matarazzo".
+        </p>
+        <div class="left-features">
+            <div class="left-feature">
+                <div class="feature-dot"></div>
+                <span>Gerenciamento de produtos e catálogo</span>
+            </div>
+            <div class="left-feature">
+                <div class="feature-dot"></div>
+                <span>Controle de pedidos e associados</span>
+            </div>
+            <div class="left-feature">
+                <div class="feature-dot"></div>
+                <span>Relatórios e estatísticas da associação</span>
             </div>
         </div>
+    </div>
 
-        <!-- RIGHT: Form -->
-        <div class="login-panel-right">
-            <div class="login-card">
-                <div class="login-card-header">
-                    <h2>Entrar na conta</h2>
-                    <p>Insira suas credenciais de administrador para continuar.</p>
-                </div>
-
-                <!-- Mensagem de cadastro bem-sucedido -->
-                {% if request.query_params.get('cadastro') == 'sucesso' %}
-                <div class="form-error" style="background:#f0fdf4; border-color:#86efac; color:#166534;">
-                    Cadastro realizado com sucesso! Faça login para continuar.
-                </div>
-                {% endif %}
-
-                <!-- Mensagem de erro vinda do backend -->
-                {% if erro %}
-                <div class="form-error visible">
-                    {{ erro }}
-                </div>
-                {% endif %}
-
-                <form action="/auth/login" method="post">
-
-                    <div class="form-group">
-                        <label for="email">E-mail</label>
-                        <div class="input-wrap">
-                            <svg class="input-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                <rect x="2" y="4" width="20" height="16" rx="2" />
-                                <path d="M2 7l10 7 10-7" />
-                            </svg>
-                            <input type="email" id="email" name="email" placeholder="seu@email.com" autocomplete="email"
-                                required />
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="senha">Senha</label>
-                        <div class="input-wrap">
-                            <svg class="input-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                <rect x="5" y="11" width="14" height="10" rx="2" />
-                                <path d="M8 11V7a4 4 0 0 1 8 0v4" />
-                            </svg>
-                            <input type="password" id="senha" name="senha" placeholder="••••••••"
-                                autocomplete="current-password" required />
-                        </div>
-                    </div>
-
-                    <div class="form-extras">
-                        <label class="checkbox-label">
-                            <input type="checkbox" id="lembrar" name="lembrar" />
-                            Lembrar de mim
-                        </label>
-                        <a href="/auth/recuperar-senha" class="forgot-link">Esqueci minha senha</a>
-                    </div>
-
-                    <button type="submit" class="btn-login">Entrar</button>
-
-                </form>
-
-                <div class="divider">ou</div>
-
-                <a href="/" class="back-link">
-                    <svg viewBox="0 0 24 24">
-                        <polyline points="15 18 9 12 15 6" />
-                    </svg>
-                    Voltar ao site
-                </a>
+    <!-- RIGHT: Form -->
+    <div class="login-panel-right">
+        <div class="login-card">
+            <div class="login-card-header">
+                <h2>Entrar na conta</h2>
+                <p>Insira suas credenciais de administrador para continuar.</p>
             </div>
-        </div>
 
+            <!-- Mensagem de cadastro bem-sucedido -->
+            {% if request.query_params.get('cadastro') == 'sucesso' %}
+            <div class="form-error" style="background:#f0fdf4; border-color:#86efac; color:#166534;">
+                Cadastro realizado com sucesso! Faça login para continuar.
+            </div>
+            {% endif %}
+
+            <!-- Mensagem de erro vinda do backend -->
+            {% if erro %}
+            <div class="form-error visible">
+                {{ erro }}
+            </div>
+            {% endif %}
+
+            <form action="/auth/login" method="post">
+
+                <div class="form-group">
+                    <label for="email">E-mail</label>
+                    <div class="input-wrap">
+                        <svg class="input-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <rect x="2" y="4" width="20" height="16" rx="2" />
+                            <path d="M2 7l10 7 10-7" />
+                        </svg>
+                        <input type="email" id="email" name="email" placeholder="seu@email.com" autocomplete="email"
+                            required />
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="senha">Senha</label>
+                    <div class="input-wrap">
+                        <svg class="input-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <rect x="5" y="11" width="14" height="10" rx="2" />
+                            <path d="M8 11V7a4 4 0 0 1 8 0v4" />
+                        </svg>
+                        <input type="password" id="senha" name="senha" placeholder="••••••••"
+                            autocomplete="current-password" required />
+                    </div>
+                </div>
+
+                <div class="form-extras">
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="lembrar" name="lembrar" />
+                        Lembrar de mim
+                    </label>
+                    <a href="/auth/recuperar-senha" class="forgot-link">Esqueci minha senha</a>
+                </div>
+
+                <button type="submit" class="btn-login">Entrar</button>
+
+            </form>
+
+            <div class="divider">ou</div>
+
+            <a href="/" class="back-link">
+                <svg viewBox="0 0 24 24">
+                    <polyline points="15 18 9 12 15 6" />
+                </svg>
+                Voltar ao site
+            </a>
+        </div>
     </div>
 
-    <!-- FOOTER NAV -->
-    <div class="footer-nav">
-        <a href="/">Informações</a>
-        <span>•</span>
-        <a href="/horario">Horário de Atendimento</a>
-        <span>•</span>
-        <a href="/politica">Política de Privacidade</a>
-    </div>
+</div>
 
-    <!-- FOOTER -->
-    <footer>
-        <div class="footer-brand">
-            SENAI
-        </div>
-        <span class="footer-copy">Copyright 2024 © Todos os direitos reservados</span>
-    </footer>
-
-    <script src="/static/js/login.js"></script>
-
-</body>
-
-</html>
+{% endblock %}
