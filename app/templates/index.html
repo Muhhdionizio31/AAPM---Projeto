@@ -1,26 +1,32 @@
 {% extends 'base.html' %}
 
+{% block css %}
+    <link rel="stylesheet" href="/static/css/index.css" />
+{% endblock %}
+
 {% block conteudo %}
 <!-- HERO -->
 <section style="max-width:1100px;margin:0 auto;padding:0 32px;">
   <div class="hero">
-    <img
-      class="hero-img"
-      src="https://images.unsplash.com/photo-1497633762265-9d179a990aa6?w=560&q=80"
-      alt="Material escolar colorido sobre mesa"
-    />
+    <img class="hero-img"
+      src="https://lh5.googleusercontent.com/p/AF1QipNWI1YmnHNw2zpkKsPkGul55IkmgW0wWiKscNcW=w650-h365-k-no"
+      alt="Senai francisco matarazzo" />
     <div class="hero-content">
-      <div class="hero-badge">AAPM</div>
+      <div class="hero-badge" style="margin-bottom:6px;">AAPM</div>
       <h1>Escola SENAI<br>Francisco Matarazzo</h1>
       <p>
-        A AAPM — Associação de Alunos, Ex-Alunos, Pais e Mestres da Escola SENAI "Francisco Matarazzo" — é uma entidade sem fins lucrativos dedicada ao cuidado e ao desenvolvimento de seus alunos.
+        A AAPM — Associação de Alunos, Ex-Alunos, Pais e Mestres da Escola SENAI "Francisco Matarazzo" — é uma entidade
+        sem fins lucrativos dedicada ao cuidado e ao desenvolvimento de seus alunos.
       </p>
       <p>
-        Para realizar essa missão, a AAPM mobiliza recursos diversos, disponibilizando cursos, colônias e modalidades de lazer recreativas e sociais, proporcionando aos estudantes e ex-alunos a oportunidade de reviver memórias da escola, além de promover ações culturais e de lazer para toda a comunidade.
+        Para realizar essa missão, a AAPM mobiliza recursos diversos, disponibilizando cursos, colônias e modalidades de
+        lazer recreativas e sociais, proporcionando aos estudantes e ex-alunos a oportunidade de reviver memórias da
+        escola, além de promover ações culturais e de lazer para toda a comunidade.
       </p>
       <a class="btn-whatsapp" href="https://wa.me/" target="_blank" rel="noopener">
         <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
-          <path d="M16 .5C7.44.5.5 7.44.5 16c0 2.83.74 5.5 2.03 7.82L.5 31.5l7.87-2.06A15.43 15.43 0 0016 31.5c8.56 0 15.5-6.94 15.5-15.5S24.56.5 16 .5zm0 28.26a12.7 12.7 0 01-6.47-1.76l-.46-.28-4.67 1.22 1.25-4.55-.3-.47A12.73 12.73 0 1116 28.76zm6.97-9.54c-.38-.19-2.25-1.11-2.6-1.24-.35-.13-.6-.19-.85.19s-.98 1.24-1.2 1.5c-.22.25-.44.28-.82.09a10.37 10.37 0 01-3.05-1.88 11.45 11.45 0 01-2.11-2.63c-.22-.38 0-.58.17-.77.15-.17.35-.44.53-.66.17-.22.22-.38.34-.63.12-.25.06-.47-.03-.66-.09-.19-.85-2.04-1.16-2.8-.3-.72-.6-.63-.85-.64h-.72c-.25 0-.66.09-1 .47-.35.38-1.32 1.29-1.32 3.14s1.35 3.64 1.54 3.89c.19.25 2.66 4.06 6.44 5.69 3.78 1.63 3.78 1.09 4.47 1.02.69-.06 2.25-.92 2.57-1.8.32-.88.32-1.63.22-1.8-.1-.19-.35-.28-.73-.47z"/>
+          <path
+            d="M16 .5C7.44.5.5 7.44.5 16c0 2.83.74 5.5 2.03 7.82L.5 31.5l7.87-2.06A15.43 15.43 0 0016 31.5c8.56 0 15.5-6.94 15.5-15.5S24.56.5 16 .5zm0 28.26a12.7 12.7 0 01-6.47-1.76l-.46-.28-4.67 1.22 1.25-4.55-.3-.47A12.73 12.73 0 1116 28.76zm6.97-9.54c-.38-.19-2.25-1.11-2.6-1.24-.35-.13-.6-.19-.85.19s-.98 1.24-1.2 1.5c-.22.25-.44.28-.82.09a10.37 10.37 0 01-3.05-1.88 11.45 11.45 0 01-2.11-2.63c-.22-.38 0-.58.17-.77.15-.17.35-.44.53-.66.17-.22.22-.38.34-.63.12-.25.06-.47-.03-.66-.09-.19-.85-2.04-1.16-2.8-.3-.72-.6-.63-.85-.64h-.72c-.25 0-.66.09-1 .47-.35.38-1.32 1.29-1.32 3.14s1.35 3.64 1.54 3.89c.19.25 2.66 4.06 6.44 5.69 3.78 1.63 3.78 1.09 4.47 1.02.69-.06 2.25-.92 2.57-1.8.32-.88.32-1.63.22-1.8-.1-.19-.35-.28-.73-.47z" />
         </svg>
         WhatsApp
       </a>
@@ -47,8 +53,9 @@
         <div class="product-card">
           <div class="shirt-placeholder">
             <svg viewBox="0 0 100 120" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M30 10 L10 30 L25 35 L25 110 L75 110 L75 35 L90 30 L70 10 Q60 20 50 20 Q40 20 30 10Z" fill="#333" stroke="#555" stroke-width="1.5"/>
-              <rect x="38" y="48" width="24" height="10" rx="2" fill="#c8102e"/>
+              <path d="M30 10 L10 30 L25 35 L25 110 L75 110 L75 35 L90 30 L70 10 Q60 20 50 20 Q40 20 30 10Z" fill="#333"
+                stroke="#555" stroke-width="1.5" />
+              <rect x="38" y="48" width="24" height="10" rx="2" fill="#c8102e" />
             </svg>
           </div>
           <div class="card-body">
@@ -60,8 +67,9 @@
         <div class="product-card">
           <div class="shirt-placeholder">
             <svg viewBox="0 0 100 120" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M30 10 L10 30 L25 35 L25 110 L75 110 L75 35 L90 30 L70 10 Q60 20 50 20 Q40 20 30 10Z" fill="#333" stroke="#555" stroke-width="1.5"/>
-              <rect x="38" y="48" width="24" height="10" rx="2" fill="#c8102e"/>
+              <path d="M30 10 L10 30 L25 35 L25 110 L75 110 L75 35 L90 30 L70 10 Q60 20 50 20 Q40 20 30 10Z" fill="#333"
+                stroke="#555" stroke-width="1.5" />
+              <rect x="38" y="48" width="24" height="10" rx="2" fill="#c8102e" />
             </svg>
           </div>
           <div class="card-body">
@@ -73,8 +81,9 @@
         <div class="product-card">
           <div class="shirt-placeholder">
             <svg viewBox="0 0 100 120" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M30 10 L10 30 L25 35 L25 110 L75 110 L75 35 L90 30 L70 10 Q60 20 50 20 Q40 20 30 10Z" fill="#333" stroke="#555" stroke-width="1.5"/>
-              <rect x="38" y="48" width="24" height="10" rx="2" fill="#c8102e"/>
+              <path d="M30 10 L10 30 L25 35 L25 110 L75 110 L75 35 L90 30 L70 10 Q60 20 50 20 Q40 20 30 10Z" fill="#333"
+                stroke="#555" stroke-width="1.5" />
+              <rect x="38" y="48" width="24" height="10" rx="2" fill="#c8102e" />
             </svg>
           </div>
           <div class="card-body">
@@ -86,8 +95,9 @@
         <div class="product-card">
           <div class="shirt-placeholder">
             <svg viewBox="0 0 100 120" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M30 10 L10 30 L25 35 L25 110 L75 110 L75 35 L90 30 L70 10 Q60 20 50 20 Q40 20 30 10Z" fill="#333" stroke="#555" stroke-width="1.5"/>
-              <rect x="38" y="48" width="24" height="10" rx="2" fill="#c8102e"/>
+              <path d="M30 10 L10 30 L25 35 L25 110 L75 110 L75 35 L90 30 L70 10 Q60 20 50 20 Q40 20 30 10Z" fill="#333"
+                stroke="#555" stroke-width="1.5" />
+              <rect x="38" y="48" width="24" height="10" rx="2" fill="#c8102e" />
             </svg>
           </div>
           <div class="card-body">
@@ -99,8 +109,9 @@
         <div class="product-card">
           <div class="shirt-placeholder">
             <svg viewBox="0 0 100 120" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M30 10 L10 30 L25 35 L25 110 L75 110 L75 35 L90 30 L70 10 Q60 20 50 20 Q40 20 30 10Z" fill="#222" stroke="#444" stroke-width="1.5"/>
-              <rect x="38" y="48" width="24" height="10" rx="2" fill="#c8102e"/>
+              <path d="M30 10 L10 30 L25 35 L25 110 L75 110 L75 35 L90 30 L70 10 Q60 20 50 20 Q40 20 30 10Z" fill="#222"
+                stroke="#444" stroke-width="1.5" />
+              <rect x="38" y="48" width="24" height="10" rx="2" fill="#c8102e" />
             </svg>
           </div>
           <div class="card-body">
@@ -112,8 +123,9 @@
         <div class="product-card">
           <div class="shirt-placeholder">
             <svg viewBox="0 0 100 120" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M30 10 L10 30 L25 35 L25 110 L75 110 L75 35 L90 30 L70 10 Q60 20 50 20 Q40 20 30 10Z" fill="#111" stroke="#333" stroke-width="1.5"/>
-              <rect x="38" y="48" width="24" height="10" rx="2" fill="#c8102e"/>
+              <path d="M30 10 L10 30 L25 35 L25 110 L75 110 L75 35 L90 30 L70 10 Q60 20 50 20 Q40 20 30 10Z" fill="#111"
+                stroke="#333" stroke-width="1.5" />
+              <rect x="38" y="48" width="24" height="10" rx="2" fill="#c8102e" />
             </svg>
           </div>
           <div class="card-body">
@@ -121,6 +133,64 @@
             <p>Linha Premium 2024</p>
           </div>
         </div>
+
+        <div class="product-card">
+          <div class="shirt-placeholder">
+            <svg viewBox="0 0 100 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M30 10 L10 30 L25 35 L25 110 L75 110 L75 35 L90 30 L70 10 Q60 20 50 20 Q40 20 30 10Z" fill="#111"
+                stroke="#333" stroke-width="1.5" />
+              <rect x="38" y="48" width="24" height="10" rx="2" fill="#c8102e" />
+            </svg>
+          </div>
+          <div class="card-body">
+            <h3>Camiseta SENAI — Premium</h3>
+            <p>Linha Premium 2024</p>
+          </div>
+        </div>
+
+        <div class="product-card">
+          <div class="shirt-placeholder">
+            <svg viewBox="0 0 100 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M30 10 L10 30 L25 35 L25 110 L75 110 L75 35 L90 30 L70 10 Q60 20 50 20 Q40 20 30 10Z" fill="#111"
+                stroke="#333" stroke-width="1.5" />
+              <rect x="38" y="48" width="24" height="10" rx="2" fill="#c8102e" />
+            </svg>
+          </div>
+          <div class="card-body">
+            <h3>Camiseta SENAI — Premium</h3>
+            <p>Linha Premium 2024</p>
+          </div>
+        </div>
+        
+        <div class="product-card">
+          <div class="shirt-placeholder">
+            <svg viewBox="0 0 100 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M30 10 L10 30 L25 35 L25 110 L75 110 L75 35 L90 30 L70 10 Q60 20 50 20 Q40 20 30 10Z" fill="#111"
+                stroke="#333" stroke-width="1.5" />
+              <rect x="38" y="48" width="24" height="10" rx="2" fill="#c8102e" />
+            </svg>
+          </div>
+          <div class="card-body">
+            <h3>Camiseta SENAI — Premium</h3>
+            <p>Linha Premium 2024</p>
+          </div>
+        </div>
+
+        <div class="product-card">
+          <div class="shirt-placeholder">
+            <svg viewBox="0 0 100 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M30 10 L10 30 L25 35 L25 110 L75 110 L75 35 L90 30 L70 10 Q60 20 50 20 Q40 20 30 10Z" fill="#111"
+                stroke="#333" stroke-width="1.5" />
+              <rect x="38" y="48" width="24" height="10" rx="2" fill="#c8102e" />
+            </svg>
+          </div>
+          <div class="card-body">
+            <h3>Camiseta SENAI — Premium</h3>
+            <p>Linha Premium 2024</p>
+          </div>
+        </div>
+
+
       </div>
 
       <button class="carousel-btn next" onclick="slide(1)" aria-label="Próximo">&#8250;</button>
