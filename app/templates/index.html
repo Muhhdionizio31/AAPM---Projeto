@@ -1,5 +1,9 @@
 {% extends 'base.html' %}
 
+{% block css %}
+    <link rel="stylesheet" href="/static/css/index.css" />
+{% endblock %}
+
 {% block conteudo %}
 <!-- HERO -->
 <section style="max-width:1100px;margin:0 auto;padding:0 32px;">
@@ -196,19 +200,3 @@
   </div>
 </section>
 {% endblock %}
-
-<style>
-/* coloque no seu arquivo CSS principal */
-.hero-content {
-  display: flex;
-  flex-direction: column;
-  gap: 6px; /* distancia entre badge e o restante do conteúdo */
-  align-items: flex-start; /* garante alinhamento consistente */
-}
-
-.hero-badge {
-  margin: 0; /* remover margens indesejadas */
-  line-height: 1;
-  padding: 4px 8px;
-}
-</style>
