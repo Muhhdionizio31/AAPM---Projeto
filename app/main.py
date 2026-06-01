@@ -3,15 +3,16 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import HTMLResponse, RedirectResponse
 from app.auth import get_usuario_opcional
+
 from app.controllers import auth_controller
 from app.controllers import admin_controller
 from app.controllers import categoria_controller
 from app.controllers import produto_controller
+
 from dotenv import load_dotenv
 import os
 from app.database import get_db
 from sqlalchemy.orm import Session
-from app.models.categoria import Categoria
 
 
 load_dotenv()
@@ -95,13 +96,14 @@ def listar_categorias(
     usuario = Depends(get_usuario_opcional)
 ):
     
-    if not usuario:
+    if usuario is None:
         return RedirectResponse(
             url="/auth/login",
             status_code=302
         )
 
     return templates.TemplateResponse(
+        request,
         "categorias/index.html",
         {
             "request": request,
@@ -115,15 +117,38 @@ def listar_produtos(
     db: Session = Depends(get_db),
     usuario = Depends(get_usuario_opcional)
 ):
-    
-    if not usuario:
+
+    if usuario is None:
         return RedirectResponse(
             url="/auth/login",
             status_code=302
         )
 
     return templates.TemplateResponse(
+        request,
         "produtos/index.html",
+        {
+            "request": request,
+            "usuario": usuario,
+        }
+    )
+
+@app.get("/usuarios")
+def listar_usuarios(
+    request: Request,
+    db: Session = Depends(get_db),
+    usuario = Depends(get_usuario_opcional)
+):
+
+    if usuario is None:
+        return RedirectResponse(
+            url="/auth/login",
+            status_code=302
+        )
+
+    return templates.TemplateResponse(
+        request,
+        "usuarios/index.html",
         {
             "request": request,
             "usuario": usuario,
