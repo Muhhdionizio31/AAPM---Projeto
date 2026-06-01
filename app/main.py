@@ -33,11 +33,21 @@ app.include_router(produto_controller.router)
 def home(
     request: Request,
     usuario = Depends(get_usuario_opcional)
-):
+    ):
+    
+    #Não logado
+    if usuario is None:
+        return templates.TemplateResponse(
+            request,
+            "index.html",
+            {"request": request}       
+        )
+
+    #Logado
     return templates.TemplateResponse(
         request,
-        "index.html",
-        {"request": request, "usuario": usuario}
+        "home.html",
+        {"request": request, "usuario": usuario}       
     )
 
 # Rota para o horário de atendimento

@@ -2,7 +2,7 @@
 const carousel = document.getElementById('carousel');
 const dotsContainer = document.getElementById('dots');
 
-let visibleCount = () => window.innerWidth <= 480 ? 1 : window.innerWidth <= 800 ? 2 : 4;
+let visibleCount = () => window.innerWidth <= 480 ? 1 : window.innerWidth <= 800 ? 2 : 5;
 let currentIndex = 0;
 
 const cards = Array.from(carousel.children);

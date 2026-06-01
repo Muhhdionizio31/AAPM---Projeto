@@ -109,7 +109,6 @@ def login(
 
     # Cria a resposta de redirecionamento
     response = RedirectResponse(url="/", status_code=302)
-
     # Define o cookie com o token JWT
     response.set_cookie(
         key="access_token",
@@ -119,7 +118,6 @@ def login(
         samesite="lax",
         secure=True
     )
-
     return response
 
 #Rota para Sair/logout - remove o cookie do token JWT
