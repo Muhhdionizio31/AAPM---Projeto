@@ -8,7 +8,7 @@
       src="https://lh5.googleusercontent.com/p/AF1QipNWI1YmnHNw2zpkKsPkGul55IkmgW0wWiKscNcW=w650-h365-k-no"
       alt="Senai francisco matarazzo" />
     <div class="hero-content">
-      <div class="hero-badge">AAPM</div>
+      <div class="hero-badge" style="margin-bottom:6px;">AAPM</div>
       <h1>Escola SENAI<br>Francisco Matarazzo</h1>
       <p>
         A AAPM — Associação de Alunos, Ex-Alunos, Pais e Mestres da Escola SENAI "Francisco Matarazzo" — é uma entidade
@@ -196,3 +196,19 @@
   </div>
 </section>
 {% endblock %}
+
+<style>
+/* coloque no seu arquivo CSS principal */
+.hero-content {
+  display: flex;
+  flex-direction: column;
+  gap: 6px; /* distancia entre badge e o restante do conteúdo */
+  align-items: flex-start; /* garante alinhamento consistente */
+}
+
+.hero-badge {
+  margin: 0; /* remover margens indesejadas */
+  line-height: 1;
+  padding: 4px 8px;
+}
+</style>
