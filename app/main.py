@@ -132,3 +132,25 @@ def listar_produtos(
             "usuario": usuario,
         }
     )
+
+@app.get("/usuarios")
+def listar_usuarios(
+    request: Request,
+    db: Session = Depends(get_db),
+    usuario = Depends(get_usuario_opcional)
+):
+
+    if usuario is None:
+        return RedirectResponse(
+            url="/auth/login",
+            status_code=302
+        )
+
+    return templates.TemplateResponse(
+        request,
+        "usuarios/index.html",
+        {
+            "request": request,
+            "usuario": usuario,
+        }
+    )
