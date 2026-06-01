@@ -1,5 +1,9 @@
 {% extends 'base.html' %}
 
+{% block css %}
+    <link rel="stylesheet" href="/static/css/index.css" />
+{% endblock %}
+
 {% block conteudo %}
 <!-- HERO -->
 <section style="max-width:1100px;margin:0 auto;padding:0 32px;">
@@ -129,4 +133,7 @@
     <div class="carousel-dots" id="dots"></div>
   </div>
 </section>
+{% endblock %}
+{% block scripts %}
+  <script src="/static/js/index.js"></script>
 {% endblock %}
