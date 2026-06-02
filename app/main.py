@@ -2,18 +2,25 @@ from fastapi import FastAPI, Form, Request, Depends
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import HTMLResponse, RedirectResponse
-from app.auth import get_usuario_opcional
+from app.auth import get_usuario_logado, get_usuario_opcional
 
 from app.controllers import auth_controller
 from app.controllers import admin_controller
 from app.controllers import categoria_controller
 from app.controllers import produto_controller
 from app.controllers import variacao_controller
+from app.controllers import movimentacao_controller
+from app.controllers import cliente_controller
+from app.controllers import pdv_controllers
+
 
 from dotenv import load_dotenv
 import os
 from app.database import get_db
 from sqlalchemy.orm import Session
+
+from app.models.cliente import Cliente
+from app.models.produto import Produto
 
 
 load_dotenv()
@@ -29,6 +36,11 @@ app.include_router(admin_controller.router)
 app.include_router(categoria_controller.router)
 app.include_router(produto_controller.router)
 app.include_router(variacao_controller.router)
+app.include_router(movimentacao_controller.router)
+app.include_router(cliente_controller.router)
+app.include_router(pdv_controllers.router)
+
+
 
 #Rota para a página inicial
 @app.get("/")
