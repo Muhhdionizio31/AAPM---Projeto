@@ -12,6 +12,7 @@ from app.controllers import variacao_controller
 from app.controllers import movimentacao_controller
 from app.controllers import cliente_controller
 
+
 from dotenv import load_dotenv
 import os
 from app.database import get_db
@@ -33,6 +34,7 @@ app.include_router(produto_controller.router)
 app.include_router(variacao_controller.router)
 app.include_router(movimentacao_controller.router)
 app.include_router(cliente_controller.router)
+
 
 
 #Rota para a página inicial
