@@ -18,6 +18,8 @@ class Produto(Base):
 
     categoria = relationship("Categoria", back_populates="produtos")
 
+    variacoes = relationship("ProdutoVariacao", back_populates="produto", cascade="all, delete-orphan", lazy="select")
+
     @property
     def imagem_url(self):
         if self.imagem_path:
