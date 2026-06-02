@@ -2,7 +2,7 @@ from fastapi import FastAPI, Form, Request, Depends
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import HTMLResponse, RedirectResponse
-from app.auth import get_usuario_opcional
+from app.auth import get_usuario_logado, get_usuario_opcional
 
 from app.controllers import auth_controller
 from app.controllers import admin_controller
@@ -18,6 +18,9 @@ from dotenv import load_dotenv
 import os
 from app.database import get_db
 from sqlalchemy.orm import Session
+
+from app.models.cliente import Cliente
+from app.models.produto import Produto
 
 
 load_dotenv()
@@ -174,4 +177,50 @@ def listar_usuarios(
             "request": request,
             "usuario": usuario,
         }
+    )
+
+app.get("/clientes")
+def listar_clientes(
+    request: Request,
+    db: Session = Depends(get_db),
+    usuario = Depends(get_usuario_opcional)
+):
+    if usuario is None:
+        return RedirectResponse(
+            url="/auth/login",
+            status_code=302
+        )
+
+    return templates.TemplateResponse(
+        request,
+        "cliente/index.html",
+        {
+            "request": request,
+            "usuario": usuario,
+        }
+    )
+
+app.get("/pdv")
+def pdv(
+    request: Request,
+    db: Session = Depends(get_db),
+    usuario = Depends(get_usuario_logado)
+):
+    if usuario is None:
+        return RedirectResponse(
+            url="/auth/login",
+            status_code=302
+        )
+
+    produtos  = (
+        db.query(Produto)
+        .filter(Produto.ativo == True)
+        .order_by(Produto.nome)
+        .all()
+    )
+    clientes  = (
+        db.query(Cliente)
+        .filter(Cliente.ativo == True)
+        .order_by(Cliente.nome)
+        .all()
     )
