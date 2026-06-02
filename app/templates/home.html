@@ -25,17 +25,6 @@
 
         <ul class="barra-nav">
             <li>
-                <a href="#" onclick="trocarSecao('painel', this)">
-                    <svg viewBox="0 0 24 24">
-                        <rect x="3" y="3" width="7" height="7" rx="1" />
-                        <rect x="14" y="3" width="7" height="7" rx="1" />
-                        <rect x="3" y="14" width="7" height="7" rx="1" />
-                        <rect x="14" y="14" width="7" height="7" rx="1" />
-                    </svg>
-                    Painel
-                </a>
-            </li>
-            <li>
                 <a href="#" class="ativo" onclick="trocarSecao('estoque', this)">
                     <svg viewBox="0 0 24 24">
                         <path
@@ -75,7 +64,7 @@
                 </a>
             </li>
             <li>
-                <a href="#" onclick="trocarSecao('clientes', this)">
+                <a href="/clientes/" onclick="trocarSecao('clientes', this)">
                     <svg viewBox="0 0 24 24">
                         <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
                         <circle cx="9" cy="7" r="4" />
@@ -114,13 +103,6 @@
                         </svg>
                     </button>
                 </div>
-                <button class="btn-novo" onclick="abrirModal()">
-                    <svg viewBox="0 0 24 24">
-                        <line x1="12" y1="5" x2="12" y2="19" />
-                        <line x1="5" y1="12" x2="19" y2="12" />
-                    </svg>
-                    Novo Produto
-                </button>
             </div>
         </header>
 
