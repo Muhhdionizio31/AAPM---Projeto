@@ -8,6 +8,8 @@ from app.controllers import auth_controller
 from app.controllers import admin_controller
 from app.controllers import categoria_controller
 from app.controllers import produto_controller
+from app.controllers import cliente_controller     
+
 
 from dotenv import load_dotenv
 import os
@@ -27,6 +29,7 @@ app.include_router(auth_controller.router)
 app.include_router(admin_controller.router)
 app.include_router(categoria_controller.router)
 app.include_router(produto_controller.router)
+app.include_router(cliente_controller.router)   
 
 #Rota para a página inicial
 @app.get("/")
