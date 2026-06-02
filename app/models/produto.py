@@ -6,7 +6,7 @@ class Produto(Base):
     __tablename__ = "produtos"
 
     id = Column(Integer, primary_key=True, autoincrement=True, index=True)
-    nome = Column(String(100), unique=True, nullable=False)
+    nome = Column(String(100), nullable=False)
     preco = Column(Float, nullable=False, default=0.0)
     estoque_atual = Column(Integer, default=0)
     descricao = Column(String(255), nullable=True)
