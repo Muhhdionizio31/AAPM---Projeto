@@ -24,7 +24,7 @@ os.makedirs(UPLOAD_DIR, exist_ok=True)
 # LISTAGEM
 # ============================================================
 
-@router.get("/")
+@router.get("")
 def listar_produtos(
     request: Request,
     busca: str = "",

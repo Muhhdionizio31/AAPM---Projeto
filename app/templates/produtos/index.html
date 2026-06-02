@@ -8,6 +8,8 @@
 <body>
     <h1>Produtos</h1>
 
+    <p>Total de produtos: {{ produtos|length }}</p>
+
     {% if request.query_params.get('criado') == 'ok' %}
         <p style="color:green">Produto criado com sucesso!</p>
     {% endif %}
@@ -16,7 +18,7 @@
     {% endif %}
 
     <!-- Filtros -->
-    <form method="get" action="/produtos">
+    <form method="get" action="/produtos/">
         <input  type="text"
                 name="busca"
                 placeholder="Buscar por nome..."
