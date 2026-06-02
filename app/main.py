@@ -166,3 +166,47 @@ def listar_usuarios(
             "usuario": usuario,
         }
     )
+
+# Rota para visualização do histórico geral de movimentações
+@app.get("/movimentacoes")
+def listar_movimentacoes_page(
+    request: Request,
+    db: Session = Depends(get_db),
+    usuario = Depends(get_usuario_opcional)
+):
+    if usuario is None:
+        return RedirectResponse(
+            url="/login",
+            status_code=302
+        )
+
+    return templates.TemplateResponse(
+        request,
+        "movimentacoes/index.html",
+        {
+            "request": request,
+            "usuario": usuario,
+        }
+    )
+
+# Rota para o formulário de nova movimentação (entrada/saída de estoque)
+@app.get("/movimentacoes/nova")
+def nova_movimentacao_page(
+    request: Request,
+    db: Session = Depends(get_db),
+    usuario = Depends(get_usuario_opcional)
+):
+    if usuario is None:
+        return RedirectResponse(
+            url="/login",
+            status_code=302
+        )
+
+    return templates.TemplateResponse(
+        request,
+        "movimentacoes/form.html",
+        {
+            "request": request,
+            "usuario": usuario,
+        }
+    )
