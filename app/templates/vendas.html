@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Vendas – AAPM SENAI Francisco Matarazzo</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Lato:wght@300;400;700&display=swap" rel="stylesheet"/>
+    <link rel="stylesheet" href="/static/css/vendas.css"/>  
+</head>
+<body>
+
+<!-- ════════════════════════════════
+     BARRA LATERAL
+════════════════════════════════ -->
+<aside class="barra-lateral">
+  <div class="barra-logo">
+    <span class="barra-logo-texto">SENAI <span>///</span></span>
+    <div class="barra-logo-separador"></div>
+    <span class="barra-logo-sub">AAPM</span>
+  </div>
+
+  <span class="barra-menu-titulo">Menu</span>
+
+  <ul class="barra-nav">
+    <li>
+      <a href="admin.html">
+        <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+        Painel
+      </a>
+    </li>
+    <li>
+      <a href="admin.html">
+        <svg viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+        Estoque
+      </a>
+    </li>
+    <li>
+      <a href="#" onclick="abrirModalVenda()">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+        Adicionar
+      </a>
+    </li>
+    <li>
+      <a href="#">
+        <svg viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+        Relatórios
+      </a>
+    </li>
+    <li>
+      <a href="vendas.html" class="ativo">
+        <svg viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+        Vendas
+      </a>
+    </li>
+    <li>
+      <a href="#">
+        <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        Clientes
+      </a>
+    </li>
+  </ul>
+
+  <div class="barra-rodape">
+    <div class="barra-usuario">
+      <div class="avatar-usuario">GS</div>
+      <div class="info-usuario">
+        <strong>Gidalva</strong>
+        <small>Administrador</small>
+      </div>
+    </div>
+    <button class="btn-sair" onclick="window.location.href='login.html'">Sair</button>
+  </div>
+</aside>
+
+<!-- ════════════════════════════════
+     CONTEÚDO PRINCIPAL
+════════════════════════════════ -->
+<div class="conteudo-principal">
+
+  <header class="cabecalho-pagina">
+    <h1>Vendas</h1>
+    <div class="acoes-cabecalho">
+      <div class="filtro-data">
+        <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        <input type="month" id="filtroMes" onchange="renderizarTudo()"/>
+      </div>
+      <button class="btn-novo" onclick="abrirModalVenda()">
+        <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Nova Venda
+      </button>
+    </div>
+  </header>
+
+  <main class="area-conteudo">
+
+    <!-- Cards de resumo -->
+    <div class="grade-resumo">
+      <div class="cartao-resumo vermelho" style="animation-delay:0s">
+        <div class="resumo-icone">
+          <svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+        </div>
+        <div class="resumo-rotulo">Faturamento Total</div>
+        <div class="resumo-valor" id="resumoFaturamento">R$ 0,00</div>
+        <div class="resumo-variacao subiu" id="resumoVarFatur">↑ +0% este mês</div>
+      </div>
+
+      <div class="cartao-resumo verde" style="animation-delay:0.08s">
+        <div class="resumo-icone">
+          <svg viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+        </div>
+        <div class="resumo-rotulo">Vendas Concluídas</div>
+        <div class="resumo-valor" id="resumoConcluidas">0</div>
+        <div class="resumo-variacao subiu" id="resumoVarConc">↑ +0% este mês</div>
+      </div>
+
+      <div class="cartao-resumo amarelo" style="animation-delay:0.16s">
+        <div class="resumo-icone">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        </div>
+        <div class="resumo-rotulo">Pendentes</div>
+        <div class="resumo-valor" id="resumoPendentes">0</div>
+        <div class="resumo-variacao neutro" id="resumoVarPend">Aguardando pagamento</div>
+      </div>
+
+      <div class="cartao-resumo azul" style="animation-delay:0.24s">
+        <div class="resumo-icone">
+          <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        </div>
+        <div class="resumo-rotulo">Clientes Atendidos</div>
+        <div class="resumo-valor" id="resumoClientes">0</div>
+        <div class="resumo-variacao subiu" id="resumoVarCli">↑ +0% este mês</div>
+      </div>
+    </div>
+
+    <!-- Layout inferior -->
+    <div class="layout-inferior">
+
+      <!-- Tabela de vendas -->
+      <div class="painel">
+        <div class="painel-cabecalho">
+          <span class="painel-titulo">Histórico de Vendas</span>
+          <div class="barra-busca-tabela">
+            <input type="text" id="campoBusca" placeholder="Buscar venda..." oninput="renderizarTabela()"/>
+            <button class="btn-buscar-tabela">
+              <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            </button>
+          </div>
+        </div>
+
+        <table class="tabela-vendas">
+          <thead>
+            <tr>
+              <th>Código</th>
+              <th>Cliente</th>
+              <th>Itens</th>
+              <th>Data</th>
+              <th>Valor</th>
+              <th>Pagamento</th>
+              <th>Status</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="corpoTabela"></tbody>
+        </table>
+
+        <div class="rodape-tabela">
+          <span id="infoTabela">0 vendas</span>
+          <div class="paginacao" id="paginacao"></div>
+        </div>
+      </div>
+
+      <!-- Lateral -->
+      <div class="painel-lateral">
+
+        <!-- Top produtos -->
+        <div class="painel painel-top">
+          <div class="painel-cabecalho">
+            <span class="painel-titulo">Mais Vendidos</span>
+          </div>
+          <div id="listaMaisVendidos"></div>
+        </div>
+
+        <!-- Métodos de pagamento -->
+        <div class="painel">
+          <div class="painel-cabecalho">
+            <span class="painel-titulo">Pagamentos</span>
+          </div>
+          <div id="listaPagamentos"></div>
+        </div>
+
+      </div>
+    </div>
+  </main>
+
+  <footer class="rodape-admin">
+    Controle de Vendas &nbsp;·&nbsp; © 2026 Todos os direitos reservados
+  </footer>
+</div>
+
+<!-- ════════════════════════════════
+     MODAL NOVA / EDITAR VENDA
+════════════════════════════════ -->
+<div class="sobreposicao-modal" id="modalVenda" onclick="fecharModalFora(event,'modalVenda')">
+  <div class="modal">
+    <div class="modal-cabecalho">
+      <h2 id="modalTitulo">Nova Venda</h2>
+      <button class="btn-fechar-modal" onclick="fecharModal('modalVenda')">✕</button>
+    </div>
+
+    <div class="form-linha">
+      <div class="form-group">
+        <label>Cliente</label>
+        <input type="text" id="modalCliente" placeholder="Nome do cliente"/>
+      </div>
+      <div class="form-group">
+        <label>Data</label>
+        <input type="date" id="modalData"/>
+      </div>
+    </div>
+
+    <div class="form-linha">
+      <div class="form-group">
+        <label>Pagamento</label>
+        <select id="modalPagamento">
+          <option value="PIX">PIX</option>
+          <option value="Cartão de Crédito">Cartão de Crédito</option>
+          <option value="Cartão de Débito">Cartão de Débito</option>
+          <option value="Dinheiro">Dinheiro</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Status</label>
+        <select id="modalStatus">
+          <option value="concluido">Concluído</option>
+          <option value="pendente">Pendente</option>
+          <option value="cancelado">Cancelado</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="secao-itens">
+      <div class="secao-itens-cabecalho">
+        <span>Itens da Venda</span>
+        <button class="btn-add-item" onclick="adicionarLinhaItem()">
+          <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Adicionar
+        </button>
+      </div>
+      <div class="lista-itens-modal" id="listaItensModal"></div>
+    </div>
+
+    <div class="total-modal">
+      <span>Total da Venda</span>
+      <strong id="totalModal">R$ 0,00</strong>
+    </div>
+
+    <div class="acoes-modal">
+      <button class="btn-cancelar" onclick="fecharModal('modalVenda')">Cancelar</button>
+      <button class="btn-salvar" onclick="salvarVenda()">Registrar Venda</button>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════
+     MODAL DETALHE
+════════════════════════════════ -->
+<div class="sobreposicao-modal" id="modalDetalhe" onclick="fecharModalFora(event,'modalDetalhe')">
+  <div class="modal">
+    <div class="modal-cabecalho">
+      <h2>Detalhe da Venda</h2>
+      <button class="btn-fechar-modal" onclick="fecharModal('modalDetalhe')">✕</button>
+    </div>
+    <div id="conteudoDetalhe"></div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast">
+  <div class="toast-icone">
+    <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+  </div>
+  <span id="toastMensagem">Venda registrada!</span>
+</div>
+
+    <script src="/static/js/vendas.js"></script>
+
+</body>
+</html>
