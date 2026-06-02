@@ -9,6 +9,7 @@ from app.controllers import admin_controller
 from app.controllers import categoria_controller
 from app.controllers import produto_controller
 from app.controllers import variacao_controller
+from app.controllers import movimentacao_controller
 
 from dotenv import load_dotenv
 import os
@@ -29,6 +30,8 @@ app.include_router(admin_controller.router)
 app.include_router(categoria_controller.router)
 app.include_router(produto_controller.router)
 app.include_router(variacao_controller.router)
+app.include_router(movimentacao_controller.router)
+
 
 #Rota para a página inicial
 @app.get("/")
@@ -161,50 +164,6 @@ def listar_usuarios(
     return templates.TemplateResponse(
         request,
         "usuarios/index.html",
-        {
-            "request": request,
-            "usuario": usuario,
-        }
-    )
-
-# Rota para visualização do histórico geral de movimentações
-@app.get("/movimentacoes")
-def listar_movimentacoes_page(
-    request: Request,
-    db: Session = Depends(get_db),
-    usuario = Depends(get_usuario_opcional)
-):
-    if usuario is None:
-        return RedirectResponse(
-            url="/login",
-            status_code=302
-        )
-
-    return templates.TemplateResponse(
-        request,
-        "movimentacoes/index.html",
-        {
-            "request": request,
-            "usuario": usuario,
-        }
-    )
-
-# Rota para o formulário de nova movimentação (entrada/saída de estoque)
-@app.get("/movimentacoes/nova")
-def nova_movimentacao_page(
-    request: Request,
-    db: Session = Depends(get_db),
-    usuario = Depends(get_usuario_opcional)
-):
-    if usuario is None:
-        return RedirectResponse(
-            url="/login",
-            status_code=302
-        )
-
-    return templates.TemplateResponse(
-        request,
-        "movimentacoes/form.html",
         {
             "request": request,
             "usuario": usuario,
