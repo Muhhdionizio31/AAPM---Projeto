@@ -12,7 +12,7 @@ from app.models.cliente import Cliente
 from app.auth import get_admin
 
 router = APIRouter(prefix="/clientes", tags=["Clientes"])
-templates = Jinja2Templates(directory="app/templates/cliente")
+templates = Jinja2Templates(directory="app/templates")
 
 
 @router.get("/")
