@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Painel Administrativo – AAPM SENAI Francisco Matarazzo</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Lato:wght@300;400;700&display=swap"
+        rel="stylesheet" />
+    <link rel="stylesheet" href="/static/css/home.css" />
+</head>
+
+<body>
+
+    <aside class="barra-lateral" id="barraLateral">
+
+        <div class="barra-logo">
+            <span class="barra-logo-texto">SENAI <span>///</span></span>
+            <div class="barra-logo-separador"></div>
+            <span class="barra-logo-sub">AAPM</span>
+        </div>
+
+        <span class="barra-menu-titulo">Menu</span>
+
+        <ul class="barra-nav">
+            <li>
+                <a href="#" onclick="trocarSecao('painel', this)">
+                    <svg viewBox="0 0 24 24">
+                        <line x1="18" y1="20" x2="18" y2="10" />
+                        <line x1="12" y1="20" x2="12" y2="4" />
+                        <line x1="6" y1="20" x2="6" y2="14" />
+                    </svg>
+                    Painel
+                </a>
+            </li>
+
+            <li>
+                <a href="/" class="ativo" onclick="trocarSecao('estoque', this)">
+                    <svg viewBox="0 0 24 24">
+                        <path
+                            d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
+                    </svg>
+                    Estoque
+                </a>
+            </li>
+            <li>
+                <a href="#" onclick="trocarSecao('adicionar', this)">
+                    <svg viewBox="0 0 24 24">
+                        <circle cx="12" cy="12" r="10" />
+                        <line x1="12" y1="8" x2="12" y2="16" />
+                        <line x1="8" y1="12" x2="16" y2="12" />
+                    </svg>
+                    Adicionar
+                </a>
+            </li>
+            <li>
+<<<<<<< HEAD:app/templates/home.html
+                <a href="#" onclick="trocarSecao('relatorios', this)">
+                    <svg viewBox="0 0 24 24">
+                        <line x1="18" y1="20" x2="18" y2="10" />
+                        <line x1="12" y1="20" x2="12" y2="4" />
+                        <line x1="6" y1="20" x2="6" y2="14" />
+                    </svg>
+                    Relatórios
+                </a>
+            </li>
+            <li>
+                <a href="/pdv/" onclick="trocarSecao('vendas', this)">
+=======
+                <a href="/venda" onclick="trocarSecao('vendas', this)">
+>>>>>>> df0f2ea619355f143dfac76f5ecfff9e0d88cd96:app/templates/estoque/index.html
+                    <svg viewBox="0 0 24 24">
+                        <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" />
+                        <line x1="3" y1="6" x2="21" y2="6" />
+                        <path d="M16 10a4 4 0 0 1-8 0" />
+                    </svg>
+                    Vendas
+                </a>
+            </li>
+            <li>
+                <a href="/clientes" onclick="carregarClientes(event, this)">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                        <circle cx="9" cy="7" r="4" />
+                        <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+                        <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                    </svg>
+                    Clientes
+                </a>
+            </li>
+        </ul>
+
+        <div class="barra-rodape">
+            <div class="barra-usuario">
+                <div class="avatar-usuario">GS</div>
+                <div class="info-usuario">
+                    <strong>Gidalva</strong>
+                    <small>Administrador</small>
+                </div>
+            </div>
+            <button class="btn-sair" onclick="window.location.href='/auth/logout'">Sair</button>
+        </div>
+    </aside>
+
+    <div class="conteudo-principal">
+
+        <!-- Cabeçalho -->
+        <header class="cabecalho-pagina">
+            <h1 id="tituloPagina">Estoque</h1>
+            <div class="acoes-cabecalho">
+                <div class="barra-busca">
+                    <input type="text" id="campoBusca" placeholder="Buscar no estoque..." oninput="filtrarProdutos()" />
+                    <button class="btn-buscar" aria-label="Buscar">
+                        <svg viewBox="0 0 24 24">
+                            <circle cx="11" cy="11" r="8" />
+                            <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Área de conteúdo -->
+        <main class="area-conteudo">
+
+            <!-- Filtros -->
+            <div class="barra-filtros">
+                <button class="btn-filtro ativo" onclick="filtrarCategoria('todos', this)">Todos</button>
+                <button class="btn-filtro" onclick="filtrarCategoria('Material Escolar', this)">Material
+                    Escolar</button>
+                <button class="btn-filtro" onclick="filtrarCategoria('Uniforme', this)">Uniforme</button>
+                <button class="btn-filtro" onclick="filtrarCategoria('Apostila', this)">Apostila</button>
+            </div>
+
+            <!-- Grade de produtos -->
+            <div class="grade-produtos" id="gradeProdutos"></div>
+
+            <!-- Paginação -->
+            <div class="paginacao" id="paginacao"></div>
+
+        </main>
+
+        <footer class="rodape-admin">
+            Controle de Estoque &nbsp;·&nbsp; © 2026 Todos os direitos reservados
+        </footer>
+    </div>
+
+    <!-- Toast -->
+    <div class="toast" id="toast">
+        <div class="toast-icone">
+            <svg viewBox="0 0 24 24">
+                <polyline points="20 6 9 17 4 12" />
+            </svg>
+        </div>
+        <span id="toastMensagem">Produto salvo com sucesso!</span>
+    </div>
+
+    <script src="/static/js/home.js"></script>
+</body>
+
+</html>
