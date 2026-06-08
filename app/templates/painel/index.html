@@ -1,13 +1,17 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Painel – AAPM SENAI Francisco Matarazzo</title>
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Lato:wght@300;400;700&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="/static/css/painel.css" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Lato:wght@300;400;700&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="/static/css/painel.css" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 </head>
+
 <body>
 
   <aside class="barra-lateral">
@@ -22,26 +26,53 @@
     <ul class="barra-nav">
       <li>
         <a href="/" class="ativo">
-          <svg viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+          <svg viewBox="0 0 24 24">
+            <line x1="18" y1="20" x2="18" y2="10" />
+            <line x1="12" y1="20" x2="12" y2="4" />
+            <line x1="6" y1="20" x2="6" y2="14" />
+          </svg>
           Painel
         </a>
       </li>
       <li>
         <a href="/produtos/">
-          <svg viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+          <svg viewBox="0 0 24 24">
+            <path
+              d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
+          </svg>
           Estoque
         </a>
       </li>
       <li>
         <a href="/pdv/">
-          <svg viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+          <svg viewBox="0 0 24 24">
+            <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" />
+            <line x1="3" y1="6" x2="21" y2="6" />
+            <path d="M16 10a4 4 0 0 1-8 0" />
+          </svg>
           Vendas
         </a>
       </li>
       <li>
         <a href="/clientes/">
-          <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          <svg viewBox="0 0 24 24">
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+            <circle cx="9" cy="7" r="4" />
+            <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+            <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+          </svg>
           Clientes
+        </a>
+      </li>
+      <li>
+        <a href="/usuarios/">
+          <svg viewBox="0 0 24 24">
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+            <circle cx="9" cy="7" r="4" />
+            <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+            <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+          </svg>
+          Usuarios
         </a>
       </li>
     </ul>
@@ -50,11 +81,13 @@
       <div class="barra-usuario">
         <div class="avatar-usuario">GS</div>
         <div class="info-usuario">
-          <strong>Gidalva</strong>
-          <small>Administrador</small>
+          <strong>{{ usuario.nome }}</strong>
+          <small>{{ usuario.role }}</small>
         </div>
       </div>
-      <button class="btn-sair">Sair</button>
+      <button class="btn-sair" onclick="window.location.href='/auth/logout'">
+        Sair
+      </button>
     </div>
   </aside>
 
@@ -70,7 +103,7 @@
       <!-- Boas-vindas -->
       <div class="bloco-boas-vindas">
         <div class="bv-texto">
-          <h2>Bem-vinda de volta, <span>Gidalva</span> 👋</h2>
+          <h2>Bem-vinda de volta, <span>{{ usuario.nome }}</span> 👋</h2>
           <p>Aqui está um resumo do desempenho do estoque e das vendas da AAPM. Tudo atualizado para hoje.</p>
         </div>
         <div class="bv-badge">AAPM · SENAI</div>
@@ -82,12 +115,18 @@
           <div class="cm-topo">
             <span class="cm-label">Receita Total</span>
             <div class="cm-icone vermelho">
-              <svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 1 0 0 7h5a3.5 3.5 0 1 1 0 7H6"/></svg>
+              <svg viewBox="0 0 24 24">
+                <line x1="12" y1="1" x2="12" y2="23" />
+                <path d="M17 5H9.5a3.5 3.5 0 1 0 0 7h5a3.5 3.5 0 1 1 0 7H6" />
+              </svg>
             </div>
           </div>
           <div class="cm-valor">R$ 8.420</div>
           <div class="cm-variacao positivo">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><polyline points="18 15 12 9 6 15"/></svg>
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"
+              stroke-linecap="round">
+              <polyline points="18 15 12 9 6 15" />
+            </svg>
             +12% vs. mês anterior
           </div>
         </div>
@@ -96,12 +135,18 @@
           <div class="cm-topo">
             <span class="cm-label">Produtos em Estoque</span>
             <div class="cm-icone azul">
-              <svg viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+              <svg viewBox="0 0 24 24">
+                <path
+                  d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
+              </svg>
             </div>
           </div>
           <div class="cm-valor">247</div>
           <div class="cm-variacao neutro">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"
+              stroke-linecap="round">
+              <line x1="5" y1="12" x2="19" y2="12" />
+            </svg>
             Sem variação
           </div>
         </div>
@@ -110,12 +155,19 @@
           <div class="cm-topo">
             <span class="cm-label">Vendas no Mês</span>
             <div class="cm-icone verde">
-              <svg viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+              <svg viewBox="0 0 24 24">
+                <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" />
+                <line x1="3" y1="6" x2="21" y2="6" />
+                <path d="M16 10a4 4 0 0 1-8 0" />
+              </svg>
             </div>
           </div>
           <div class="cm-valor">183</div>
           <div class="cm-variacao positivo">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><polyline points="18 15 12 9 6 15"/></svg>
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"
+              stroke-linecap="round">
+              <polyline points="18 15 12 9 6 15" />
+            </svg>
             +8% vs. mês anterior
           </div>
         </div>
@@ -124,12 +176,19 @@
           <div class="cm-topo">
             <span class="cm-label">Estoque Crítico</span>
             <div class="cm-icone laranja">
-              <svg viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+              <svg viewBox="0 0 24 24">
+                <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
+                <line x1="12" y1="9" x2="12" y2="13" />
+                <line x1="12" y1="17" x2="12.01" y2="17" />
+              </svg>
             </div>
           </div>
           <div class="cm-valor">7</div>
           <div class="cm-variacao negativo">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"
+              stroke-linecap="round">
+              <polyline points="6 9 12 15 18 9" />
+            </svg>
             Itens com baixo estoque
           </div>
         </div>
@@ -145,11 +204,17 @@
             <span>2025 – 2026</span>
           </div>
           <div class="legenda-grafico">
-            <div class="legenda-item"><div class="legenda-cor" style="background:#c8102e;"></div>Vendas (unid.)</div>
-            <div class="legenda-item"><div class="legenda-cor" style="background:#111111; opacity:0.2;border:1.5px dashed #111;"></div>Meta</div>
+            <div class="legenda-item">
+              <div class="legenda-cor" style="background:#c8102e;"></div>Vendas (unid.)
+            </div>
+            <div class="legenda-item">
+              <div class="legenda-cor" style="background:#111111; opacity:0.2;border:1.5px dashed #111;"></div>Meta
+            </div>
           </div>
           <div style="position:relative;height:220px;">
-            <canvas id="graficoVendas" role="img" aria-label="Gráfico de barras com vendas mensais de julho 2025 a junho 2026">Vendas mensais: Jul 95, Ago 110, Set 88, Out 130, Nov 145, Dez 200, Jan 160, Fev 140, Mar 175, Abr 183, Mai 190, Jun 210.</canvas>
+            <canvas id="graficoVendas" role="img"
+              aria-label="Gráfico de barras com vendas mensais de julho 2025 a junho 2026">Vendas mensais: Jul 95, Ago
+              110, Set 88, Out 130, Nov 145, Dez 200, Jan 160, Fev 140, Mar 175, Abr 183, Mai 190, Jun 210.</canvas>
           </div>
         </div>
 
@@ -160,12 +225,20 @@
             <span>Estoque atual</span>
           </div>
           <div class="legenda-grafico">
-            <div class="legenda-item"><div class="legenda-cor" style="background:#c8102e;"></div>Mat. Escolar 52%</div>
-            <div class="legenda-item"><div class="legenda-cor" style="background:#111111;"></div>Uniforme 31%</div>
-            <div class="legenda-item"><div class="legenda-cor" style="background:#e0e0e0;"></div>Apostila 17%</div>
+            <div class="legenda-item">
+              <div class="legenda-cor" style="background:#c8102e;"></div>Mat. Escolar 52%
+            </div>
+            <div class="legenda-item">
+              <div class="legenda-cor" style="background:#111111;"></div>Uniforme 31%
+            </div>
+            <div class="legenda-item">
+              <div class="legenda-cor" style="background:#e0e0e0;"></div>Apostila 17%
+            </div>
           </div>
           <div style="position:relative;height:220px;">
-            <canvas id="graficoCategorias" role="img" aria-label="Gráfico de rosca com distribuição por categoria: Material Escolar 52%, Uniforme 31%, Apostila 17%">Material Escolar: 52%, Uniforme: 31%, Apostila: 17%.</canvas>
+            <canvas id="graficoCategorias" role="img"
+              aria-label="Gráfico de rosca com distribuição por categoria: Material Escolar 52%, Uniforme 31%, Apostila 17%">Material
+              Escolar: 52%, Uniforme: 31%, Apostila: 17%.</canvas>
           </div>
         </div>
 
@@ -181,10 +254,14 @@
             <span>Últimos 6 meses</span>
           </div>
           <div class="legenda-grafico">
-            <div class="legenda-item"><div class="legenda-cor" style="background:#c8102e;"></div>Receita</div>
+            <div class="legenda-item">
+              <div class="legenda-cor" style="background:#c8102e;"></div>Receita
+            </div>
           </div>
           <div style="position:relative;height:180px;">
-            <canvas id="graficoReceita" role="img" aria-label="Gráfico de linha com receita mensal dos últimos 6 meses">Receita: Jan 5200, Fev 4800, Mar 6100, Abr 7200, Mai 7800, Jun 8420.</canvas>
+            <canvas id="graficoReceita" role="img"
+              aria-label="Gráfico de linha com receita mensal dos últimos 6 meses">Receita: Jan 5200, Fev 4800, Mar
+              6100, Abr 7200, Mai 7800, Jun 8420.</canvas>
           </div>
         </div>
 
@@ -250,4 +327,5 @@
   <script src="/static/js/painel.js"></script>
 
 </body>
+
 </html>

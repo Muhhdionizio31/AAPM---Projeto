@@ -14,7 +14,7 @@ templates = Jinja2Templates(directory="app/templates")
 
 
 # Exibir os usuarios do sistema
-@router.get("/")
+@router.get("")
 def listar_usuarios(
     request: Request,
     db: Session = Depends(get_db),
