@@ -53,7 +53,7 @@ def home(
     if usuario is None:
         return templates.TemplateResponse(
             request,
-            "index.html",
+            "site/index.html",
             {"request": request}       
         )
 
@@ -72,7 +72,7 @@ def horario(
 ):
     return templates.TemplateResponse(
         request,
-        "horario.html",
+        "site/horario.html",
         {"request": request, "usuario": usuario}
     )
 
@@ -85,7 +85,7 @@ def catalogo(
 ):
     return templates.TemplateResponse(
         request,
-        "catalogo.html",
+        "site/catalogo.html",
         {"request": request, "usuario": usuario}
     )
 
@@ -108,7 +108,7 @@ def politica(
 ):
     return templates.TemplateResponse(
         request,
-        "politica.html",
+        "site/politica.html",
         {"request": request, "usuario": usuario}
     )
 
