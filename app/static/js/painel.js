@@ -1,0 +1,103 @@
+    // Data atual no cabeçalho
+    const now = new Date();
+    const opts = { weekday: 'long', day: '2-digit', month: 'long', year: 'numeric' };
+    document.getElementById('dataAtual').textContent =
+      now.toLocaleDateString('pt-BR', opts).replace(/^\w/, c => c.toUpperCase());
+
+    // Cores
+    const vermelho = '#c8102e';
+    const preto    = '#111111';
+    const cinza    = '#e0e0e0';
+
+    // Gráfico 1 – Vendas mensais (barras)
+    new Chart(document.getElementById('graficoVendas'), {
+      type: 'bar',
+      data: {
+        labels: ['Jul','Ago','Set','Out','Nov','Dez','Jan','Fev','Mar','Abr','Mai','Jun'],
+        datasets: [
+          {
+            label: 'Vendas',
+            data: [95, 110, 88, 130, 145, 200, 160, 140, 175, 183, 190, 210],
+            backgroundColor: vermelho,
+            borderRadius: 5,
+            borderSkipped: false,
+          },
+          {
+            label: 'Meta',
+            data: [150,150,150,150,150,150,150,150,150,150,150,150],
+            type: 'line',
+            borderColor: preto,
+            borderWidth: 1.5,
+            borderDash: [6, 4],
+            pointRadius: 0,
+            fill: false,
+            tension: 0,
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { display: false } },
+        scales: {
+          x: { grid: { display: false }, ticks: { font: { family: 'Montserrat', size: 11, weight: '700' }, color: '#bbb' } },
+          y: { grid: { color: '#f0f0f0' }, ticks: { font: { family: 'Lato', size: 11 }, color: '#bbb' }, beginAtZero: true }
+        }
+      }
+    });
+
+    // Gráfico 2 – Categorias (rosca)
+    new Chart(document.getElementById('graficoCategorias'), {
+      type: 'doughnut',
+      data: {
+        labels: ['Material Escolar', 'Uniforme', 'Apostila'],
+        datasets: [{
+          data: [52, 31, 17],
+          backgroundColor: [vermelho, preto, cinza],
+          borderWidth: 0,
+          hoverOffset: 6,
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        cutout: '65%',
+        plugins: { legend: { display: false } }
+      }
+    });
+
+    // Gráfico 3 – Receita (linha)
+    new Chart(document.getElementById('graficoReceita'), {
+      type: 'line',
+      data: {
+        labels: ['Jan','Fev','Mar','Abr','Mai','Jun'],
+        datasets: [{
+          label: 'Receita',
+          data: [5200, 4800, 6100, 7200, 7800, 8420],
+          borderColor: vermelho,
+          borderWidth: 2.5,
+          pointBackgroundColor: vermelho,
+          pointRadius: 4,
+          pointHoverRadius: 6,
+          fill: true,
+          backgroundColor: 'rgba(200,16,46,0.07)',
+          tension: 0.4,
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { display: false } },
+        scales: {
+          x: { grid: { display: false }, ticks: { font: { family: 'Montserrat', size: 11, weight: '700' }, color: '#bbb' } },
+          y: {
+            grid: { color: '#f0f0f0' },
+            ticks: {
+              font: { family: 'Lato', size: 11 }, color: '#bbb',
+              callback: v => 'R$' + (v/1000).toFixed(1) + 'k'
+            },
+            beginAtZero: false
+          }
+        }
+      }
+    });

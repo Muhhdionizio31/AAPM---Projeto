@@ -60,7 +60,7 @@ def home(
     #Logado
     return templates.TemplateResponse(
         request,
-        "home.html",
+        "painel/index.html",
         {"request": request, "usuario": usuario}       
     )
 
