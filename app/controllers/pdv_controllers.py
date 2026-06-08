@@ -28,13 +28,13 @@ def tela_pdv(
     """
     produtos  = (
         db.query(Produto)
-        .filter(Produto.ativo == True, Produto.estoque_atual > 0)
+        .filter(Produto.ativa == True, Produto.estoque_atual > 0)
         .order_by(Produto.nome)
         .all()
     )
     clientes  = (
         db.query(Cliente)
-        .filter(Cliente.ativo == True)
+        .filter(Cliente.ativa == True)
         .order_by(Cliente.nome)
         .all()
     )
@@ -85,7 +85,7 @@ def finalizar_venda(
     if cliente_id:
         cliente = db.query(Cliente).filter(
             Cliente.id == cliente_id,
-            Cliente.ativo == True
+            Cliente.ativa == True
         ).first()
 
         if cliente and cliente.is_associado:
@@ -98,7 +98,7 @@ def finalizar_venda(
     for item in itens:
         produto = db.query(Produto).filter(
             Produto.id == item["produto_id"],
-            Produto.ativo == True
+            Produto.ativa == True
         ).with_for_update().first()
 
         if not produto:
