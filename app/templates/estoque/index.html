@@ -25,7 +25,18 @@
 
         <ul class="barra-nav">
             <li>
-                <a href="#" class="ativo" onclick="trocarSecao('estoque', this)">
+                <a href="#" onclick="trocarSecao('painel', this)">
+                    <svg viewBox="0 0 24 24">
+                        <line x1="18" y1="20" x2="18" y2="10" />
+                        <line x1="12" y1="20" x2="12" y2="4" />
+                        <line x1="6" y1="20" x2="6" y2="14" />
+                    </svg>
+                    Painel
+                </a>
+            </li>
+
+            <li>
+                <a href="/" class="ativo" onclick="trocarSecao('estoque', this)">
                     <svg viewBox="0 0 24 24">
                         <path
                             d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
@@ -44,17 +55,7 @@
                 </a>
             </li>
             <li>
-                <a href="#" onclick="trocarSecao('relatorios', this)">
-                    <svg viewBox="0 0 24 24">
-                        <line x1="18" y1="20" x2="18" y2="10" />
-                        <line x1="12" y1="20" x2="12" y2="4" />
-                        <line x1="6" y1="20" x2="6" y2="14" />
-                    </svg>
-                    Relatórios
-                </a>
-            </li>
-            <li>
-                <a href="/auth/venda" onclick="trocarSecao('vendas', this)">
+                <a href="/venda" onclick="trocarSecao('vendas', this)">
                     <svg viewBox="0 0 24 24">
                         <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" />
                         <line x1="3" y1="6" x2="21" y2="6" />
@@ -131,46 +132,6 @@
         </footer>
     </div>
 
-
-    <div class="sobreposicao-modal" id="modalSobreposicao" onclick="fecharModalFora(event)">
-        <div class="modal">
-            <div class="modal-cabecalho">
-                <h2 id="modalTitulo">Novo Produto</h2>
-                <button class="btn-fechar-modal" onclick="fecharModal()">✕</button>
-            </div>
-
-            <div class="form-group">
-                <label for="modalNome">Nome do Produto</label>
-                <input type="text" id="modalNome" placeholder="Ex: Caderno Universitário SENAI" />
-            </div>
-
-            <div class="form-linha">
-                <div class="form-group">
-                    <label for="modalCategoria">Categoria</label>
-                    <select id="modalCategoria">
-                        <option value="Material Escolar">Material Escolar</option>
-                        <option value="Uniforme">Uniforme</option>
-                        <option value="Apostila">Apostila</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="modalPreco">Preço (R$)</label>
-                    <input type="number" id="modalPreco" placeholder="0,00" step="0.01" min="0" />
-                </div>
-            </div>
-
-            <div class="form-group">
-                <label for="modalQuantidade">Quantidade em Estoque</label>
-                <input type="number" id="modalQuantidade" placeholder="0" min="0" />
-            </div>
-
-            <div class="acoes-modal">
-                <button class="btn-cancelar" onclick="fecharModal()">Cancelar</button>
-                <button class="btn-salvar" onclick="salvarProduto()">Salvar Produto</button>
-            </div>
-        </div>
-    </div>
-
     <!-- Toast -->
     <div class="toast" id="toast">
         <div class="toast-icone">
@@ -183,4 +144,5 @@
 
     <script src="/static/js/home.js"></script>
 </body>
+
 </html>
