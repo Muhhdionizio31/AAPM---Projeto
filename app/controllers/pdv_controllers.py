@@ -34,7 +34,7 @@ def tela_pdv(
     )
     clientes  = (
         db.query(Cliente)
-        .filter(Cliente.ativa == True)
+        .filter(Cliente.ativo == True)
         .order_by(Cliente.nome)
         .all()
     )
@@ -85,7 +85,7 @@ def finalizar_venda(
     if cliente_id:
         cliente = db.query(Cliente).filter(
             Cliente.id == cliente_id,
-            Cliente.ativa == True
+            Cliente.ativo == True
         ).first()
 
         if cliente and cliente.is_associado:
