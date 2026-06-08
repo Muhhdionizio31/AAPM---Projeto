@@ -72,7 +72,7 @@ def horario(
 ):
     return templates.TemplateResponse(
         request,
-        "sites/horario.html",
+        "site/horario.html",
         {"request": request, "usuario": usuario}
     )
 
@@ -85,7 +85,7 @@ def catalogo(
 ):
     return templates.TemplateResponse(
         request,
-        "sites/catalogo.html",
+        "site/catalogo.html",
         {"request": request, "usuario": usuario}
     )
 
@@ -108,7 +108,7 @@ def politica(
 ):
     return templates.TemplateResponse(
         request,
-        "sites/politica.html",
+        "site/politica.html",
         {"request": request, "usuario": usuario}
     )
 
