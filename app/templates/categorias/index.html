@@ -1,4 +1,3 @@
-<!-- templates/categorias/index.html -->
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -45,19 +44,28 @@
                     Filtramos em Python para contar apenas os ativos.
                 -->
                 <td>
-                    {{ c.produtos | selectattr('ativo') | list | length }}
+                    {{ c.produtos | selectattr('ativa') | list | length }}
                 </td>
 
-                <td>{{ "Ativa" if c.ativo else "Inativa" }}</td>
+                <td>{{ "Ativa" if c.ativa else "Inativa" }}</td>
 
-                <td>
+               <td>
                     <a href="/categorias/{{ c.id }}/editar">Editar</a>
 
                     <form action="/categorias/{{ c.id }}/toggle-ativo"
-                          method="post"
-                          style="display:inline">
+                        method="post"
+                        style="display:inline">
                         <button type="submit">
-                            {{ "Desativar" if c.ativo else "Ativar" }}
+                            {{ "Desativar" if c.ativa else "Ativar" }}
+                        </button>
+                    </form>
+
+                    <form action="/categorias/{{ c.id }}/deletar"
+                        method="post"
+                        style="display:inline"
+                        onsubmit="return confirm('Deseja realmente excluir a categoria {{ c.nome }}?');">
+                        <button type="submit">
+                            Excluir
                         </button>
                     </form>
                 </td>

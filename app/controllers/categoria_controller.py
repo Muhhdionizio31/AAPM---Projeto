@@ -11,12 +11,7 @@ router = APIRouter(prefix="/categorias", tags=["Categorias"])
 
 templates = Jinja2Templates(directory="app/templates")
 
-
-# ============================================================
-# LISTAGEM
-# ============================================================
-
-@router.get("/")
+@router.get("")
 def listar_categorias(
     request: Request,
     db: Session = Depends(get_db),
@@ -36,11 +31,6 @@ def listar_categorias(
             "categorias": categorias,
         }
     )
-
-
-# ============================================================
-# CADASTRO
-# ============================================================
 
 @router.get("/nova")
 def form_nova_categoria(
@@ -90,11 +80,6 @@ def criar_categoria(
     db.commit()
 
     return RedirectResponse(url="/categorias?criado=ok", status_code=302)
-
-
-# ============================================================
-# EDIÇÃO
-# ============================================================
 
 @router.get("/{categoria_id}/editar")
 def form_editar_categoria(
@@ -163,9 +148,37 @@ def editar_categoria(
     return RedirectResponse(url="/categorias?editado=ok", status_code=302)
 
 
-# ============================================================
-# TOGGLE ATIVO
-# ============================================================
+@router.post("/{categoria_id}/deletar")
+def deletar_categoria(
+    categoria_id: int,
+    db: Session = Depends(get_db),
+    admin = Depends(get_admin)
+):
+    categoria = db.query(Categoria).filter(
+        Categoria.id == categoria_id
+    ).first()
+
+    if not categoria:
+        return RedirectResponse(
+            url="/categorias",
+            status_code=302
+        )
+
+    # Exemplo: verifica se há produtos vinculados
+    if categoria.produtos:
+        return RedirectResponse(
+            url="/categorias?erro=possui_produtos",
+            status_code=302
+        )
+
+    db.delete(categoria)
+    db.commit()
+
+    return RedirectResponse(
+        url="/categorias?deletado=ok",
+        status_code=302
+    )
+
 
 @router.post("/{categoria_id}/toggle-ativo")
 def toggle_ativo(

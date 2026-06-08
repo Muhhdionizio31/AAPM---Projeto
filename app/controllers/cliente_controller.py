@@ -1,7 +1,3 @@
-# ============================================================
-# controllers/cliente_controller.py — CRUD de clientes
-# ============================================================
-
 from fastapi import APIRouter, Depends, Request, Form
 from fastapi.responses import RedirectResponse
 from fastapi.templating import Jinja2Templates
