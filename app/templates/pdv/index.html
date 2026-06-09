@@ -1,12 +1,14 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Vendas – AAPM SENAI Francisco Matarazzo</title>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Lato:wght@300;400;700&display=swap" rel="stylesheet"/>
   <link rel="stylesheet" href="/static/css/vendas.css"/>  
 </head>
+
 <body>
 
 <aside class="barra-lateral">
@@ -16,7 +18,7 @@
     <span class="barra-logo-sub">AAPM</span>
   </div>
 
-  <span class="barra-menu-titulo">Menu</span>
+    <span class="barra-menu-titulo">Menu</span>
 
   <ul class="barra-nav">
     <li>
@@ -78,7 +80,7 @@
     </div>
   </header>
 
-  <main class="area-conteudo">
+    <main class="area-conteudo">
 
     {% if request and request.query_params.get('criado') == 'ok' %}
     <div class="alerta-sucesso">✓ Venda registrada com sucesso no banco de dados!</div>
@@ -268,4 +270,5 @@
 
 <script src="/static/js/vendas.js"></script>
 </body>
+
 </html>
