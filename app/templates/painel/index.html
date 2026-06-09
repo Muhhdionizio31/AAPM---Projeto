@@ -25,7 +25,7 @@
 
     <ul class="barra-nav">
       <li>
-        <a href="/"  class="ativo"  onclick="trocarSecao('painel', this)">
+        <a href="/" class="ativo">
           <svg viewBox="0 0 24 24">
             <line x1="18" y1="20" x2="18" y2="10" />
             <line x1="12" y1="20" x2="12" y2="4" />
@@ -36,7 +36,7 @@
       </li>
 
       <li>
-        <a href="/produtos/" onclick="trocarSecao('estoque', this)">
+        <a href="/produtos/">
           <svg viewBox="0 0 24 24">
             <path
               d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
@@ -45,7 +45,7 @@
         </a>
       </li>
       <li>
-        <a href="/pdv/" onclick="trocarSecao('vendas', this)">
+        <a href="/pdv/">
           <svg viewBox="0 0 24 24">
             <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" />
             <line x1="3" y1="6" x2="21" y2="6" />
@@ -55,7 +55,7 @@
         </a>
       </li>
       <li>
-        <a href="/clientes" onclick="carregarClientes(event, this)">
+        <a href="/clientes/">
           <svg viewBox="0 0 24 24">
             <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
             <circle cx="9" cy="7" r="4" />
@@ -82,8 +82,8 @@
     <div class="barra-rodape">
       <div class="barra-usuario">
         <div class="info-usuario">
-          <strong>{{ usuario.nome }}</strong>
-          <small>{{ usuario.role }}</small>
+          <strong>{{ usuario.nome if usuario else 'Usuário' }}</strong>
+          <small>Administrador</small>
         </div>
       </div>
       <button class="btn-sair" onclick="window.location.href='/auth/logout'">
@@ -104,7 +104,7 @@
       <!-- Boas-vindas -->
       <div class="bloco-boas-vindas">
         <div class="bv-texto">
-          <h2>Bem-vinda de volta, <span>{{ usuario.nome }}</span> 👋</h2>
+          <h2>Bem-vinda de volta, <span>{{ usuario.nome if usuario else 'Gidalva' }}</span> 👋</h2>
           <p>Aqui está um resumo do desempenho do estoque e das vendas da AAPM. Tudo atualizado para hoje.</p>
         </div>
         <div class="bv-badge">AAPM · SENAI</div>
@@ -114,7 +114,7 @@
       <div class="grade-metricas">
         <div class="card-metrica">
           <div class="cm-topo">
-            <span class="cm-label">Receita Total</span>
+            <span class="cm-label">Valor do Estoque</span>
             <div class="cm-icone vermelho">
               <svg viewBox="0 0 24 24">
                 <line x1="12" y1="1" x2="12" y2="23" />
@@ -122,13 +122,9 @@
               </svg>
             </div>
           </div>
-          <div class="cm-valor">R$ 8.420</div>
+          <div class="cm-valor">R$ {{ "%.2f" | format(receita_total) }}</div>
           <div class="cm-variacao positivo">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"
-              stroke-linecap="round">
-              <polyline points="18 15 12 9 6 15" />
-            </svg>
-            +12% vs. mês anterior
+            Patrimônio atualizado
           </div>
         </div>
 
@@ -142,13 +138,13 @@
               </svg>
             </div>
           </div>
-          <div class="cm-valor">247</div>
+          <div class="cm-valor">{{ produtos_em_estoque }}</div>
           <div class="cm-variacao neutro">
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"
               stroke-linecap="round">
               <line x1="5" y1="12" x2="19" y2="12" />
             </svg>
-            Sem variação
+            Total de itens cadastrados
           </div>
         </div>
 
@@ -163,13 +159,9 @@
               </svg>
             </div>
           </div>
-          <div class="cm-valor">183</div>
+          <div class="cm-valor">{{ total_vendas_mes }}</div>
           <div class="cm-variacao positivo">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"
-              stroke-linecap="round">
-              <polyline points="18 15 12 9 6 15" />
-            </svg>
-            +8% vs. mês anterior
+            Mês vigente
           </div>
         </div>
 
@@ -184,13 +176,13 @@
               </svg>
             </div>
           </div>
-          <div class="cm-valor">7</div>
+          <div class="cm-valor">{{ estoque_critico }}</div>
           <div class="cm-variacao negativo">
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"
               stroke-linecap="round">
               <polyline points="6 9 12 15 18 9" />
             </svg>
-            Itens com baixo estoque
+            Abaixo de 8 unidades
           </div>
         </div>
       </div>
@@ -282,36 +274,21 @@
               </tr>
             </thead>
             <tbody>
+              {% for item in ultimas_vendas %}
               <tr>
-                <td>Caderno SENAI</td>
+                <td>{{ item.produto_nome }}</td>
                 <td><span class="tag-tipo verde">Venda</span></td>
-                <td>3</td>
-                <td>R$ 45,00</td>
+                <td>{{ item.quantidade }}</td>
+                <td>R$ {{ "%.2f"|format(item.preco_unitario * item.quantidade) }}</td>
               </tr>
+              {% else %}
               <tr>
-                <td>Camiseta M</td>
-                <td><span class="tag-tipo verde">Venda</span></td>
-                <td>1</td>
-                <td>R$ 68,00</td>
+                <td colspan="4" style="text-align: center; color: #777; padding: 20px;">
+                  Nenhuma venda ou movimentação registrada hoje.
+                </td>
               </tr>
-              <tr>
-                <td>Apostila T.I.</td>
-                <td><span class="tag-tipo vermelho">Entrada</span></td>
-                <td>20</td>
-                <td>—</td>
-              </tr>
-              <tr>
-                <td>Caneta BIC</td>
-                <td><span class="tag-tipo verde">Venda</span></td>
-                <td>5</td>
-                <td>R$ 12,50</td>
-              </tr>
-              <tr>
-                <td>Régua 30cm</td>
-                <td><span class="tag-tipo verde">Venda</span></td>
-                <td>2</td>
-                <td>R$ 9,00</td>
-              </tr>
+              {% endfor %}
+
             </tbody>
           </table>
         </div>
@@ -324,6 +301,17 @@
       Painel de Controle &nbsp;·&nbsp; © 2026 Todos os direitos reservados
     </footer>
   </div>
+
+  <div id="dados-grafico-categorias"
+    data-labels='{{ categorias_labels | tojson if categorias_labels else "[\"Sem dados\"]" }}'
+    data-valores='{{ categorias_valores | tojson if categorias_valores else "[1]" }}' 
+    style="display: none;"></div>
+
+  <div id="dados-grafico-vendas"
+    data-vendas="{{ vendas_mensais_lista | tojson if vendas_mensais_lista else '[0,0,0,0,0,0,0,0,0,0,0,0]' }}"
+    style="display: none;">
+  </div>
+
 
   <script src="/static/js/painel.js"></script>
 
