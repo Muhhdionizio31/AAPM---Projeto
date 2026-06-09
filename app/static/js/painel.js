@@ -52,12 +52,24 @@ const graficoVendas = new Chart(ctxVendas, {
 });
 
 // Gráfico 2 – Categorias (rosca)
-new Chart(document.getElementById('graficoCategorias'), {
+const elementoCategorias = document.getElementById('dados-grafico-categorias');
+// Carrega os dados reais ou adota um padrão caso não encontre o elemento
+const LABELS_CATEGORIAS = (elementoCategorias && elementoCategorias.dataset.labels) 
+  ? JSON.parse(elementoCategorias.dataset.labels) 
+  : ['Mat. Escolar', 'Uniforme', 'Apostila'];
+
+const VALORES_CATEGORIAS = (elementoCategorias && elementoCategorias.dataset.valores) 
+  ? JSON.parse(elementoCategorias.dataset.valores) 
+  : [0, 0, 0];
+  
+const ctxCategorias = document.getElementById('graficoCategorias').getContext('2d');
+
+const graficoCategorias = new Chart(ctxCategorias,{
   type: 'doughnut',
   data: {
-    labels: ['Material Escolar', 'Uniforme', 'Apostila'],
+    labels: LABELS_CATEGORIAS,
     datasets: [{
-      data: [52, 31, 17],
+      data: VALORES_CATEGORIAS,
       backgroundColor: [vermelho, preto, cinza],
       borderWidth: 0,
       hoverOffset: 6,
