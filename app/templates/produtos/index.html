@@ -4,7 +4,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Produtos — AAPM SENAI</title>
+    <title>Estoque — AAPM SENAI</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
@@ -26,7 +26,7 @@
 
         <ul class="barra-nav">
             <li>
-                <a href="/" class="ativo">
+                <a href="/" onclick="trocarSecao('painel', this)">
                     <svg viewBox="0 0 24 24">
                         <line x1="18" y1="20" x2="18" y2="10" />
                         <line x1="12" y1="20" x2="12" y2="4" />
@@ -35,8 +35,9 @@
                     Painel
                 </a>
             </li>
+
             <li>
-                <a href="/produtos">
+                <a href="/produtos/" class="ativo" onclick="trocarSecao('estoque', this)">
                     <svg viewBox="0 0 24 24">
                         <path
                             d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
@@ -45,7 +46,7 @@
                 </a>
             </li>
             <li>
-                <a href="/pdv/">
+                <a href="/pdv/" onclick="trocarSecao('vendas', this)">
                     <svg viewBox="0 0 24 24">
                         <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" />
                         <line x1="3" y1="6" x2="21" y2="6" />
@@ -55,7 +56,7 @@
                 </a>
             </li>
             <li>
-                <a href="/clientes">
+                <a href="/clientes" onclick="carregarClientes(event, this)">
                     <svg viewBox="0 0 24 24">
                         <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
                         <circle cx="9" cy="7" r="4" />
@@ -76,12 +77,15 @@
                     Usuarios
                 </a>
             </li>
-
         </ul>
+
 
         <div class="barra-rodape">
             <div class="barra-usuario">
-                <div class="avatar-usuario">GS</div>
+                <div class="avatar">
+                    {% set nomes = usuario.nome.split() %}
+                    {{ nomes[0][0]|upper }}{% if nomes|length > 1 %}{{ nomes[1][0]|upper }}{% endif %}
+                </div>
                 <div class="info-usuario">
                     <strong>{{ usuario.nome }}</strong>
                     <small>{{ usuario.role }}</small>
@@ -97,7 +101,7 @@
     <!-- CONTEÚDO PRINCIPAL -->
     <div class="conteudo-principal">
         <header class="cabecalho-pagina">
-            <h1>Produtos</h1>
+            <h1>Estoque</h1>
             <span class="cabecalho-data">AAPM SENAI</span>
         </header>
 
@@ -132,10 +136,68 @@
                 </form>
 
                 {% if usuario.role == 'admin' %}
-                <a class="btn-novo" href="/produtos/novo">
-                    + Novo produto
-                </a>
+                <button onclick="abrirModal('modalProduto')" class="btn-novo-produto">
+                    Novo Produto
+                </button>
                 {% endif %}
+
+                <!-- MODAL NOVO PRODUTO -->
+                <div class="sobreposicao-modal" id="modalProduto" onclick="fecharModalFora(event,'modalProduto')">
+                    <div class="modal">
+
+                        <div class="modal-cabecalho">
+                            <h2>Novo Produto</h2>
+                            <button class="btn-fechar-modal" onclick="fecharModal('modalProduto')">✕</button>
+                        </div>
+
+                        <div class="form-linha">
+                            <div class="form-group">
+                                <label>Nome do Produto</label>
+                                <input type="text" id="produtoNome" placeholder="Digite o nome do produto">
+                            </div>
+
+                            <div class="form-group">
+                                <label>Categoria</label>
+                                <select id="produtoCategoria">
+                                    <option value="">Selecione</option>
+                                    <option>Papelaria e Escrita</option>
+                                    <option>Ferramentas e Acessórios</option>
+                                    <option>Costura e Modelagem</option>
+                                    <option>Segurança e EPIs</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-linha">
+                            <div class="form-group">
+                                <label>Preço</label>
+                                <input type="number" step="0.01" id="produtoPreco" placeholder="0,00">
+                            </div>
+
+                            <div class="form-group">
+                                <label>Estoque</label>
+                                <input type="number" id="produtoEstoque" placeholder="Quantidade">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Imagem</label>
+                            <input type="file" id="produtoImagem" accept="image/*">
+                        </div>
+
+                        <div class="acoes-modal">
+                            <button class="btn-cancelar" onclick="fecharModal('modalProduto')">
+                                Cancelar
+                            </button>
+
+                            <button class="btn-salvar" onclick="salvarProduto()">
+                                Cadastrar Produto
+                            </button>
+                        </div>
+
+                    </div>
+                </div>
+
             </div>
 
             <div class="card-tabela">
@@ -171,11 +233,17 @@
                             <td>
                                 <div class="acoes-td">
                                     {% if usuario.role == 'admin' %}
-                                    <a class="btn-editar" href="/produtos/{{ p.id }}/editar">Editar</a>
-                                    <form action="/produtos/{{ p.id }}/desativar" method="post" style="display:inline"
-                                        onsubmit="return confirm('Desativar {{ p.nome }}?')">
-                                        <button class="btn-desativar" type="submit">Desativar</button>
-                                    </form>
+                                    <button class="btn-editar" data-id="{{ p.id }}" data-nome="{{ p.nome }}"
+                                        data-preco="{{ p.preco }}" data-estoque="{{ p.estoque_atual }}"
+                                        data-categoria="{{ p.categoria.id if p.categoria else '' }}"
+                                        onclick="abrirModalEditar(this)">
+                                        Editar
+                                    </button>
+
+                                    <button class="btn-desativar" type="button"
+                                        onclick="abrirModalDesativar('{{ p.id }}', '{{ p.nome }}')">
+                                        Desativar
+                                    </button>
                                     {% endif %}
                                 </div>
                             </td>
@@ -193,6 +261,83 @@
                 </table>
             </div>
 
+            <!-- MODAL EDITAR PRODUTO -->
+            <div class="sobreposicao-modal" id="modalEditarProduto"
+                onclick="fecharModalFora(event,'modalEditarProduto')">
+
+                <div class="modal">
+
+                    <div class="modal-cabecalho">
+                        <h2>Editar Produto</h2>
+
+                        <button type="button" class="btn-fechar-modal" onclick="fecharModal('modalEditarProduto')">
+                            ✕
+                        </button>
+                    </div>
+
+                    <form id="formEditarProduto" method="post" enctype="multipart/form-data">
+
+                        <div class="form-linha">
+
+                            <div class="form-group">
+                                <label>Nome do Produto</label>
+                                <input type="text" id="editNome" name="nome">
+                            </div>
+
+                            <div class="form-group">
+                                <label>Categoria</label>
+
+                                <select id="editCategoria" name="categoria_id">
+
+                                    {% for c in categorias %}
+                                    <option value="{{ c.id }}">
+                                        {{ c.nome }}
+                                    </option>
+                                    {% endfor %}
+
+                                </select>
+                            </div>
+
+                        </div>
+
+                        <div class="form-linha">
+
+                            <div class="form-group">
+                                <label>Preço</label>
+
+                                <input type="number" step="0.01" id="editPreco" name="preco">
+                            </div>
+
+                            <div class="form-group">
+                                <label>Estoque</label>
+
+                                <input type="number" id="editEstoque" name="estoque">
+                            </div>
+
+                        </div>
+
+                        <div class="form-group">
+                            <label>Nova Imagem</label>
+                            <input type="file" name="imagem">
+                        </div>
+
+                        <div class="acoes-modal">
+
+                            <button type="button" class="btn-cancelar" onclick="fecharModal('modalEditarProduto')">
+                                Cancelar
+                            </button>
+
+                            <button type="submit" class="btn-salvar">
+                                Salvar Alterações
+                            </button>
+
+                        </div>
+
+                    </form>
+
+                </div>
+            </div>
+
             <p style="margin-top: 20px;">
                 <a href="/"
                     style="font-size:0.82rem; font-weight:700; color:#999; text-decoration:none; transition: color 0.2s;">
@@ -200,10 +345,65 @@
                 </a>
             </p>
 
+            <!-- Modal Desativar Produto -->
+            <div id="overlay" style="position: fixed; inset:0;
+            background:rgba(0,0,0,.45);
+            display:none;
+            align-items:center;
+            justify-content:center;
+            z-index:9999;">
+                <div
+                    style="background: #fff; border-radius: 12px; padding: 2rem 2rem 1.5rem; width: 380px; max-width: 90%;">
+
+                    <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
+                        <div
+                            style="width: 40px; height: 40px; border-radius: 50%; background: #fff0f0; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                            <!-- Ícone de alerta (opcional, remova se não quiser) -->
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                                fill="none" stroke="#CC0000" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <path
+                                    d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
+                                <line x1="12" y1="9" x2="12" y2="13" />
+                                <line x1="12" y1="17" x2="12.01" y2="17" />
+                            </svg>
+                        </div>
+                        <h2 style="margin: 0; font-size: 18px; font-weight: 500; color: #111;">Desativar produto</h2>
+                    </div>
+
+                    <p style="margin: 0 0 1.5rem; font-size: 14px; color: #555; line-height: 1.6;">
+                        Tem certeza que deseja desativar <strong style="color: #111; font-weight: 500;">2ª via de
+                            crachá</strong>? O produto não estará mais disponível no catálogo.
+                    </p>
+
+                    <div
+                        style="border-top: 1px solid #e5e5e5; padding-top: 1rem; display: flex; justify-content: flex-end; gap: 8px;">
+                        <button onclick="document.getElementById('overlay').style.display='none'"
+                            style="padding: 9px 20px; border-radius: 8px; border: 1px solid #ccc; background: #fff; color: #333; font-size: 14px; cursor: pointer;">
+                            Cancelar
+                        </button>
+                        <button onclick="desativarProduto()"
+                            style="padding: 9px 20px; border-radius: 8px; border: none; background: #CC0000; color: #fff; font-size: 14px; font-weight: 500; cursor: pointer;">
+                            Desativar
+                        </button>
+                    </div>
+
+                </div>
+            </div>
+
+            <script>
+                function desativarProduto() {
+                    // Sua lógica de desativação aqui
+                    document.getElementById('overlay').style.display = 'none';
+                }
+            </script>
+
         </main>
 
         <footer class="rodape-admin">AAPM SENAI — Sistema de Gestão</footer>
     </div>
+
+    <script src="/static/js/produtos.js"></script>
 
 </body>
 

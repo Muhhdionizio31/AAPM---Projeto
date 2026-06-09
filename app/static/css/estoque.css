@@ -557,3 +557,137 @@
                 display: none;
             }
         }
+
+        /* Fundo escurecido */
+        .sobreposicao-modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.45);
+            z-index: 500;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Caixa do modal */
+        .modal {
+            background: var(--branco);
+            border-radius: 16px;
+            padding: 32px 36px;
+            width: 100%;
+            max-width: 520px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+            animation: deslizarModal 0.25s ease both;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        @keyframes aparecer {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .btn-novo-produto {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            background: var(--vermelho);
+            color: var(--branco);
+            border: none;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+            font-size: 0.82rem;
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background var(--transicao), transform var(--transicao);
+            text-decoration: none;
+        }
+
+        /* Cabeçalho */
+        .modal-cabecalho {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .modal-cabecalho h2 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1.15rem;
+            font-weight: 800;
+            color: var(--preto);
+        }
+
+        .btn-fechar-modal {
+            background: var(--cinza-claro);
+            border: none;
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background var(--transicao);
+            color: var(--cinza-texto);
+            font-size: 1.1rem;
+        }
+
+        /* Formulário */
+        .form-linha {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+
+        .form-group {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label {
+            margin-bottom: 6px;
+            font-weight: 500;
+        }
+
+        .form-group input,
+        .form-group select {
+            height: 44px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 0 12px;
+        }
+
+        /* Rodapé */
+        .acoes-modal {
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+            margin-top: 24px;
+        }
+
+        .btn-cancelar {
+            border: none;
+            background: #f1f1f1;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .btn-salvar {
+            border: none;
+            background: #cf2030;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+        }
