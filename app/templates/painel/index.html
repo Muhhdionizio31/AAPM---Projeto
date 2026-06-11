@@ -34,6 +34,7 @@
           Painel
         </a>
       </li>
+
       <li>
         <a href="/produtos/">
           <svg viewBox="0 0 24 24">
@@ -64,17 +65,30 @@
           Clientes
         </a>
       </li>
+      <li>
+        <a href="/usuarios/">
+          <svg viewBox="0 0 24 24">
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+            <circle cx="9" cy="7" r="4" />
+            <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+            <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+          </svg>
+          Usuarios
+        </a>
+      </li>
     </ul>
+
 
     <div class="barra-rodape">
       <div class="barra-usuario">
-        <div class="avatar-usuario">GS</div>
         <div class="info-usuario">
           <strong>{{ usuario.nome if usuario else 'Usuário' }}</strong>
           <small>Administrador</small>
         </div>
       </div>
-      <button class="btn-sair">Sair</button>
+      <button class="btn-sair" onclick="window.location.href='/auth/logout'">
+        Sair
+      </button>
     </div>
   </aside>
 
@@ -263,9 +277,7 @@
               {% for item in ultimas_vendas %}
               <tr>
                 <td>{{ item.produto_nome }}</td>
-                <td>
-                  <span class="tag-tipo verde">Venda</span>
-                </td>
+                <td><span class="tag-tipo verde">Venda</span></td>
                 <td>{{ item.quantidade }}</td>
                 <td>R$ {{ "%.2f"|format(item.preco_unitario * item.quantidade) }}</td>
               </tr>
@@ -290,10 +302,16 @@
     </footer>
   </div>
 
+  <div id="dados-grafico-categorias"
+    data-labels='{{ categorias_labels | tojson if categorias_labels else "[\"Sem dados\"]" }}'
+    data-valores='{{ categorias_valores | tojson if categorias_valores else "[1]" }}' 
+    style="display: none;"></div>
+
   <div id="dados-grafico-vendas"
     data-vendas="{{ vendas_mensais_lista | tojson if vendas_mensais_lista else '[0,0,0,0,0,0,0,0,0,0,0,0]' }}"
     style="display: none;">
   </div>
+
 
   <script src="/static/js/painel.js"></script>
 

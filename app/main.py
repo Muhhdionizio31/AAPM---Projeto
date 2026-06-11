@@ -5,6 +5,7 @@ from fastapi.responses import HTMLResponse, RedirectResponse
 from app.auth import get_usuario_logado, get_usuario_opcional
 from sqlalchemy import func
 from datetime import datetime
+from starlette.middleware.base import BaseHTTPMiddleware
 
 from app.controllers import auth_controller
 from app.controllers import admin_controller
@@ -84,6 +85,33 @@ def home(
         if dado.mes:
             vendas_mensais_lista[int(dado.mes) - 1] = dado.total
     
+    # GRÁFICO DE ROSCA: CATEGORIAS MAIS VENDIDAS
+    try:
+        dados_categorias = db.query(Produto.categoria,func.count(Produto.id)).group_by(Produto.categoria).all()
+        # Vamos organizar os dados para o formato que o Chart.js espera:
+        categorias_labels = []
+        categorias_valores = []
+
+        for cat, qtd in dados_categorias:
+            if cat is True or cat == "True" or cat == "true":
+                nome_cat = "Material Escolar" 
+            elif cat is False or cat == "False" or cat == "false" or not cat:
+                nome_cat = "Outros"
+            else:
+                nome_cat = str(cat)
+            categorias_labels.append(nome_cat)
+            categorias_valores.append(qtd)
+
+    except Exception as e:
+        print(f"Erro ao computar categorias: {e}")
+        categorias_labels = ["Sem dados"]
+        categorias_valores = [1]
+
+          # Se o banco estiver totalmente vazio, colocamos um valor padrão para o gráfico não quebrar
+    if not categorias_labels or not categorias_valores:
+            categorias_labels = ["Sem Itens"]
+            categorias_valores = [1]
+
     return templates.TemplateResponse(
         request,
         "painel/index.html",
@@ -96,7 +124,9 @@ def home(
             "receita_total": receita_total,
             "total_vendas_mes": total_vendas_mes,
             "ultimas_vendas": ultimas_vendas,
-            "vendas_mensais_lista": vendas_mensais_lista
+            "vendas_mensais_lista": vendas_mensais_lista,
+            "categorias_labels": categorias_labels,
+            "categorias_valores": categorias_valores,
         }       
     )
 
@@ -149,69 +179,17 @@ def politica(
     )
 
 # Rota para acesso não autenticado
-@app.get("/categorias")
-def listar_categorias(
-    request: Request,
-    db: Session = Depends(get_db),
-    usuario = Depends(get_usuario_opcional)
-):
-    
-    if usuario is None:
-        return RedirectResponse(
-            url="/auth/login",
-            status_code=302
-        )
+ROTAS_PUBLICAS = ["/auth/login", "/static"]
 
-    return templates.TemplateResponse(
-        request,
-        "categorias/index.html",
-        {
-            "request": request,
-            "usuario": usuario,
-        }
-    )
+@app.middleware("http")
+async def verificar_login_middleware(request: Request, call_next):
+    if any(request.url.path.startswith(rota) for rota in ROTAS_PUBLICAS):
+        return await call_next(request)
 
-@app.get("/produtos")
-def listar_produtos(
-    request: Request,
-    db: Session = Depends(get_db),
-    usuario = Depends(get_usuario_opcional)
-):
+    usuario_logado = request.cookies.get("access_token")
 
-    if usuario is None:
-        return RedirectResponse(
-            url="/auth/login",
-            status_code=302
-        )
+    if not usuario_logado:
+        return RedirectResponse(url="/auth/login", status_code=302)
 
-    return templates.TemplateResponse(
-        request,
-        "produtos/index.html",
-        {
-            "request": request,
-            "usuario": usuario,
-        }
-    )
-
-@app.get("/usuarios")
-def listar_usuarios(
-    request: Request,
-    db: Session = Depends(get_db),
-    usuario = Depends(get_usuario_opcional)
-):
-
-    if usuario is None:
-        return RedirectResponse(
-            url="/auth/login",
-            status_code=302
-        )
-
-    return templates.TemplateResponse(
-        request,
-        "usuarios/index.html",
-        {
-            "request": request,
-            "usuario": usuario,
-        }
-    )
-
+    response = await call_next(request)
+    return response
