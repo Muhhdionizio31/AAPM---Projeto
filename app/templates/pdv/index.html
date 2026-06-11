@@ -5,270 +5,333 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Vendas – AAPM SENAI Francisco Matarazzo</title>
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Lato:wght@300;400;700&display=swap" rel="stylesheet"/>
-  <link rel="stylesheet" href="/static/css/vendas.css"/>  
+  <link
+    href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Lato:wght@300;400;700&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="/static/css/vendas.css" />
 </head>
 
 <body>
 
-<aside class="barra-lateral">
-  <div class="barra-logo">
-    <span class="barra-logo-texto">SENAI <span>///</span></span>
-    <div class="barra-logo-separador"></div>
-    <span class="barra-logo-sub">AAPM</span>
-  </div>
+  <aside class="barra-lateral">
+    <div class="barra-logo">
+      <span class="barra-logo-texto">SENAI <span>///</span></span>
+      <div class="barra-logo-separador"></div>
+      <span class="barra-logo-sub">AAPM</span>
+    </div>
 
     <span class="barra-menu-titulo">Menu</span>
 
-  <ul class="barra-nav">
-    <li>
-      <a href="/">
-        <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
-        Painel
-      </a>
-    </li>
-    <li>
-      <a href="/produtos">
-        <svg viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
-        Estoque
-      </a>
-    </li>
-    <li>
-      <a href="/pdv" class="ativo">
-        <svg viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
-        Vendas
-      </a>
-    </li>
-    <li>
-      <a href="/clientes">
-        <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-        Clientes
-      </a>
-    </li>
-  </ul>
+    <ul class="barra-nav">
+      <li>
+        <a href="/">
+          <svg viewBox="0 0 24 24">
+            <rect x="3" y="3" width="7" height="7" rx="1" />
+            <rect x="14" y="3" width="7" height="7" rx="1" />
+            <rect x="3" y="14" width="7" height="7" rx="1" />
+            <rect x="14" y="14" width="7" height="7" rx="1" />
+          </svg>
+          Painel
+        </a>
+      </li>
+      <li>
+        <a href="/produtos">
+          <svg viewBox="0 0 24 24">
+            <path
+              d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
+          </svg>
+          Estoque
+        </a>
+      </li>
+      <li>
+        <a href="/pdv" class="ativo">
+          <svg viewBox="0 0 24 24">
+            <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" />
+            <line x1="3" y1="6" x2="21" y2="6" />
+            <path d="M16 10a4 4 0 0 1-8 0" />
+          </svg>
+          Vendas
+        </a>
+      </li>
+      <li>
+        <a href="/clientes">
+          <svg viewBox="0 0 24 24">
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+            <circle cx="9" cy="7" r="4" />
+            <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+            <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+          </svg>
+          Clientes
+        </a>
+      </li>
+      <li>
+        <a href="/usuarios/">
+          <svg viewBox="0 0 24 24">
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+            <circle cx="9" cy="7" r="4" />
+            <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+            <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+          </svg>
+          Usuarios
+        </a>
+      </li>
+    </ul>
 
-  <div class="barra-rodape">
-    <div class="barra-usuario">
-      <div class="avatar-usuario">{{ usuario.nome[0] | upper if usuario else 'GS' }}</div>
-      <div class="info-usuario">
-        <strong>{{ usuario.nome }}</strong>
-        <small>{{ usuario.role | title }}</small>
-      </div>
-    </div>
-    <a href="/sair"><button class="btn-sair">Sair</button></a>
-  </div>
-</aside>
-
-<div class="conteudo-principal">
-
-  <header class="cabecalho-pagina">
-    <h1>Vendas</h1>
-    <div class="acoes-cabecalho">
-      <form method="get" action="/pdv/" class="filtro-data-form" style="display: flex; gap: 10px;">
-        <div class="filtro-data">
-          <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-          <input type="month" id="filtroMes" name="mes" value="{{ mes_selecionado }}" onchange="this.form.submit()"/>
+    <div class="barra-rodape">
+      <div class="barra-usuario">
+        <div class="avatar-usuario">{{ usuario.nome[0] | upper if usuario else 'GS' }}</div>
+        <div class="info-usuario">
+          <strong>{{ usuario.nome }}</strong>
+          <small>{{ usuario.role | title }}</small>
         </div>
-      </form>
-      
-      {% if not usuario or usuario.role == 'admin' or usuario.role == 'operador' %}
-      <button class="btn-novo" onclick="abrirModalVenda()">
-        <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-        Nova Venda
-      </button>
-      {% endif %}
+      </div>
+      <a href="/sair"><button class="btn-sair">Sair</button></a>
     </div>
-  </header>
+  </aside>
+
+  <div class="conteudo-principal">
+
+    <header class="cabecalho-pagina">
+      <h1>Vendas</h1>
+      <div class="acoes-cabecalho">
+        <form method="get" action="/pdv/" class="filtro-data-form" style="display: flex; gap: 10px;">
+          <div class="filtro-data">
+            <svg viewBox="0 0 24 24">
+              <rect x="3" y="4" width="18" height="18" rx="2" />
+              <line x1="16" y1="2" x2="16" y2="6" />
+              <line x1="8" y1="2" x2="8" y2="6" />
+              <line x1="3" y1="10" x2="21" y2="10" />
+            </svg>
+            <input type="month" id="filtroMes" name="mes" value="{{ mes_selecionado }}" onchange="this.form.submit()" />
+          </div>
+        </form>
+
+        {% if not usuario or usuario.role == 'admin' or usuario.role == 'operador' %}
+        <button class="btn-novo" onclick="abrirModalVenda()">
+          <svg viewBox="0 0 24 24">
+            <line x1="12" y1="5" x2="12" y2="19" />
+            <line x1="5" y1="12" x2="19" y2="12" />
+          </svg>
+          Nova Venda
+        </button>
+        {% endif %}
+      </div>
+    </header>
 
     <main class="area-conteudo">
 
-    {% if request and request.query_params.get('criado') == 'ok' %}
-    <div class="alerta-sucesso">✓ Venda registrada com sucesso no banco de dados!</div>
-    {% endif %}
-    {% if request and request.query_params.get('cancelado') == 'ok' %}
-    <div class="alerta-sucesso">✓ Status da venda atualizado para Cancelado.</div>
-    {% endif %}
+      {% if request and request.query_params.get('criado') == 'ok' %}
+      <div class="alerta-sucesso">✓ Venda registrada com sucesso no banco de dados!</div>
+      {% endif %}
+      {% if request and request.query_params.get('cancelado') == 'ok' %}
+      <div class="alerta-sucesso">✓ Status da venda atualizado para Cancelado.</div>
+      {% endif %}
 
-    <div class="grade-resumo">
-      <div class="cartao-resumo vermelho" style="animation-delay:0s">
-        <div class="resumo-icone">
-          <svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
-        </div>
-        <div class="resumo-rotulo">Faturamento Total</div>
-        <div class="resumo-valor">R$ {{ "%.2f"|format(resumos.faturamento_total) if resumos is defined else "0.00" }}</div>
-        <div class="resumo-variacao subiu">Mês selecionado</div>
-      </div>
-
-      <div class="cartao-resumo verde" style="animation-delay:0.08s">
-        <div class="resumo-icone">
-          <svg viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
-        </div>
-        <div class="resumo-rotulo">Vendas Concluídas</div>
-        <div class="resumo-valor">{{ resumos.vendas_concluidas if resumos is defined else "0" }}</div>
-        <div class="resumo-variacao subiu">Efetuadas</div>
-      </div>
-
-      <div class="cartao-resumo azul" style="animation-delay:0.16s">
-        <div class="resumo-icone">
-          <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-        </div>
-        <div class="resumo-rotulo">Clientes Atendidos</div>
-        <div class="resumo-valor">{{ resumos.clientes_atendidos if resumos is defined else "0" }}</div>
-        <div class="resumo-variacao subiu">Consumidores únicos</div>
-      </div>
-    </div>
-
-    <div class="layout-inferior">
-
-      <div class="painel">
-        <div class="painel-cabecalho">
-          <span class="painel-titulo">Histórico de Vendas</span>
-          <form method="get" action="/pdv/" class="barra-busca-tabela">
-            <input type="text" name="busca" placeholder="Buscar por cliente..." value="{{ busca or '' }}"/>
-            <button type="submit" class="btn-buscar-tabela">
-              <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-            </button>
-          </form>
+      <div class="grade-resumo">
+        <div class="cartao-resumo vermelho" style="animation-delay:0s">
+          <div class="resumo-icone">
+            <svg viewBox="0 0 24 24">
+              <line x1="12" y1="1" x2="12" y2="23" />
+              <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+            </svg>
+          </div>
+          <div class="resumo-rotulo">Faturamento Total</div>
+          <div class="resumo-valor">R$ {{ "%.2f"|format(resumos.faturamento_total) if resumos is defined else "0.00" }}
+          </div>
+          <div class="resumo-variacao subiu">Mês selecionado</div>
         </div>
 
-        <table class="tabela-vendas">
-          <thead>
-            <tr>
-              <th>Código</th>
-              <th>Cliente</th>
-              <th>Data</th>
-              <th>Valor Bruto</th>
-              <th>Valor Líquido</th>
-              <th>Desconto</th>
-              <th>Ações</th>
-            </tr>
-          </thead>
-          <tbody id="corpoTabela">
-            {% for v in vendas %}
-            <tr>
-              <td><strong>#{{ v.id }}</strong></td>
-              <td>{{ v.cliente.nome if v.cliente else "Cliente Balcão" }}</td>
-              <td>{{ v.criado_em.strftime('%d/%m/%Y') if v.criado_em else '—' }}</td>
-              <td>R$ {{ "%.2f"|format(v.total_bruto) }}</td>
-              <td>R$ {{ "%.2f"|format(v.total_liquido) }}</td>
-              <td>{{ v.desconto_percentual }}%</td>
-              <td>
-                <button class="btn-ver" onclick="verDetalhesVenda('{{ v.id }}')" style="background:none; border:none; cursor:pointer;">👁️</button>
-              </td>
-            </tr>
-            {% endfor %}
+        <div class="cartao-resumo verde" style="animation-delay:0.08s">
+          <div class="resumo-icone">
+            <svg viewBox="0 0 24 24">
+              <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" />
+              <line x1="3" y1="6" x2="21" y2="6" />
+              <path d="M16 10a4 4 0 0 1-8 0" />
+            </svg>
+          </div>
+          <div class="resumo-rotulo">Vendas Concluídas</div>
+          <div class="resumo-valor">{{ resumos.vendas_concluidas if resumos is defined else "0" }}</div>
+          <div class="resumo-variacao subiu">Efetuadas</div>
+        </div>
 
-            {% if not vendas %}
-            <tr>
-              <td colspan="7">
-                <div style="text-align: center; padding: 30px; color: #999;">Nenhuma venda encontrada para este período.</div>
-              </td>
-            </tr>
-            {% endif %}
-          </tbody>
-        </table>
-
-        <div class="rodape-tabela">
-          <span id="infoTabela">{{ vendas|length if vendas else 0 }} venda{{ 's' if (vendas and vendas|length != 1) else '' }} encontrada(s)</span>
+        <div class="cartao-resumo azul" style="animation-delay:0.16s">
+          <div class="resumo-icone">
+            <svg viewBox="0 0 24 24">
+              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+              <circle cx="9" cy="7" r="4" />
+              <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+              <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+            </svg>
+          </div>
+          <div class="resumo-rotulo">Clientes Atendidos</div>
+          <div class="resumo-valor">{{ resumos.clientes_atendidos if resumos is defined else "0" }}</div>
+          <div class="resumo-variacao subiu">Consumidores únicos</div>
         </div>
       </div>
 
-      <div class="painel-lateral">
+      <div class="layout-inferior">
 
-        <div class="painel painel-top">
+        <div class="painel">
           <div class="painel-cabecalho">
-            <span class="painel-titulo">Mais Vendidos</span>
+            <span class="painel-titulo">Histórico de Vendas</span>
+            <form method="get" action="/pdv/" class="barra-busca-tabela">
+              <input type="text" name="busca" placeholder="Buscar por cliente..." value="{{ busca or '' }}" />
+              <button type="submit" class="btn-buscar-tabela">
+                <svg viewBox="0 0 24 24">
+                  <circle cx="11" cy="11" r="8" />
+                  <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                </svg>
+              </button>
+            </form>
           </div>
-          <div id="listaMaisVendidos">
-            {% for item in top_produtos %}
-            <div style="display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 0.9rem;">
-              <span>{{ item.produto_nome }}</span>
-              <strong>{{ item.total_vendido }} un.</strong>
+
+          <table class="tabela-vendas">
+            <thead>
+              <tr>
+                <th>Código</th>
+                <th>Cliente</th>
+                <th>Data</th>
+                <th>Valor Bruto</th>
+                <th>Valor Líquido</th>
+                <th>Desconto</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody id="corpoTabela">
+              {% for v in vendas %}
+              <tr>
+                <td><strong>#{{ v.id }}</strong></td>
+                <td>{{ v.cliente.nome if v.cliente else "Cliente Balcão" }}</td>
+                <td>{{ v.criado_em.strftime('%d/%m/%Y') if v.criado_em else '—' }}</td>
+                <td>R$ {{ "%.2f"|format(v.total_bruto) }}</td>
+                <td>R$ {{ "%.2f"|format(v.total_liquido) }}</td>
+                <td>{{ v.desconto_percentual }}%</td>
+                <td>
+                  <button class="btn-ver" onclick="verDetalhesVenda('{{ v.id }}')"
+                    style="background:none; border:none; cursor:pointer;">👁️</button>
+                </td>
+              </tr>
+              {% endfor %}
+
+              {% if not vendas %}
+              <tr>
+                <td colspan="7">
+                  <div style="text-align: center; padding: 30px; color: #999;">Nenhuma venda encontrada para este
+                    período.</div>
+                </td>
+              </tr>
+              {% endif %}
+            </tbody>
+          </table>
+
+          <div class="rodape-tabela">
+            <span id="infoTabela">{{ vendas|length if vendas else 0 }} venda{{ 's' if (vendas and vendas|length != 1)
+              else '' }} encontrada(s)</span>
+          </div>
+        </div>
+
+        <div class="painel-lateral">
+
+          <div class="painel painel-top">
+            <div class="painel-cabecalho">
+              <span class="painel-titulo">Mais Vendidos</span>
             </div>
-            {% endfor %}
-            {% if not top_produtos %}
-            <div style="color:#999; font-size:0.85rem; text-align:center; padding: 10px;">Sem dados no período.</div>
-            {% endif %}
+            <div id="listaMaisVendidos">
+              {% for item in top_produtos %}
+              <div style="display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 0.9rem;">
+                <span>{{ item.produto_nome }}</span>
+                <strong>{{ item.total_vendido }} un.</strong>
+              </div>
+              {% endfor %}
+              {% if not top_produtos %}
+              <div style="color:#999; font-size:0.85rem; text-align:center; padding: 10px;">Sem dados no período.</div>
+              {% endif %}
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </main>
+
+    <footer class="rodape-admin">
+      Controle de Vendas &nbsp;·&nbsp; © 2026 AAPM SENAI Francisco Matarazzo
+    </footer>
+  </div>
+
+  <div class="sobreposicao-modal" id="modalVenda" onclick="fecharModalFora(event,'modalVenda')">
+    <div class="modal">
+      <div class="modal-cabecalho">
+        <h2 id="modalTitulo" ">Nova Venda</h2>
+      <button class=" btn-fechar-modal" onclick="fecharModal('modalVenda')">✕</button>
+      </div>
+
+      <form id="formNovaVenda" method="POST" action="/pdv/salvar">
+        <div class="form-linha">
+          <div class="form-group">
+            <label>Cliente</label>
+            <input type="text" name="cliente_id" id="modalCliente" placeholder="ID ou Nome do cliente (Opcional)" />
+          </div>
+          <div class="form-group">
+            <label>Percentual de Desconto (%)</label>
+            <input type="number" step="0.1" name="desconto_percentual" id="modalDesconto" value="0.0" min="0"
+              max="100" />
           </div>
         </div>
-         
-      </div>
+
+        <div class="form-linha">
+          <div class="form-group">
+            <label>Observação</label>
+            <input type="text" name="observacao" id="modalObservacao" placeholder="Ex: Venda balcão rápida" />
+          </div>
+        </div>
+
+        <div class="secao-itens">
+          <div class="secao-itens-cabecalho">
+            <span>Itens da Venda</span>
+            <button type="button" class="btn-add-item" onclick="adicionarLinhaItem()">
+              <svg viewBox="0 0 24 24">
+                <line x1="12" y1="5" x2="12" y2="19" />
+                <line x1="5" y1="12" x2="19" y2="12" />
+              </svg>
+              Adicionar Item
+            </button>
+          </div>
+          <div class="lista-itens-modal" id="listaItensModal"></div>
+        </div>
+
+        <div class="total-modal">
+          <span>Total Líquido</span>
+          <strong id="totalModal">R$ 0,00</strong>
+        </div>
+
+        <div class="acoes-modal">
+          <button type="button" class="btn-cancelar" onclick="fecharModal('modalVenda')">Cancelar</button>
+          <button type="submit" class="btn-salvar">Registrar Venda</button>
+        </div>
+      </form>
     </div>
-  </main>
+  </div>
 
-  <footer class="rodape-admin">
-    Controle de Vendas &nbsp;·&nbsp; © 2026 AAPM SENAI Francisco Matarazzo
-  </footer>
-</div>
-
-<div class="sobreposicao-modal" id="modalVenda" onclick="fecharModalFora(event,'modalVenda')">
-  <div class="modal">
-    <div class="modal-cabecalho">
-      <h2 id="modalTitulo" ">Nova Venda</h2>
-      <button class="btn-fechar-modal" onclick="fecharModal('modalVenda')">✕</button>
+  <div class="sobreposicao-modal" id="modalDetalhe" onclick="fecharModalFora(event,'modalDetalhe')">
+    <div class="modal">
+      <div class="modal-cabecalho">
+        <h2>Detalhe da Venda</h2>
+        <button class="btn-fechar-modal" onclick="fecharModal('modalDetalhe')">✕</button>
+      </div>
+      <div id="conteudoDetalhe"></div>
     </div>
-
-    <form id="formNovaVenda" method="POST" action="/pdv/salvar">
-      <div class="form-linha">
-        <div class="form-group">
-          <label>Cliente</label>
-          <input type="text" name="cliente_id" id="modalCliente" placeholder="ID ou Nome do cliente (Opcional)"/>
-        </div>
-        <div class="form-group">
-          <label>Percentual de Desconto (%)</label>
-          <input type="number" step="0.1" name="desconto_percentual" id="modalDesconto" value="0.0" min="0" max="100"/>
-        </div>
-      </div>
-
-      <div class="form-linha">
-        <div class="form-group">
-          <label>Observação</label>
-          <input type="text" name="observacao" id="modalObservacao" placeholder="Ex: Venda balcão rápida"/>
-        </div>
-      </div>
-
-      <div class="secao-itens">
-        <div class="secao-itens-cabecalho">
-          <span>Itens da Venda</span>
-          <button type="button" class="btn-add-item" onclick="adicionarLinhaItem()">
-            <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-            Adicionar Item
-          </button>
-        </div>
-        <div class="lista-itens-modal" id="listaItensModal"></div>
-      </div>
-
-      <div class="total-modal">
-        <span>Total Líquido</span>
-        <strong id="totalModal">R$ 0,00</strong>
-      </div>
-
-      <div class="acoes-modal">
-        <button type="button" class="btn-cancelar" onclick="fecharModal('modalVenda')">Cancelar</button>
-        <button type="submit" class="btn-salvar">Registrar Venda</button>
-      </div>
-    </form>
   </div>
-</div>
 
-<div class="sobreposicao-modal" id="modalDetalhe" onclick="fecharModalFora(event,'modalDetalhe')">
-  <div class="modal">
-    <div class="modal-cabecalho">
-      <h2>Detalhe da Venda</h2>
-      <button class="btn-fechar-modal" onclick="fecharModal('modalDetalhe')">✕</button>
+  <div class="toast" id="toast">
+    <div class="toast-icone">
+      <svg viewBox="0 0 24 24">
+        <polyline points="20 6 9 17 4 12" />
+      </svg>
     </div>
-    <div id="conteudoDetalhe"></div>
+    <span id="toastMensagem">Operação realizada com sucesso!</span>
   </div>
-</div>
 
-<div class="toast" id="toast">
-  <div class="toast-icone">
-    <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
-  </div>
-  <span id="toastMensagem">Operação realizada com sucesso!</span>
-</div>
-
-<script src="/static/js/vendas.js"></script>
+  <script src="/static/js/vendas.js"></script>
 </body>
 
 </html>

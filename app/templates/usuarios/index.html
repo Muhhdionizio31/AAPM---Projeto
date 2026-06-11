@@ -1,63 +1,325 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
+
 <head>
-    <meta charset="UTF-8">
-    <title>Usuários — Estoque</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Usuários - AAPM</title>
+    <link rel="stylesheet" href="/static/css/usuarios.css" />
 </head>
+
 <body>
-    <h1>Usuários</h1>
 
-    <a href="/usuarios/novo">+ Novo usuário</a>
+    <!-- ── BARRA LATERAL ── -->
+    <aside class="barra-lateral">
+        <div class="barra-logo">
+            <span class="barra-logo-texto">SENAI <span>///</span></span>
+            <div class="barra-logo-separador"></div>
+            <span class="barra-logo-sub">AAPM</span>
+        </div>
 
-    <!-- Mensagens de feedback via query string -->
-    {% if request.query_params.get('criado') == 'ok' %}
-        <p style="color: green;">Usuário criado com sucesso!</p>
-    {% endif %}
-    {% if request.query_params.get('editado') == 'ok' %}
-        <p style="color: green;">Usuário atualizado com sucesso!</p>
-    {% endif %}
-    {% if request.query_params.get('erro') == 'autoproprio' %}
-        <p style="color: red;">Você não pode desativar sua própria conta.</p>
-    {% endif %}
+        <span class="barra-menu-titulo">Menu</span>
 
-    <table border="1" cellpadding="8">
-        <thead>
-            <tr>
-                <th>Nome</th>
-                <th>E-mail</th>
-                <th>Perfil</th>
-                <th>Status</th>
-                <th>Ações</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for u in usuarios %}
-            <tr>
-                <td>{{ u.nome }}</td>
-                <td>{{ u.email }}</td>
-                <td>{{ u.role }}</td>
-                <td>{{ "Ativo" if u.ativo else "Inativo" }}</td>
-                <td>
-                    <a href="/usuarios/{{ u.id }}/editar">Editar</a>
+        <ul class="barra-nav">
+            <li>
+                <a href="/">
+                    <svg viewBox="0 0 24 24">
+                        <line x1="18" y1="20" x2="18" y2="10" />
+                        <line x1="12" y1="20" x2="12" y2="4" />
+                        <line x1="6" y1="20" x2="6" y2="14" />
+                    </svg>
+                    Painel
+                </a>
+            </li>
+            <li>
+                <a href="/produtos/">
+                    <svg viewBox="0 0 24 24">
+                        <path
+                            d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
+                    </svg>
+                    Estoque
+                </a>
+            </li>
+            <li>
+                <a href="/pdv/">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" />
+                        <line x1="3" y1="6" x2="21" y2="6" />
+                        <path d="M16 10a4 4 0 0 1-8 0" />
+                    </svg>
+                    Vendas
+                </a>
+            </li>
+            <li>
+                <a href="/clientes/">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                        <circle cx="9" cy="7" r="4" />
+                        <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+                        <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                    </svg>
+                    Clientes
+                </a>
+            </li>
+            <li>
+                <a href="/usuarios/" class="ativo">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                        <circle cx="9" cy="7" r="4" />
+                        <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+                        <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                    </svg>
+                    Usuários
+                </a>
+            </li>
+        </ul>
 
-                    <!--
-                        Usamos um form com POST para ações destrutivas.
-                        Links GET podem ser acionados acidentalmente
-                        (pré-fetch do browser, bots, etc.)
-                    -->
-                    <form action="/usuarios/{{ u.id }}/toggle-ativo"
-                          method="post"
-                          style="display:inline">
-                        <button type="submit">
-                            {{ "Desativar" if u.ativo else "Ativar" }}
-                        </button>
-                    </form>
-                </td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+        <div class="barra-rodape">
+            <div class="barra-usuario">
+                <div class="info-usuario">
+                    <strong>{{ usuario.nome if usuario else 'Usuário' }}</strong>
+                    <small>Administrador</small>
+                </div>
+            </div>
+            <button class="btn-sair" onclick="window.location.href='/auth/logout'">Sair</button>
+        </div>
+    </aside>
 
-    <p><a href="/">← Voltar ao dashboard</a></p>
+    <!-- ── CONTEÚDO ── -->
+    <div class="conteudo-principal">
+
+        <header class="cabecalho-pagina">
+            <h1>Usuários</h1>
+            <span class="cabecalho-data" id="dataAtual"></span>
+        </header>
+
+        <main class="area-conteudo">
+
+            <!-- Alertas de feedback -->
+            {% if request.query_params.get('criado') == 'ok' %}
+            <div class="alerta sucesso">
+                <svg viewBox="0 0 24 24">
+                    <polyline points="20 6 9 17 4 12" />
+                </svg>
+                Usuário criado com sucesso!
+            </div>
+            {% endif %}
+
+            {% if request.query_params.get('editado') == 'ok' %}
+            <div class="alerta sucesso">
+                <svg viewBox="0 0 24 24">
+                    <polyline points="20 6 9 17 4 12" />
+                </svg>
+                Usuário atualizado com sucesso!
+            </div>
+            {% endif %}
+
+            {% if request.query_params.get('erro') == 'autoproprio' %}
+            <div class="alerta erro">
+                <svg viewBox="0 0 24 24">
+                    <circle cx="12" cy="12" r="10" />
+                    <line x1="12" y1="8" x2="12" y2="12" />
+                    <line x1="12" y1="16" x2="12.01" y2="16" />
+                </svg>
+                Você não pode desativar sua própria conta.
+            </div>
+            {% endif %}
+
+            <!-- Topo da seção -->
+            <div class="topo-secao">
+                <div>
+                    <div class="topo-secao-titulo">Gerenciamento de Usuários</div>
+                    <div class="topo-secao-sub">Gerencie os acessos ao sistema AAPM</div>
+                </div>
+                <button class="btn-novo" onclick="abrirModal()">
+                    <svg viewBox="0 0 24 24">
+                        <line x1="12" y1="5" x2="12" y2="19" />
+                        <line x1="5" y1="12" x2="19" y2="12" />
+                    </svg>
+                    Novo Usuário
+                </button>
+            </div>
+
+            <!-- Tabela -->
+            <div class="card-tabela">
+                <div class="card-tabela-cabecalho">
+                    <div class="busca-wrapper">
+                        <svg viewBox="0 0 24 24">
+                            <circle cx="11" cy="11" r="8" />
+                            <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                        </svg>
+                        <input type="text" class="busca-input" placeholder="Buscar usuário…" id="campoBusca"
+                            oninput="filtrarTabela()" />
+                    </div>
+                    <span class="contagem-usuarios" id="contagemUsuarios"></span>
+                </div>
+
+                <table class="tabela-usuarios" id="tabelaUsuarios">
+                    <thead>
+                        <tr>
+                            <th>Usuário</th>
+                            <th>Perfil</th>
+                            <th>Status</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="corpoTabela">
+                        {% for u in usuarios %}
+                        <tr data-nome="{{ u.nome | lower }}" data-email="{{ u.email | lower }}">
+                            <td>
+                                <div class="usuario-cell">
+                                    <div class="usuario-avatar {{ 'ativo-av' if u.ativo else '' }}">
+                                        {{ u.nome[:2] }}
+                                    </div>
+                                    <div>
+                                        <div class="usuario-info-nome">{{ u.nome }}</div>
+                                        <div class="usuario-info-email">{{ u.email }}</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <span class="tag role-{{ u.role | lower }}">{{ u.role }}</span>
+                            </td>
+                            <td>
+                                <span class="tag status-{{ 'ativo' if u.ativo else 'inativo' }}">
+                                    {{ "Ativo" if u.ativo else "Inativo" }}
+                                </span>
+                            </td>
+                            <td>
+                                <div class="acoes-cell">
+                                    <button class="btn-acao editar"
+                                        onclick="abrirModalEdicao('{{ u.id }}', '{{ u.nome }}', '{{ u.email }}', '{{ u.role }}')">
+                                        <svg viewBox="0 0 24 24">
+                                            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+                                            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+                                        </svg>
+                                        Editar
+                                    </button>
+                                    <form action="/usuarios/{{ u.id }}/toggle-ativo" method="post"
+                                        style="display:inline">
+                                        <button type="submit"
+                                            class="btn-acao {{ 'desativar' if u.ativo else 'ativar' }}">
+                                            {% if u.ativo %}
+                                            <svg viewBox="0 0 24 24">
+                                                <circle cx="12" cy="12" r="10" />
+                                                <line x1="8" y1="12" x2="16" y2="12" />
+                                            </svg>
+                                            Desativar
+                                            {% else %}
+                                            <svg viewBox="0 0 24 24">
+                                                <circle cx="12" cy="12" r="10" />
+                                                <line x1="12" y1="8" x2="12" y2="16" />
+                                                <line x1="8" y1="12" x2="16" y2="12" />
+                                            </svg>
+                                            Ativar
+                                            {% endif %}
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td colspan="4">
+                                <div class="empty-state">
+                                    <svg viewBox="0 0 24 24">
+                                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                                        <circle cx="9" cy="7" r="4" />
+                                        <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+                                        <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                                    </svg>
+                                    <p>Nenhum usuário cadastrado ainda.</p>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+        </main>
+
+        <footer class="rodape-admin">
+            Painel de Controle &nbsp;·&nbsp; © 2026 Todos os direitos reservados
+        </footer>
+    </div>
+
+    <!-- ══════════════════════════════════
+MODAL — NOVO / EDITAR USUÁRIO
+══════════════════════════════════ -->
+    <div class="modal-overlay" id="modalOverlay" onclick="fecharModalFora(event)">
+        <div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitulo">
+
+            <div class="modal-cabecalho">
+                <div class="modal-titulo-wrapper">
+                    <div class="modal-icone">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                            <circle cx="9" cy="7" r="4" />
+                            <line x1="19" y1="8" x2="19" y2="14" />
+                            <line x1="22" y1="11" x2="16" y2="11" />
+                        </svg>
+                    </div>
+                    <div>
+                        <div class="modal-titulo" id="modalTitulo">Novo Usuário</div>
+                        <div class="modal-subtitulo" id="modalSubtitulo">Preencha os dados para criar o acesso</div>
+                    </div>
+                </div>
+                <button class="modal-fechar" onclick="fecharModal()" aria-label="Fechar">
+                    <svg viewBox="0 0 24 24">
+                        <line x1="18" y1="6" x2="6" y2="18" />
+                        <line x1="6" y1="6" x2="18" y2="18" />
+                    </svg>
+                </button>
+            </div>
+
+            <form id="formUsuario" action="/usuarios/novo" method="post">
+                <input type="hidden" name="_method" id="formMethod" value="POST" />
+
+                <div class="modal-corpo">
+
+                    <div class="campo-grupo">
+                        <div class="campo">
+                            <label for="inputNome">Nome completo</label>
+                            <input type="text" id="inputNome" name="nome" placeholder="Ex: Maria Silva" required />
+                        </div>
+                        <div class="campo">
+                            <label for="inputEmail">E-mail</label>
+                            <input type="email" id="inputEmail" name="email" placeholder="usuario@senai.br" required />
+                        </div>
+                    </div>
+
+                    <hr class="modal-divisor" />
+
+                    <div class="campo-grupo">
+                        <div class="campo">
+                            <label for="inputPerfil">Perfil de acesso</label>
+                            <div class="select-wrapper">
+                                <select id="inputPerfil" name="role">
+                                    <option value="operador">Operador</option>
+                                    <option value="admin">Administrador</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="campo" id="campoSenha">
+                            <label for="inputSenha">Senha</label>
+                            <input type="password" id="inputSenha" name="senha" placeholder="Mínimo 8 caracteres" />
+                            <span class="campo-hint" id="hintSenha">Obrigatório para novo usuário</span>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="modal-rodape">
+                    <button type="button" class="btn-cancelar" onclick="fecharModal()">Cancelar</button>
+                    <button type="submit" class="btn-salvar" id="btnSalvar">Criar Usuário</button>
+                </div>
+            </form>
+
+        </div>
+    </div>
+    <script src="/static/js/usuarios.js"></script>
+
 </body>
+
 </html>
