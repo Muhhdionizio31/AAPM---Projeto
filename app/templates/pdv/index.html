@@ -108,7 +108,7 @@
         </form>
 
         {% if not usuario or usuario.role == 'admin' or usuario.role == 'operador' %}
-        <button class="btn-novo" onclick="abrirModalVenda()">
+        <button class="btn-novo" id="btnNovaVenda" type="button">
           <svg viewBox="0 0 24 24">
             <line x1="12" y1="5" x2="12" y2="19" />
             <line x1="5" y1="12" x2="19" y2="12" />
@@ -126,6 +126,12 @@
       {% endif %}
       {% if request and request.query_params.get('cancelado') == 'ok' %}
       <div class="alerta-sucesso">✓ Status da venda atualizado para Cancelado.</div>
+      {% endif %}
+
+      {% if request and request.query_params.get('erro') %}
+      <div class="alerta-sucesso" style="background:#fee2e2;color:#991b1b;border-color:#fecaca;">
+        Nao foi possivel registrar a venda. Erro: {{ request.query_params.get('erro') }}.
+      </div>
       {% endif %}
 
       <div class="grade-resumo">
@@ -262,20 +268,27 @@
   <div class="sobreposicao-modal" id="modalVenda" onclick="fecharModalFora(event,'modalVenda')">
     <div class="modal">
       <div class="modal-cabecalho">
-        <h2 id="modalTitulo" ">Nova Venda</h2>
-      <button class=" btn-fechar-modal" onclick="fecharModal('modalVenda')">✕</button>
+        <h2 id="modalTitulo">Nova Venda</h2>
+        <button class=" btn-fechar-modal" onclick="fecharModal('modalVenda')">✕</button>
       </div>
 
-      <form id="formNovaVenda" method="POST" action="/pdv/salvar">
+      <form id="formNovaVenda" method="POST" action="/pdv/finalizar">
+        <input type="hidden" name="carrinho_json" id="carrinhoJson" />
         <div class="form-linha">
           <div class="form-group">
             <label>Cliente</label>
-            <input type="text" name="cliente_id" id="modalCliente" placeholder="ID ou Nome do cliente (Opcional)" />
+            <select name="cliente_id" id="modalCliente">
+              <option value="0" data-desconto="0">Cliente não cadastrado</option>
+              {% for cliente in clientes %}
+              <option value="{{ cliente.id }}" data-desconto="{{ desconto_associado if cliente.is_associado else 0 }}">
+                {{ cliente.nome }}{% if cliente.is_associado %} - Associado{% endif %}
+              </option>
+              {% endfor %}
+            </select>
           </div>
           <div class="form-group">
             <label>Percentual de Desconto (%)</label>
-            <input type="number" step="0.1" name="desconto_percentual" id="modalDesconto" value="0.0" min="0"
-              max="100" />
+            <input type="number" step="0.1" id="modalDesconto" value="0.0" min="0" max="100" readonly />
           </div>
         </div>
 
@@ -332,6 +345,9 @@
     <span id="toastMensagem">Operação realizada com sucesso!</span>
   </div>
 
+  <script>
+    window.PRODUTOS_PDV = {{ produtos_pdv | tojson }};
+  </script>
   <script src="/static/js/vendas.js"></script>
 </body>
 
