@@ -77,12 +77,13 @@
       </li>
     </ul>
 
+
     <div class="barra-rodape">
       <div class="barra-usuario">
-        <div class="avatar-usuario">{{ usuario.nome[0] | upper if usuario else 'GS' }}</div>
+        <div class="avatar-usuario">{{ usuario.nome[0] | upper if usuario else 'AD' }}</div>
         <div class="info-usuario">
-          <strong>{{ usuario.nome }}</strong>
-          <small>{{ usuario.role | title }}</small>
+          <strong>{{ usuario.nome if usuario else 'Usuário' }}</strong>
+          <small>Administrador</small>
         </div>
       </div>
       <a href="/sair"><button class="btn-sair">Sair</button></a>

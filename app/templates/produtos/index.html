@@ -82,13 +82,10 @@
 
         <div class="barra-rodape">
             <div class="barra-usuario">
-                <div class="avatar">
-                    {% set nomes = usuario.nome.split() %}
-                    {{ nomes[0][0]|upper }}{% if nomes|length > 1 %}{{ nomes[1][0]|upper }}{% endif %}
-                </div>
+                <div class="avatar-usuario">{{ usuario.nome[0] | upper if usuario else 'AD' }}</div>
                 <div class="info-usuario">
-                    <strong>{{ usuario.nome }}</strong>
-                    <small>{{ usuario.role }}</small>
+                    <strong>{{ usuario.nome if usuario else 'Usuário' }}</strong>
+                    <small>Administrador</small>
                 </div>
             </div>
             <button class="btn-sair" onclick="window.location.href='/auth/logout'">
