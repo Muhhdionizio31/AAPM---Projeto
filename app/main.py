@@ -179,13 +179,15 @@ def politica(
     )
 
 # Rota para acesso não autenticado
-ROTAS_PUBLICAS = ["/auth/login", "/static"]
+ROTAS_PUBLICAS = ["/auth/login","/static"]
 
 @app.middleware("http")
 async def verificar_login_middleware(request: Request, call_next):
-    if any(request.url.path.startswith(rota) for rota in ROTAS_PUBLICAS):
-        return await call_next(request)
+    path = request.url.path
 
+    if path == "/" or any(path.startswith(rota) for rota in ROTAS_PUBLICAS):
+        return await call_next(request)
+    
     usuario_logado = request.cookies.get("access_token")
 
     if not usuario_logado:
