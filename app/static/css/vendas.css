@@ -1398,3 +1398,264 @@ body {
     width: 100%;
   }
 }
+/* Comprovante da venda */
+.comprovante-body {
+  background: #f3f4f6;
+  color: #111111;
+  font-family: 'Lato', Arial, sans-serif;
+  min-height: 100vh;
+}
+
+.pagina-comprovante {
+  min-height: 100vh;
+  padding: 32px 18px;
+
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.comprovante-wrap {
+  max-width: 820px;
+  width: 100%;
+  margin-top: 30px;
+}
+.comprovante-wrap .alerta-sucesso {
+  margin-bottom: 16px;
+  border-radius: 8px;
+}
+
+.barra-acoes-comprovante {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.btn-comprovante {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 40px;
+  padding: 0 16px;
+  border: 1px solid #dddddd;
+  border-radius: 8px;
+  background: #ffffff;
+  color: #333333;
+  font-family: 'Montserrat', Arial, sans-serif;
+  font-size: 0.8rem;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.comprovante {
+  overflow: hidden;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  box-shadow: 0 18px 45px rgba(17, 17, 17, 0.10);
+}
+
+.comprovante-topo {
+  display: flex;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 28px 32px;
+  background: #111111;
+  color: #ffffff;
+}
+
+.marca {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.marca strong {
+  font-family: 'Montserrat', Arial, sans-serif;
+  font-size: 1.3rem;
+  font-weight: 800;
+  letter-spacing: 1px;
+}
+
+.marca strong span {
+  color: #c8102e;
+}
+
+.marca small,
+.comprovante-numero small {
+  color: rgba(255, 255, 255, 0.68);
+  font-weight: 700;
+}
+
+.comprovante-numero {
+  text-align: right;
+}
+
+.comprovante-numero span {
+  display: block;
+  margin-top: 4px;
+  font-family: 'Montserrat', Arial, sans-serif;
+  font-size: 1.5rem;
+  font-weight: 800;
+}
+
+.comprovante-corpo {
+  padding: 28px 32px 32px;
+}
+
+.resumo-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-bottom: 26px;
+}
+
+.resumo-item {
+  min-height: 86px;
+  padding: 14px;
+  border: 1px solid #eeeeee;
+  border-radius: 8px;
+  background: #fafafa;
+}
+
+.resumo-item span {
+  display: block;
+  margin-bottom: 8px;
+  color: #777777;
+  font-size: 0.76rem;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.resumo-item strong {
+  display: block;
+  color: #111111;
+  font-size: 0.98rem;
+  line-height: 1.35;
+}
+
+.secao-comprovante {
+  margin-top: 24px;
+}
+
+.secao-titulo {
+  margin-bottom: 12px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #eeeeee;
+  font-family: 'Montserrat', Arial, sans-serif;
+  font-size: 0.95rem;
+  font-weight: 800;
+}
+
+.tabela-itens {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.92rem;
+}
+
+.tabela-itens th {
+  padding: 11px 10px;
+  background: #f7f7f7;
+  color: #555555;
+  font-size: 0.72rem;
+  text-align: left;
+  text-transform: uppercase;
+}
+
+.tabela-itens td {
+  padding: 13px 10px;
+  border-bottom: 1px solid #eeeeee;
+  color: #222222;
+}
+
+.tabela-itens th:nth-child(2),
+.tabela-itens th:nth-child(3),
+.tabela-itens td:nth-child(2),
+.tabela-itens td:nth-child(3) {
+  text-align: right;
+}
+
+.totais {
+  max-width: 360px;
+  margin-left: auto;
+  margin-top: 22px;
+  border: 1px solid #eeeeee;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.total-linha,
+.total-final {
+  display: flex;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 13px 16px;
+}
+
+.total-linha {
+  background: #ffffff;
+  border-bottom: 1px solid #eeeeee;
+  color: #555555;
+  font-weight: 700;
+}
+
+.total-final {
+  align-items: center;
+  background: #c8102e;
+  color: #ffffff;
+  font-family: 'Montserrat', Arial, sans-serif;
+  font-weight: 800;
+}
+
+.total-final strong {
+  font-size: 1.2rem;
+}
+
+.observacao {
+  padding: 14px 16px;
+  border-left: 4px solid #c8102e;
+  border-radius: 8px;
+  background: #fff5f6;
+  color: #4b4b4b;
+  line-height: 1.45;
+}
+
+.rodape-comprovante {
+  margin-top: 28px;
+  padding-top: 18px;
+  border-top: 1px dashed #d1d5db;
+  color: #777777;
+  font-size: 0.85rem;
+  text-align: center;
+}
+
+@media (max-width: 700px) {
+  .pagina-comprovante {
+    padding: 18px 10px;
+  }
+
+  .barra-acoes-comprovante,
+  .comprovante-topo {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .comprovante-numero {
+    text-align: left;
+  }
+
+  .comprovante-corpo,
+  .comprovante-topo {
+    padding: 22px 18px;
+  }
+
+  .resumo-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .totais {
+    max-width: none;
+  }
+}
