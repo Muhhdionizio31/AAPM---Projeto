@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Comprovante da Venda</title>
+  <link rel="stylesheet" href="/static/css/vendas.css" />
+</head>
+
+<body>
+  <div class="conteudo-principal" style="margin-left:0;min-height:100vh;padding:32px;">
+    <main class="area-conteudo" style="max-width:760px;margin:0 auto;">
+      {% if request.query_params.get('sucesso') == 'ok' %}
+      <div class="alerta-sucesso">Venda registrada com sucesso.</div>
+      {% endif %}
+
+      <div class="painel">
+        <div class="painel-cabecalho">
+          <span class="painel-titulo">Comprovante #{{ venda.id }}</span>
+          <a href="/pdv/" class="btn-novo" style="text-decoration:none;">Voltar</a>
+        </div>
+
+        <div class="detalhe-secao">
+          <h3>Informacoes</h3>
+          <div class="detalhe-linha">
+            <span>Cliente</span>
+            <span>{{ venda.cliente.nome if venda.cliente else "Cliente Balcao" }}</span>
+          </div>
+          <div class="detalhe-linha">
+            <span>Operador</span>
+            <span>{{ venda.usuario.nome if venda.usuario else usuario.nome if usuario else "-" }}</span>
+          </div>
+          <div class="detalhe-linha">
+            <span>Data</span>
+            <span>{{ venda.criado_em.strftime('%d/%m/%Y %H:%M') if venda.criado_em else "-" }}</span>
+          </div>
+          {% if venda.observacao %}
+          <div class="detalhe-linha">
+            <span>Observacao</span>
+            <span>{{ venda.observacao }}</span>
+          </div>
+          {% endif %}
+        </div>
+
+        <div class="detalhe-secao">
+          <h3>Itens</h3>
+          {% for item in venda.itens %}
+          <div class="detalhe-linha">
+            <span>{{ item.produto_nome }} x {{ item.quantidade }}</span>
+            <span>R$ {{ "%.2f"|format(item.subtotal) }}</span>
+          </div>
+          {% endfor %}
+        </div>
+
+        <div class="detalhe-secao">
+          <div class="detalhe-linha">
+            <span>Total bruto</span>
+            <span>R$ {{ "%.2f"|format(venda.total_bruto) }}</span>
+          </div>
+          <div class="detalhe-linha">
+            <span>Desconto</span>
+            <span>{{ venda.desconto_percentual }}%</span>
+          </div>
+          <div class="detalhe-total">
+            <span class="rotulo">Total liquido</span>
+            <span class="valor">R$ {{ "%.2f"|format(venda.total_liquido) }}</span>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</body>
+
+</html>
