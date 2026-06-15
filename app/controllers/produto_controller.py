@@ -2,7 +2,7 @@ import os
 import shutil
 import uuid
 from fastapi import APIRouter, Depends, Request, Form, UploadFile, File, status
-from fastapi.responses import RedirectResponse
+from fastapi.responses import RedirectResponse, JSONResponse
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
 
@@ -87,7 +87,7 @@ async def criar_produto(
     nome: str          = Form(...),
     preco: float       = Form(...),
     estoque_atual: int = Form(...),
-    categoria_id: int  = Form(0),
+    categoria_id: str = Form(""),
     imagem: UploadFile = File(None), 
     db: Session        = Depends(get_db),
     admin              = Depends(get_admin)
@@ -98,7 +98,7 @@ async def criar_produto(
     if db.query(Produto).filter(Produto.nome.ilike(nome)).first():
         return templates.TemplateResponse(
             request,
-            "produtos/form.html",
+            "produtos/index.html",
             {
                 "request":    request,
                 "usuario":    admin,
@@ -224,15 +224,22 @@ async def editar_produto(
         _remover_imagem(editando.imagem_path)
         editando.imagem_path = nova_imagem_path
 
-    editando.nome          = nome
-    editando.preco         = preco
+    editando.nome = nome
+    editando.preco = preco
     editando.estoque_atual = estoque_atual
-    editando.categoria_id  = categoria_id or None
+    editando.categoria_id = categoria_id or None
 
-    db.commit()
+    try:
+        db.commit()
+    except Exception as e:
+        db.rollback()
+        print("ERRO AO EDITAR:", repr(e))
+        raise
 
-    return RedirectResponse(url=f"/produtos/{produto_id}?editado=ok", status_code=302)
-
+    return RedirectResponse(
+        url=f"/produtos/{produto_id}?editado=ok",
+        status_code=302
+    )
 
 # ============================================================
 # DESATIVAR

@@ -6,12 +6,17 @@ async function salvarProduto() {
     const estoque = document.getElementById("produtoEstoque").value;
     const imagem = document.getElementById("produtoImagem").files[0];
 
+    if (!nome || !categoria || !preco || !estoque) {
+        alert("Preencha nome, categoria, preco e estoque.");
+        return;
+    }
+
     const formData = new FormData();
 
     formData.append("nome", nome);
     formData.append("categoria_id", categoria);
     formData.append("preco", preco);
-    formData.append("estoque", estoque);
+    formData.append("estoque_atual", estoque);
 
     if (imagem) {
         formData.append("imagem", imagem);
@@ -25,7 +30,7 @@ async function salvarProduto() {
         });
 
         if (resposta.ok) {
-            window.location.reload();
+            window.location.href = "/produtos?criado=ok";
         } else {
             alert("Erro ao cadastrar produto.");
         }
