@@ -2,7 +2,9 @@ import json
 from fastapi import APIRouter, Depends, Request, Form
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
+from sqlalchemy import String, cast, func
 from sqlalchemy.orm import Session
+from datetime import datetime
 
 from app.database import get_db
 from app.models.venda import Venda, ItemVenda
@@ -39,6 +41,65 @@ def tela_pdv(
         .all()
     )
 
+    mes_selecionado = request.query_params.get("mes") or datetime.now().strftime("%Y-%m")
+    busca = (request.query_params.get("busca") or "").strip()
+
+    try:
+        inicio = datetime.strptime(f"{mes_selecionado}-01", "%Y-%m-%d")
+        if inicio.month == 12:
+            fim = inicio.replace(year=inicio.year + 1, month=1)
+        else:
+            fim = inicio.replace(month=inicio.month + 1)
+    except ValueError:
+        mes_selecionado = datetime.now().strftime("%Y-%m")
+        inicio = datetime.strptime(f"{mes_selecionado}-01", "%Y-%m-%d")
+        fim = inicio.replace(month=inicio.month + 1)
+
+    vendas_query = (
+        db.query(Venda)
+        .outerjoin(Cliente)
+        .filter(Venda.criado_em >= inicio, Venda.criado_em < fim)
+    )
+
+    if busca:
+        vendas_query = vendas_query.filter(
+            (Cliente.nome.ilike(f"%{busca}%")) |
+            (cast(Venda.id, String).ilike(f"%{busca}%"))
+        )
+
+    vendas = vendas_query.order_by(Venda.criado_em.desc()).all()
+
+    faturamento_total = sum(v.total_liquido or 0 for v in vendas)
+    clientes_atendidos = len({v.cliente_id for v in vendas if v.cliente_id is not None})
+    resumos = {
+        "faturamento_total": faturamento_total,
+        "vendas_concluidas": len(vendas),
+        "clientes_atendidos": clientes_atendidos,
+    }
+
+    top_produtos = (
+        db.query(
+            ItemVenda.produto_nome,
+            func.sum(ItemVenda.quantidade).label("total_vendido")
+        )
+        .join(Venda)
+        .filter(Venda.criado_em >= inicio, Venda.criado_em < fim)
+        .group_by(ItemVenda.produto_nome)
+        .order_by(func.sum(ItemVenda.quantidade).desc())
+        .limit(5)
+        .all()
+    )
+
+    produtos_pdv = [
+        {
+            "id": produto.id,
+            "nome": produto.nome,
+            "preco": float(produto.preco or 0),
+            "estoque": int(produto.estoque_atual or 0),
+        }
+        for produto in produtos
+    ]
+
     return templates.TemplateResponse(
         request,
         "pdv/index.html",
@@ -48,6 +109,12 @@ def tela_pdv(
             "produtos":            produtos,
             "clientes":            clientes,
             "desconto_associado":  DESCONTO_ASSOCIADO,
+            "vendas":              vendas,
+            "resumos":             resumos,
+            "top_produtos":        top_produtos,
+            "mes_selecionado":     mes_selecionado,
+            "busca":               busca,
+            "produtos_pdv":        produtos_pdv,
         }
     )
 

@@ -83,10 +83,8 @@
 
     <div class="barra-rodape">
       <div class="barra-usuario">
-        <div class="avatar-usuario">GS</div>
+        <div class="avatar-usuario">{{ usuario.nome[0] | upper if usuario else 'AD' }}</div>
         <div class="info-usuario">
-          <strong>{{ usuario.nome }}</strong>
-          <small>{{ usuario.role }}</small>
           <strong>{{ usuario.nome if usuario else 'Usuário' }}</strong>
           <small>Administrador</small>
         </div>
@@ -219,7 +217,7 @@
     <span id="toastMensagem">Cliente salvo com sucesso!</span>
   </div>
 
-<script src="/static/js/clientes.js"></script>
+  <script src="/static/js/clientes.js"></script>
 </body>
 
 </html>

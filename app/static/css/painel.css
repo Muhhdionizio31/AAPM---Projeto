@@ -262,10 +262,12 @@
       opacity: 0.08;
     }
 
+    .bv_texto {
+      font-size: 50px;
+    }
     .bv-texto h2 {
       font-family: 'Montserrat', sans-serif;
-      font-size: 1.4rem;
-      font-weight: 800;
+      font-size: 1.8rem; font-weight: 800;
       color: var(--branco);
       margin-bottom: 6px;
     }

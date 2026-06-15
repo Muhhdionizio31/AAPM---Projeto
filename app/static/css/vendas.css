@@ -949,7 +949,7 @@ body {
   border-radius: 16px;
   padding: 32px 36px;
   width: 100%;
-  max-width: 520px;
+  max-width: 680px;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
   animation: deslizarModal 0.25s ease both;
   max-height: 90vh;
@@ -1102,13 +1102,16 @@ body {
 
 .item-modal-linha {
   display: grid;
-  grid-template-columns: 1fr 70px 70px 28px;
-  gap: 6px;
+  grid-template-columns: minmax(0, 1fr) 78px 104px 32px;
+  gap: 8px;
   align-items: center;
 }
 
 .item-modal-linha select,
 .item-modal-linha input {
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
   padding: 7px 10px;
   border: 2px solid var(--cinza-medio);
   border-radius: 7px;
@@ -1126,8 +1129,8 @@ body {
 }
 
 .btn-remover-item {
-  width: 28px;
-  height: 28px;
+  width: 32px;
+  height: 32px;
   border-radius: 6px;
   border: none;
   background: #fff0f2;
@@ -1379,5 +1382,19 @@ body {
 
   .grade-resumo {
     grid-template-columns: 1fr 1fr;
+  }
+
+  .modal {
+    max-width: calc(100vw - 24px);
+    padding: 24px 18px;
+  }
+
+  .form-linha,
+  .item-modal-linha {
+    grid-template-columns: 1fr;
+  }
+
+  .btn-remover-item {
+    width: 100%;
   }
 }
