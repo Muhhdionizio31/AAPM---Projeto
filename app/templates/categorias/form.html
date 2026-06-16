@@ -1,52 +1,230 @@
-<!-- templates/categorias/form.html -->
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
+
 <head>
-    <meta charset="UTF-8">
-    <title>{{ "Editar" if editando else "Nova" }} Categoria — AAPM SENAI</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{{ "Editar" if editando else "Nova" }} Categoria — AAPM SENAI</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Lato:wght@300;400;700&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="/static/css/form-categorias.css"/>
 </head>
+
 <body>
-    <h1>{{ "Editar categoria" if editando else "Nova categoria" }}</h1>
 
-    {% if erro %}
-        <p style="color:red">{{ erro }}</p>
-    {% endif %}
+  <!-- BARRA LATERAL -->
+  <aside class="barra-lateral">
+    <div class="barra-logo">
+      <span class="barra-logo-texto">SENAI <span>///</span></span>
+      <div class="barra-logo-separador"></div>
+      <span class="barra-logo-sub">AAPM</span>
+    </div>
 
-    <form action="{{ '/categorias/' + editando.id|string + '/editar' if editando else '/categorias/nova' }}"
-          method="post">
+    <span class="barra-menu-titulo">Menu</span>
 
-        <label>Nome:
-            <input type="text"
-                   name="nome"
-                   value="{{ editando.nome if editando else (valores.nome if valores else '') }}"
-                   required
-                   autofocus>
-        </label>
-        <br>
+    <ul class="barra-nav">
+      <li>
+        <a href="/" class="ativo">
+          <svg viewBox="0 0 24 24">
+            <line x1="18" y1="20" x2="18" y2="10" />
+            <line x1="12" y1="20" x2="12" y2="4" />
+            <line x1="6" y1="20" x2="6" y2="14" />
+          </svg>
+          Painel
+        </a>
+      </li>
 
-        <button type="submit">
-            {{ "Salvar alterações" if editando else "Criar categoria" }}
-        </button>
-        <a href="/categorias">Cancelar</a>
-    </form>
+      <li>
+        <a href="/produtos/">
+          <svg viewBox="0 0 24 24">
+            <path
+              d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
+          </svg>
+          Estoque
+        </a>
+      </li>
 
-    <!--
-        Na edição, exibe os produtos vinculados para o admin
-        ter contexto antes de fazer alterações.
-    -->
-    {% if editando and editando.produtos %}
-        <hr>
-        <h3>Produtos vinculados a esta categoria</h3>
-        <ul>
-            {% for p in editando.produtos if p.ativa %}
-                <li>
-                    <a href="/produtos/{{ p.id }}">{{ p.nome }}</a>
-                    — R$ {{ "%.2f"|format(p.preco) }}
-                </li>
-            {% else %}
-                <li>Nenhum produto ativo vinculado.</li>
-            {% endfor %}
-        </ul>
-    {% endif %}
+      <li>
+        <a href="/categorias/">
+          <svg viewBox="0 0 24 24">
+            <path
+              d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
+          </svg>
+          Categorias
+        </a>
+      </li>
+
+      <li>
+        <a href="/pdv/">
+          <svg viewBox="0 0 24 24">
+            <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" />
+            <line x1="3" y1="6" x2="21" y2="6" />
+            <path d="M16 10a4 4 0 0 1-8 0" />
+          </svg>
+          Vendas
+        </a>
+      </li>
+      <li>
+        <a href="/clientes/">
+          <svg viewBox="0 0 24 24">
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+            <circle cx="9" cy="7" r="4" />
+            <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+            <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+          </svg>
+          Clientes
+        </a>
+      </li>
+      <li>
+        <a href="/usuarios/">
+          <svg viewBox="0 0 24 24">
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+            <circle cx="9" cy="7" r="4" />
+            <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+            <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+          </svg>
+          Usuarios
+        </a>
+      </li>
+    </ul>
+
+
+    <div class="barra-rodape">
+      <div class="barra-usuario">
+        <div class="avatar-usuario">{{ usuario.nome[0] | upper if usuario else 'AD' }}</div>
+        <div class="info-usuario">
+          <strong>{{ usuario.nome if usuario else 'Usuário' }}</strong>
+          <small>Administrador</small>
+        </div>
+      </div>
+      <button class="btn-sair" onclick="window.location.href='/auth/logout'">
+        Sair
+      </button>
+    </div>
+  </aside>
+
+  <!-- CONTEÚDO -->
+  <div class="conteudo-principal">
+
+    <header class="cabecalho-pagina">
+      <nav class="breadcrumb">
+        <a href="/categorias">Categorias</a>
+        <svg viewBox="0 0 24 24">
+          <polyline points="9 18 15 12 9 6" />
+        </svg>
+        <span>{{ "Editar categoria" if editando else "Nova categoria" }}</span>
+      </nav>
+    </header>
+
+    <div class="area-conteudo">
+
+      <!-- FORMULÁRIO -->
+      <div class="card">
+        <div class="card-cabecalho">
+          <h2>{{ "Editar categoria" if editando else "Nova categoria" }}</h2>
+          <p>{{ "Atualize as informações da categoria." if editando else "Preencha os dados para criar uma nova
+            categoria." }}</p>
+        </div>
+
+        <div class="card-corpo">
+
+          {% if erro %}
+          <div class="alerta-erro">
+            <svg viewBox="0 0 24 24">
+              <circle cx="12" cy="12" r="10" />
+              <line x1="12" y1="8" x2="12" y2="12" />
+              <line x1="12" y1="16" x2="12.01" y2="16" />
+            </svg>
+            {{ erro }}
+          </div>
+          {% endif %}
+
+          <form action="{{ '/categorias/' + editando.id|string + '/editar' if editando else '/categorias/nova' }}"
+            method="post">
+
+            <div class="form-group">
+              <label for="nome">Nome da categoria</label>
+              <input type="text" id="nome" name="nome"
+                value="{{ editando.nome if editando else (valores.nome if valores else '') }}"
+                placeholder="Ex: Material Escolar" required autofocus />
+            </div>
+
+            <div class="form-group">
+              <div class="toggle-wrap">
+                <div class="toggle-label">
+                  <strong>Categoria ativa</strong>
+                  <small>Categorias inativas ficam ocultas no catálogo</small>
+                </div>
+                <input type="checkbox" class="toggle-input" id="ativa" name="ativa" value="1" {% if not editando or
+                  editando.ativa %}checked{% endif %} />
+                <label class="toggle-visual" for="ativa"></label>
+              </div>
+            </div>
+
+            <div class="acoes-form">
+              <a href="/categorias" class="btn-cancelar">Cancelar</a>
+              <button type="submit" class="btn-salvar">
+                {{ "Salvar alterações" if editando else "Criar categoria" }}
+              </button>
+            </div>
+
+          </form>
+        </div>
+      </div>
+
+      <!-- PAINEL LATERAL -->
+      <aside class="painel-lateral">
+
+        {% if editando and editando.produtos %}
+        <!-- Produtos vinculados (só aparece na edição) -->
+        <div class="card">
+          <div class="card-corpo">
+            <div class="card-titulo-lateral">
+              Produtos vinculados
+              <span class="badge-count">
+                {{ editando.produtos | selectattr('ativa') | list | length }} ativo(s)
+              </span>
+            </div>
+
+            <div class="lista-produtos">
+              {% for p in editando.produtos if p.ativa %}
+              <a class="item-produto" target="_blank">
+                <span class="produto-nome">
+                  <svg viewBox="0 0 24 24">
+                    <path
+                      d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
+                  </svg>
+                  {{ p.nome }}
+                </span>
+                <span class="produto-preco">R$ {{ "%.2f"|format(p.preco) }}</span>
+              </a>
+              {% else %}
+              <div class="sem-produtos">Nenhum produto ativo vinculado.</div>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+        {% endif %}
+
+        <!-- Dica -->
+        <div class="card-dica">
+          {% if editando %}
+          <strong>Atenção:</strong> desativar uma categoria que possui produtos ativos vinculados não é permitido.
+          Desative ou mova os produtos primeiro.
+          {% else %}
+          <strong>Dica:</strong> após criar a categoria, você pode vinculá-la a produtos no painel de estoque.
+          {% endif %}
+        </div>
+
+      </aside>
+    </div>
+
+    <footer class="rodape-admin">
+      Gerenciamento de Categorias &nbsp;·&nbsp; © 2026 Todos os direitos reservados
+    </footer>
+  </div>
+
 </body>
+
 </html>

@@ -1,8 +1,13 @@
 import os
 import shutil
 import uuid
+<<<<<<< HEAD
 from fastapi import APIRouter, Depends, Request, Form, UploadFile, File, status
 from fastapi.responses import RedirectResponse, JSONResponse
+=======
+from fastapi import APIRouter, Depends, HTTPException, Request, Form, UploadFile, File, status
+from fastapi.responses import RedirectResponse
+>>>>>>> f044175f7ad914e2b84286959faeb9ab6b8adda3
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
 
@@ -10,6 +15,7 @@ from app.database import get_db
 from app.models.produto import Produto
 from app.models.categoria import Categoria
 from app.auth import get_usuario_logado, get_admin
+from app.models.produto_variacao import ProdutoVariacao
 
 router = APIRouter(prefix="/produtos", tags=["Produtos"])
 
@@ -83,17 +89,31 @@ def form_novo_produto(
 
 @router.post("/novo")
 async def criar_produto(
-    request: Request,
-    nome: str          = Form(...),
-    preco: float       = Form(...),
+    nome: str = Form(...),
+    categoria_id: int = Form(...),
+    preco: float = Form(...),
     estoque_atual: int = Form(...),
+<<<<<<< HEAD
     categoria_id: str = Form(""),
     imagem: UploadFile = File(None), 
     db: Session        = Depends(get_db),
     admin              = Depends(get_admin)
+=======
+    descricao: str = Form(""),
+    tamanho: str = Form(None), # Recebe o tamanho enviado pelo JS (pode ser None)
+    imagem: UploadFile = File(None),
+    db: Session = Depends(get_db)
+>>>>>>> f044175f7ad914e2b84286959faeb9ab6b8adda3
 ):
-    categorias = db.query(Categoria).filter(Categoria.ativa == True).all()
+    try:
+        # 1. Tratar o caminho da imagem se ela existir
+        imagem_path = None
+        if imagem:
+            # Sua lógica atual de salvar a imagem no disco vai aqui
+            # Exemplo: imagem_path = f"img/produtos/{imagem.filename}"
+            pass
 
+<<<<<<< HEAD
     # Verifica duplicidade de nome
     if db.query(Produto).filter(Produto.nome.ilike(nome)).first():
         return templates.TemplateResponse(
@@ -110,21 +130,48 @@ async def criar_produto(
                                "categoria_id": categoria_id}
             },
             status_code=400
+=======
+        # 2. Criar a instância do Produto Principal
+        novo_produto = Produto(
+            nome=nome,
+            categoria_id=categoria_id,
+            preco=preco,
+            estoque_atual=estoque_atual if categoria_id != 10 else 0, # Se for vestuário, o estoque mestre pode ser 0 ou a soma das variações
+            descricao=descricao,
+            imagem_path=imagem_path,
+            ativa=True
+>>>>>>> f044175f7ad914e2b84286959faeb9ab6b8adda3
         )
 
-    # Processa o upload da imagem
-    imagem_path = await _salvar_imagem(imagem)
+        db.add(novo_produto)
+        db.flush() # O flush gera o ID do produto sem fechar a transação no banco!
 
-    produto = Produto(
-        nome          = nome,
-        preco         = preco,
-        estoque_atual = estoque_atual,
-        categoria_id  = categoria_id or None,
-        imagem_path   = imagem_path,
-    )
+        # 3. Se a categoria for 10 e o tamanho foi enviado, cria a variação automaticamente
+        if categoria_id == 10 and tamanho:
+            # Corta a string para no máximo 5 caracteres para não estourar o limite do banco Column(String(5))
+            tamanho_higienizado = tamanho.strip()[:5] 
+            
+            nova_variacao = ProdutoVariacao(
+                produto_id=novo_produto.id, # Aqui acontece a mágica do relacionamento automático!
+                tamanho=tamanho_higienizado,
+                estoque_atual=estoque_atual, # O estoque digitado vai direto para a variação
+                ativa=True
+            )
+            db.add(nova_variacao)
 
-    db.add(produto)
-    db.commit()
+        # 4. Salva tudo definitivamente no banco de dados
+        db.commit()
+        db.refresh(novo_produto)
+
+        return {"status": "sucesso", "produto_id": novo_produto.id}
+
+    except Exception as e:
+        db.rollback() # Desfaz qualquer alteração se der erro
+        print(f"Erro ao salvar: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_SERVER_ERROR,
+            detail=f"Erro interno ao salvar produto: {str(e)}"
+        )
 
     return RedirectResponse(url="/produtos?criado=ok", status_code=302)
 
