@@ -30,10 +30,16 @@ def listar_produtos(
     request: Request,
     busca: str = "",
     categoria_id: int = 0,
+    status: str = "ativos",
     db: Session = Depends(get_db),
     usuario = Depends(get_usuario_logado)
 ):
-    query = db.query(Produto).filter(Produto.ativa == True)
+    query = db.query(Produto)
+
+    if status == "inativos":
+        produtos = query.filter(Produto.ativa == False).all()
+    else:
+        produtos = query.filter(Produto.ativa == True).all()
 
     if busca:
         query = query.filter(Produto.nome.ilike(f"%{busca}%"))
@@ -54,6 +60,7 @@ def listar_produtos(
             "categorias":   categorias,
             "busca":        busca,
             "categoria_id": categoria_id,
+            "status_atual": status
         }
     )
 
@@ -267,6 +274,40 @@ def desativar_produto(
         db.commit()
 
     return RedirectResponse(url="/produtos?desativado=ok", status_code=302)
+
+@router.post("/{produto_id}/ativar")
+def ativar_produto(
+    produto_id: int,
+    db: Session = Depends(get_db),
+    admin = Depends(get_admin)
+):
+    produto = db.query(Produto).filter(Produto.id == produto_id).first()
+
+    if not produto:
+        raise HTTPException(status_code=404, detail="Produto não encontrado")
+
+    produto.ativa = True  # Altera para True para reativar o produto
+    db.commit()
+
+    # Redireciona com um parâmetro indicando que foi ativado com sucesso
+    return RedirectResponse(url="/produtos?ativado=ok", status_code=status.HTTP_302_FOUND)
+
+@router.post("/{produto_id}/excluir")
+def excluir_produto(
+    produto_id: int,
+    db: Session = Depends(get_db),
+    admin = Depends(get_admin)
+):
+    produto = db.query(Produto).filter(Produto.id == produto_id).first()
+
+    if not produto:
+        raise HTTPException(status_code=404, detail="Produto não encontrado")
+
+    db.delete(produto)  # Remove o registro fisicamente do banco de dados
+    db.commit()
+
+    # Redireciona com um parâmetro indicando que foi excluído com sucesso
+    return RedirectResponse(url="/produtos?excluido=ok", status_code=status.HTTP_302_FOUND)
 
 
 # ============================================================
