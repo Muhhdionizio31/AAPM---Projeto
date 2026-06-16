@@ -48,7 +48,7 @@ app.include_router(pdv_controllers.router)
 
 
 #Rota para a página inicial
-@app.get("/")
+@app.get("/inicio")
 def home(
     request: Request,
     usuario = Depends(get_usuario_opcional)
@@ -118,7 +118,7 @@ def politica(
     )
 
 # Rota para acesso não autenticado
-ROTAS_PUBLICAS = ["/auth/login", "/static"]
+ROTAS_PUBLICAS = ["/auth/login","/inicio", "/static"]
 
 @app.middleware("http")
 async def verificar_login_middleware(request: Request, call_next):
