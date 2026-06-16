@@ -118,7 +118,7 @@ def politica(
     )
 
 # Rota para acesso não autenticado
-ROTAS_PUBLICAS = ["/auth/login","/inicio", "/static"]
+ROTAS_PUBLICAS = ["/auth/login","/inicio", "/static", "/catalogo", "/horario", "/politica"]
 
 @app.middleware("http")
 async def verificar_login_middleware(request: Request, call_next):
