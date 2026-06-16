@@ -5,7 +5,7 @@ from sqlalchemy.orm import Session
 
 from app.database import get_db
 from app.models.categoria import Categoria
-from app.auth import get_admin
+from app.auth import get_admin, get_usuario_logado
 
 router = APIRouter(prefix="/categorias", tags=["Categorias"])
 
@@ -15,7 +15,7 @@ templates = Jinja2Templates(directory="app/templates")
 def listar_categorias(
     request: Request,
     db: Session = Depends(get_db),
-    admin = Depends(get_admin)
+    usuario = Depends(get_usuario_logado)
 ):
     """
     Lista todas as categorias ordenadas por nome.
@@ -27,7 +27,7 @@ def listar_categorias(
         "categorias/index.html",
         {
             "request":    request,
-            "usuario":    admin,
+            "usuario":    usuario,
             "categorias": categorias,
         }
     )
