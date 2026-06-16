@@ -44,6 +44,17 @@
           Estoque
         </a>
       </li>
+      
+      <li>
+        <a href="/categorias/">
+          <svg viewBox="0 0 24 24">
+            <path
+              d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
+          </svg>
+          Categorias
+        </a>
+      </li>
+
       <li>
         <a href="/pdv/">
           <svg viewBox="0 0 24 24">
@@ -305,8 +316,7 @@
 
   <div id="dados-grafico-categorias"
     data-labels='{{ categorias_labels | tojson if categorias_labels else "[\"Sem dados\"]" }}'
-    data-valores='{{ categorias_valores | tojson if categorias_valores else "[1]" }}' 
-    style="display: none;"></div>
+    data-valores='{{ categorias_valores | tojson if categorias_valores else "[1]" }}' style="display: none;"></div>
 
   <div id="dados-grafico-vendas"
     data-vendas="{{ vendas_mensais_lista | tojson if vendas_mensais_lista else '[0,0,0,0,0,0,0,0,0,0,0,0]' }}"

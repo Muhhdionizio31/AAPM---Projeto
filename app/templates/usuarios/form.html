@@ -22,10 +22,7 @@
     <form action="{{ '/usuarios/' + editando.id|string + '/editar' if editando else '/usuarios/novo' }}" method="post">
 
         <label>Nome:
-            <!--
-                value recupera do objeto na edição,
-                ou do dicionário "valores" se houve erro na criação
-            -->
+          
             <input type="text" name="nome"
                 value="{{ editando.nome if editando else (valores.nome if valores else '') }}" required>
         </label>
@@ -38,10 +35,6 @@
         <br>
 
         <label>Senha:
-            <!--
-                Na edição o campo é opcional — deixar vazio mantém a senha atual.
-                Na criação é obrigatório.
-            -->
             <input type="password" name="senha" {{ "placeholder='Deixe vazio para não alterar'" if editando
                 else "required minlength='6'" }}>
         </label>
@@ -49,11 +42,7 @@
 
         <label>Perfil de acesso:
             <select name="role">
-                <!--
-                    selected é definido comparando com o valor atual.
-                    Na criação usa "valores.role" se voltou com erro,
-                    senão deixa "operador" como padrão.
-                -->
+               
                 <option value="operador" {{ 'selected' if (editando and editando.role=='operador' ) or (valores and
                     valores.role=='operador' ) else '' }}>
                     Operador
