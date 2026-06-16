@@ -51,8 +51,7 @@
     display: flex;
     align-items: center;
     height: 100%;       
-    max-width: 150px;  
-    overflow: hidden;  
+    max-width: 150px; 
 }
 
 .img-logo {
