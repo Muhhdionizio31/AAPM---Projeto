@@ -108,7 +108,7 @@ def login(
     token = criar_token(token_data)
 
     # Cria a resposta de redirecionamento
-    response = RedirectResponse(url="/", status_code=302)
+    response = RedirectResponse(url="/painel", status_code=302)
     # Define o cookie com o token JWT
     response.set_cookie(
         key="access_token",
