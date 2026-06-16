@@ -151,22 +151,28 @@
                             </div>
 
                             <div class="form-group">
-                                <div class="form-linha">
-                                    <div class="form-group">
-                                        <label>Categoria</label>
-                                        <select id="produtoCategoria">
-                                            <option value="">Selecione</option>
-                                            {% for c in categorias %}
-                                            <option value="{{ c.id }}">{{ c.nome }}</option>
-                                            {% endfor %}
-                                        </select>
-                                    </div>
-                                    <div class="form-group" id="grupoTamanho" style="display: none;">
-                                        <label>Tamanho do Produto</label>
-                                        <input type="text" id="produtoTamanho" placeholder="Ex: P, M, G ou 42">
-                                    </div>
+                                <label>Categoria</label>
+                                <select id="produtoCategoria">
+                                    <option value="">Selecione</option>
+                                    {% for c in categorias %}
+                                    <option value="{{ c.id }}">{{ c.nome }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+
+                        <div id="grupoTamanho" style="display: none; margin: 10px 0; padding: 12px; border: 1px solid #e5e7eb; border-radius: 8px; background-color: #f9fafb;">
+                            <label style="font-weight: bold; display: block; margin-bottom: 8px; color: #374151; font-size: 0.9rem;">Grade de Tamanhos e Estoque</label>
+                            <div id="container-grades" style="display: flex; flex-direction: column; gap: 6px;">
+                                <div class="linha-grade" style="display: flex; gap: 6px; align-items: center;">
+                                    <input type="text" class="grade-tamanho" placeholder="Ex: P, M, G, 42" style="flex: 2; padding: 6px; border: 1px solid #ccc; border-radius: 4px;">
+                                    <input type="number" class="grade-qtd" placeholder="Qtd" min="0" value="0" oninput="somarGradeNaTela('container-grades', 'produtoEstoque')" style="flex: 1; padding: 6px; border: 1px solid #ccc; border-radius: 4px;">
+                                    <button type="button" onclick="removerLinha(this, 'container-grades', 'produtoEstoque')" style="background-color: #fee2e2; color: #dc2626; border: none; padding: 6px 10px; border-radius: 4px; cursor: pointer;">✕</button>
                                 </div>
                             </div>
+                            <button type="button" onclick="adicionarLinha('container-grades', 'produtoEstoque')" style="margin-top: 8px; background: #fff; color: #4b5563; border: 1px dashed #d1d5db; padding: 6px; width: 100%; border-radius: 4px; cursor: pointer; font-size: 0.85rem;">
+                                + Adicionar outro tamanho
+                            </button>
                         </div>
 
                         <div class="form-linha">
@@ -294,7 +300,7 @@
                         <button type="button" class="btn-fechar-modal" onclick="fecharModal('modalEditarProduto')">✕</button>
                     </div>
 
-                    <form id="formEditarProduto" method="post" enctype="multipart/form-data">
+                    <form id="formEditarProduto" onsubmit="salvarEdicaoProduto(event)" enctype="multipart/form-data">
                         <div class="form-linha">
                             <div class="form-group">
                                 <label>Nome do Produto</label>
@@ -310,6 +316,15 @@
                             </div>
                         </div>
 
+                        <div id="editGrupoTamanho" style="display: none; margin: 10px 0; padding: 12px; border: 1px solid #e5e7eb; border-radius: 8px; background-color: #f9fafb;">
+                            <label style="font-weight: bold; display: block; margin-bottom: 8px; color: #374151; font-size: 0.9rem;">Grade de Tamanhos e Estoque (Edição)</label>
+                            <div id="edit-container-grades" style="display: flex; flex-direction: column; gap: 6px;">
+                                </div>
+                            <button type="button" onclick="adicionarLinha('edit-container-grades', 'editEstoque')" style="margin-top: 8px; background: #fff; color: #4b5563; border: 1px dashed #d1d5db; padding: 6px; width: 100%; border-radius: 4px; cursor: pointer; font-size: 0.85rem;">
+                                + Adicionar outro tamanho
+                            </button>
+                        </div>
+
                         <div class="form-linha">
                             <div class="form-group">
                                 <label>Preço</label>
@@ -323,7 +338,7 @@
 
                         <div class="form-group">
                             <label>Nova Imagem</label>
-                            <input type="file" name="imagem">
+                            <input type="file" id="editImagem" name="imagem">
                         </div>
 
                         <div class="acoes-modal">

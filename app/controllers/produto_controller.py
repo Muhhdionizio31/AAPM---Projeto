@@ -1,7 +1,9 @@
 import os
 import shutil
 import uuid
+import json
 
+from typing import Optional
 from fastapi import APIRouter, Depends, Request, Form, UploadFile, File, status
 from fastapi.responses import RedirectResponse, JSONResponse
 from fastapi import APIRouter, Depends, HTTPException, Request, Form, UploadFile, File, status
@@ -14,6 +16,7 @@ from app.models.produto import Produto
 from app.models.categoria import Categoria
 from app.auth import get_usuario_logado, get_admin
 from app.models.produto_variacao import ProdutoVariacao
+from app.services.estoque_service import recalcular_estoque_produto
 
 router = APIRouter(prefix="/produtos", tags=["Produtos"])
 
@@ -98,80 +101,57 @@ async def criar_produto(
     categoria_id: int = Form(...),
     preco: float = Form(...),
     estoque_atual: int = Form(...),
-    imagem: UploadFile = File(None), 
-    db: Session = Depends(get_db),
-    admin = Depends(get_admin),
-    descricao: str = Form(""),
-    tamanho: str = Form(None), # Recebe o tamanho enviado pelo JS (pode ser None)
+    descricao: Optional[str] = Form(""),
+    variacoes_json: Optional[str] = Form(None), 
+    imagem: Optional[UploadFile] = File(None),
+    db: Session = Depends(get_db)
 ):
-    try:
-        # 1. Tratar o caminho da imagem se ela existir
-        imagem_path = None
-        if imagem:
-            # Sua lógica atual de salvar a imagem no disco vai aqui
-            # Exemplo: imagem_path = f"img/produtos/{imagem.filename}"
-            pass
+    # 1. Processa a imagem usando a sua função auxiliar
+    # Se nenhuma imagem foi enviada, nome_imagem será None (já que não é obrigatória)
+    nome_imagem = await _salvar_imagem(imagem)
+    
+    # 2. Cria e salva o produto pai usando a coluna real 'imagem_path'
+    novo_produto = Produto(
+        nome=nome,
+        categoria_id=categoria_id,
+        preco=preco,
+        estoque_atual=estoque_atual,
+        descricao=descricao,
+        ativa=True,
+        imagem_path=nome_imagem  # Grava None ou o caminho relativo correto ("uploads/nome_unico.png")
+    )
+    db.add(novo_produto)
+    db.flush() 
 
-    # Verifica duplicidade de nome
-        if db.query(Produto).filter(Produto.nome.ilike(nome)).first():
-            return templates.TemplateResponse(
-                request,
-                "produtos/index.html",
-                    {
-                    "request": request,
-                    "usuario": admin,
-                    "editando": None,
-                    "categorias": categorias,
-                    "erro": "Já existe um produto com este nome.",
-                    "valores": {"nome": nome, "preco": preco,
-                                "estoque_atual": estoque_atual,
-                                "categoria_id": categoria_id}
-                },
+    # 3. Se for categoria de Uniformes (10), insere as variações associadas
+    if categoria_id == 10 and variacoes_json:
+        try:
+            lista_variacoes = json.loads(variacoes_json)
+            for item in lista_variacoes:
+                nova_var = ProdutoVariacao(
+                    produto_id=novo_produto.id,
+                    tamanho=str(item.get("tamanho")).upper(),
+                    estoque_atual=int(item.get("estoque_atual", 0)),
+                    ativa=True
+                )
+                db.add(nova_var)
+            db.flush()
+            
+            recalcular_estoque_produto(db, novo_produto.id)
+        except Exception as e:
+            db.rollback()
+            return JSONResponse(
+                content={"status": "erro", "detalhe": f"Erro nas variações: {str(e)}"}, 
                 status_code=400
             )
+
+    db.commit()
     
-        # 2. Criar a instância do Produto Principal
-        novo_produto = Produto(
-            nome=nome,
-            categoria_id=categoria_id,
-            preco=preco,
-            estoque_atual=estoque_atual if categoria_id != 10 else 0, # Se for vestuário, o estoque mestre pode ser 0 ou a soma das variações
-            descricao=descricao,
-            imagem_path=imagem_path,
-            ativa=True
+    # Retorna uma resposta JSON de sucesso para o Fetch do JS atualizar a página
+    return JSONResponse(
+        content={"status": "sucesso", "mensagem": "Produto criado com sucesso!"}, 
+        status_code=201
     )
-
-        db.add(novo_produto)
-        db.flush() # O flush gera o ID do produto sem fechar a transação no banco!
-
-        # 3. Se a categoria for 10 e o tamanho foi enviado, cria a variação automaticamente
-        if categoria_id == 10 and tamanho:
-            # Corta a string para no máximo 5 caracteres para não estourar o limite do banco Column(String(5))
-            tamanho_higienizado = tamanho.strip()[:5] 
-            
-            nova_variacao = ProdutoVariacao(
-                produto_id=novo_produto.id, # Aqui acontece a mágica do relacionamento automático!
-                tamanho=tamanho_higienizado,
-                estoque_atual=estoque_atual, # O estoque digitado vai direto para a variação
-                ativa=True
-            )
-            db.add(nova_variacao)
-
-        # 4. Salva tudo definitivamente no banco de dados
-        db.commit()
-        db.refresh(novo_produto)
-
-        return {"status": "sucesso", "produto_id": novo_produto.id}
-
-    except Exception as e:
-        db.rollback() # Desfaz qualquer alteração se der erro
-        print(f"Erro ao salvar: {e}")
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_SERVER_ERROR,
-            detail=f"Erro interno ao salvar produto: {str(e)}"
-        )
-
-    return RedirectResponse(url="/produtos?criado=ok", status_code=302)
 
 
 # DETALHE
@@ -227,65 +207,75 @@ def form_editar_produto(
 @router.post("/{produto_id}/editar")
 async def editar_produto(
     produto_id: int,
-    request: Request,
-    nome: str          = Form(...),
-    preco: float       = Form(...),
-    estoque_atual: int = Form(...),
-    categoria_id: int  = Form(0),
-    imagem: UploadFile = File(None),
-    db: Session        = Depends(get_db),
-    admin              = Depends(get_admin)
+    nome: str = Form(...),
+    categoria_id: int = Form(...),
+    preco: float = Form(...),
+    estoque_atual: int = Form(0),
+    variacoes_json: Optional[str] = Form(None),
+    imagem: Optional[UploadFile] = File(None),
+    db: Session = Depends(get_db)
 ):
-    editando   = db.query(Produto).filter(Produto.id == produto_id).first()
-    categorias = db.query(Categoria).filter(Categoria.ativa == True).all()
+    produto = db.query(Produto).filter(Produto.id == produto_id).first()
+    if not produto:
+        raise HTTPException(status_code=404, detail="Produto não encontrado.")
 
-    if not editando:
-        return RedirectResponse(url="/produtos", status_code=302)
+    produto.nome = nome
+    produto.categoria_id = categoria_id
+    produto.preco = preco
+    # O estoque_atual vai ser recalculado no final pela sua função, não se preocupe
 
-    # Verifica conflito de nome com outro produto
-    conflito = db.query(Produto).filter(
-        Produto.nome.ilike(nome),
-        Produto.id != produto_id
-    ).first()
+    if categoria_id == 10 and variacoes_json:
+        try:
+            lista_variacoes = json.loads(variacoes_json)
+            
+            # 1. Mapeia os tamanhos que vieram do Front-end nesta edição
+            tamanhos_enviados = [str(item.get("tamanho")).upper() for item in lista_variacoes if item.get("tamanho")]
 
-    if conflito:
-        return templates.TemplateResponse(
-            request,
-            "produtos/form.html",
-            {
-                "request":    request,
-                "usuario":    admin,
-                "editando":   editando,
-                "categorias": categorias,
-                "erro":       "Já existe outro produto com este nome.",
-            },
-            status_code=400
-        )
+            # 2. Em vez de desativar tudo, nós REATIVEI e atualizei quem veio.
+            # Se um tamanho NÃO veio no JSON, significa que o usuário clicou no [✕] para remover.
+            # Portanto, desativamos APENAS os tamanhos que sumiram do modal.
+            if tamanhos_enviados:
+                db.query(ProdutoVariacao).filter(
+                    ProdutoVariacao.produto_id == produto_id,
+                    ProdutoVariacao.ativa == True, # Apenas os que estavam ativos antes
+                    ~ProdutoVariacao.tamanho.in_(tamanhos_enviados)
+                ).update({"ativa": False}, synchronize_session=False)
 
-    # Processa nova imagem — só substitui se um arquivo foi enviado
-    nova_imagem_path = await _salvar_imagem(imagem)
-    if nova_imagem_path:
-        # Remove a imagem antiga do disco para não acumular arquivos
-        _remover_imagem(editando.imagem_path)
-        editando.imagem_path = nova_imagem_path
-
-    editando.nome = nome
-    editando.preco = preco
-    editando.estoque_atual = estoque_atual
-    editando.categoria_id = categoria_id or None
-
-    try:
-        db.commit()
-    except Exception as e:
-        db.rollback()
-        print("ERRO AO EDITAR:", repr(e))
-        raise
-
-    return RedirectResponse(
-        url=f"/produtos/{produto_id}?editado=ok",
-        status_code=302
-    )
-
+            # 3. Atualiza ou Cria as variações enviadas
+            for item in lista_variacoes:
+                # O .strip() remove qualquer espaço invisível antes ou depois (Ex: " P " vira "P")
+                tamanho_nome = str(item.get("tamanho")).upper().strip()
+                qtd = int(item.get("estoque_atual", 0))
+                
+                # CORREÇÃO NA BUSCA: Procuramos limpando os espaços no banco usando func.trim
+                from sqlalchemy import func
+                var_existente = db.query(ProdutoVariacao).filter(
+                    ProdutoVariacao.produto_id == produto_id, 
+                    func.trim(ProdutoVariacao.tamanho) == tamanho_nome
+                ).first()
+                
+                if var_existente:
+                    # Se encontrou, atualiza o estoque e garante que está ativa
+                    var_existente.estoque_atual = qtd
+                    var_existente.ativa = True  
+                else:
+                    # Se realmente for um tamanho novo, cria do zero
+                    nova_var = ProdutoVariacao(
+                        produto_id=produto_id,
+                        tamanho=tamanho_nome,
+                        estoque_atual=qtd,
+                        ativa=True
+                    )
+                    db.add(nova_var)
+            
+            db.flush()
+            
+            # Recalcula e salva a soma correta na tabela Produto pai
+            recalcular_estoque_produto(db, produto_id)
+            
+        except Exception as e:
+            db.rollback()
+            raise HTTPException(status_code=400, detail=f"Erro na edição da grade: {str(e)}")
 # ============================================================
 # DESATIVAR
 # ============================================================

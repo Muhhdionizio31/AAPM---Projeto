@@ -25,4 +25,5 @@ class Produto(Base):
         if self.imagem_path:
             return f"/static/{self.imagem_path}"
         else:
-            return "/static/img/product-placeholder.png"
+            # Usa uma imagem temporária da internet
+            return "https://placehold.co/300x300?text=Sem+Imagem"
