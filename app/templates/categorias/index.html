@@ -109,7 +109,8 @@
   <div class="conteudo-principal">
 
     <header class="cabecalho-pagina">
-      <h1>Categorias</h1>
+        <h1>Categorias</h1>
+      {% if usuario.role == 'admin' %}
       <a href="/categorias/nova" class="btn-novo">
         <svg viewBox="0 0 24 24">
           <line x1="12" y1="5" x2="12" y2="19" />
@@ -117,6 +118,7 @@
         </svg>
         Nova Categoria
       </a>
+      {% endif %}
     </header>
 
     <!-- Alertas (query params do backend) -->
@@ -164,9 +166,11 @@
         <div class="painel-cabecalho">
           <span class="painel-titulo">Lista de Categorias</span>
           <div class="filtros-status">
+            {% if usuario.role == 'admin' %}
             <button class="btn-filtro ativo" onclick="filtrar('todos', this)">Todas</button>
             <button class="btn-filtro" onclick="filtrar('ativa', this)">Ativas</button>
             <button class="btn-filtro" onclick="filtrar('inativa', this)">Inativas</button>
+            {% endif %}
           </div>
         </div>
 
@@ -176,7 +180,12 @@
               <th>Nome</th>
               <th>Produtos Ativos</th>
               <th>Status</th>
+              {% if usuario.role == 'admin' %}
               <th style="text-align:right">Ações</th>
+              {% endif %}
+              {% if usuario.role == 'operador' %}
+              <th style="text-align:right"></th>
+              {% endif %}
             </tr>
           </thead>
           <tbody id="corpoTabela">
@@ -208,8 +217,8 @@
               </td>
 
               <td>
+                {% if usuario.role == 'admin' %}
                 <div class="celula-acoes">
-
                   <!-- Editar -->
                   <a href="/categorias/{{ c.id }}/editar" class="btn-acao btn-editar" title="Editar">
                     <svg viewBox="0 0 24 24">
@@ -251,8 +260,8 @@
                       </svg>
                     </button>
                   </form>
-
                 </div>
+                {% endif %}
               </td>
             </tr>
             {% endfor %}
