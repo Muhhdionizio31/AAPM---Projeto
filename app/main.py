@@ -51,13 +51,11 @@ app.include_router(pdv_controllers.router)
 @app.get("/inicio")
 def home(
     request: Request,
-    usuario = Depends(get_usuario_opcional)
 ):
     return templates.TemplateResponse(
         request,
         "site/index.html",
         {"request": request, 
-         "usuario": usuario
         }
     )
 # Rota para o horário de atendimento
@@ -118,13 +116,20 @@ def politica(
     )
 
 # Rota para acesso não autenticado
-ROTAS_PUBLICAS = ["/auth/login","/inicio", "/static", "/catalogo", "/horario", "/politica"]
+ROTAS_PUBLICAS = ["/auth/login", "/inicio", "/static", "/catalogo", "/horario", "/politica"]
 
 @app.middleware("http")
 async def verificar_login_middleware(request: Request, call_next):
+    # 1. Se o usuário digitar só o IP/Domínio (ex: 127.0.0.1:49669), 
+    # ele cai aqui e é jogado direto para /inicio
+    if request.url.path == "/":
+        return RedirectResponse(url="/inicio", status_code=302)
+
+    # 2. Se for qualquer outra rota pública (/inicio, /static, etc.), libera o acesso
     if any(request.url.path.startswith(rota) for rota in ROTAS_PUBLICAS):
         return await call_next(request)
 
+    # 3. Se for uma rota privada, verifica o cookie de login
     usuario_logado = request.cookies.get("access_token")
 
     if not usuario_logado:
@@ -132,8 +137,6 @@ async def verificar_login_middleware(request: Request, call_next):
 
     response = await call_next(request)
     return response
-
-
 
 @app.get("/painel")
 def visualizar_painel(
