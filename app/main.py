@@ -55,7 +55,7 @@ def home(
 ):
     return templates.TemplateResponse(
         request,
-        "painel/index.html",
+        "site/index.html",
         {"request": request, 
          "usuario": usuario
         }
