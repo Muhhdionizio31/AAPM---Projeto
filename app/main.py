@@ -20,11 +20,12 @@ from app.controllers import pdv_controllers
 from dotenv import load_dotenv
 import os
 from app.database import get_db
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, joinedload
 
-from app.models.cliente import Cliente
+from app.models.categoria import Categoria
 from app.models.produto import Produto
 from app.models.venda import Venda, ItemVenda
+
 
 
 load_dotenv()
@@ -147,12 +148,21 @@ def horario(
 @app.get("/catalogo")
 def catalogo(
     request: Request,
-    usuario = Depends(get_usuario_opcional)
+    usuario = Depends(get_usuario_opcional),
+    db: Session = Depends(get_db) 
 ):
+    categorias = db.query(Categoria).all()
+    produtos = (db.query(Produto).filter(Produto.ativa == True).options(joinedload(Produto.categoria)).all())
+
     return templates.TemplateResponse(
         request,
         "site/catalogo.html",
-        {"request": request, "usuario": usuario}
+        {
+            "request": request, 
+            "usuario": usuario,
+            "produtos": produtos,
+            "categorias": categorias
+        }
     )
 
 @app.get("/login")
