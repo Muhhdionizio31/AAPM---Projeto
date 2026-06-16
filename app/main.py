@@ -51,13 +51,34 @@ app.include_router(pdv_controllers.router)
 @app.get("/inicio")
 def home(
     request: Request,
+    usuario = Depends(get_usuario_opcional), # Mantendo o padrão do seu app
+    db: Session = Depends(get_db)
 ):
+    try:
+        # Busca 12 produtos aleatórios que estejam ativos (.ativa == True)
+        # func.random() funciona no SQLite e PostgreSQL. (Se for MySQL, use func.rand())
+        produtos_carrossel = (
+            db.query(Produto)
+            .filter(Produto.ativa == True)
+            .options(joinedload(Produto.categoria))
+            .order_by(func.random()) 
+            .limit(10)
+            .all()
+        )
+    except Exception as e:
+        print(f"Erro ao buscar produtos aleatórios: {e}")
+        produtos_carrossel = []
+
     return templates.TemplateResponse(
         request,
         "site/index.html",
-        {"request": request, 
+        {
+            "request": request, 
+            "usuario": usuario,
+            "produtos": produtos_carrossel # Envia os 12 produtos aleatórios para a Home
         }
     )
+
 # Rota para o horário de atendimento
 @app.get("/horario")
 def horario(
