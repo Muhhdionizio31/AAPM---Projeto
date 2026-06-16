@@ -1,3 +1,29 @@
+// ==========================================
+// VARIÁVEIS GLOBAIS DE CONTROLE
+// ==========================================
+let produtoIdStatus = null;
+let acaoStatus = "desativar";
+let produtoIdExcluir = null;
+
+// ==========================================
+// FUNÇÕES DOS MODAIS GERAIS (NOVO PRODUTO)
+// ==========================================
+function abrirModal(id) {
+    const modal = document.getElementById(id);
+    if (modal) modal.style.display = "flex";
+}
+
+function fecharModal(id) {
+    const modal = document.getElementById(id);
+    if (modal) modal.style.display = "none";
+}
+
+function fecharModalFora(event, id) {
+    if (event.target.id === id) {
+        fecharModal(id);
+    }
+}
+
 async function salvarProduto() {
     const nome = document.getElementById("produtoNome").value.trim();
     const categoria = document.getElementById("produtoCategoria").value;
@@ -5,7 +31,6 @@ async function salvarProduto() {
     const estoqueInput = document.getElementById("produtoEstoque").value;
     const imagem = document.getElementById("produtoImagem").files[0];
 
-    // Validações básicas no Front-End para evitar requisições inúteis
     if (!nome) {
         alert("O nome do produto é obrigatório.");
         return;
@@ -15,7 +40,6 @@ async function salvarProduto() {
         return;
     }
 
-    // Conversão de tipos para garantir consistência numérica
     const preco = parseFloat(precoInput) || 0.0;
     const estoqueAtual = parseInt(estoqueInput) || 0;
     const categoriaId = parseInt(categoria);
@@ -24,11 +48,7 @@ async function salvarProduto() {
     formData.append("nome", nome);
     formData.append("categoria_id", categoriaId);
     formData.append("preco", preco);
-    
-    // CORREÇÃO AQUI: Mudamos de "estoque" para "estoque_atual" para bater com o banco
     formData.append("estoque_atual", estoqueAtual); 
-    
-    // Enviando uma string vazia para a descrição (caso sua rota exija o campo no Schema)
     formData.append("descricao", ""); 
 
     if (imagem) {
@@ -39,124 +59,127 @@ async function salvarProduto() {
         const resposta = await fetch("/produtos/novo", {
             method: "POST",
             body: formData
-            // Deixe sem headers, o navegador resolve o Boundary do FormData sozinho
         });
 
         if (resposta.ok) {
             window.location.reload();
         } else {
-            // Caso ainda dê erro, isso vai printar no console exatamente qual campo falhou
             const erroDetalhado = await resposta.json();
-            console.error("Detalhes do erro 422 enviados pelo FastAPI:", erroDetalhado);
-            
-            // Tenta mostrar uma mensagem mais amigável vinda do servidor
-            if (erroDetalhado.detail && Array.isArray(erroDetalhado.detail)) {
-                const erroMsg = erroDetalhado.detail.map(e => `${e.loc.join(' -> ')}: ${e.msg}`).join('\n');
-                alert(`Erro de validação no servidor:\n${erroMsg}`);
-            } else {
-                alert("Erro ao cadastrar produto. Verifique os detalhes no console (F12).");
-            }
+            console.error("Detalhes do erro enviados pelo servidor:", erroDetalhado);
+            alert("Erro ao cadastrar produto. Verifique os detalhes no console.");
         }
-
     } catch (erro) {
         console.error("Erro na conexão:", erro);
         alert("Erro ao conectar com o servidor.");
     }
 }
 
-function abrirModal(id) {
-    document.getElementById(id).style.display = "flex";
-}
-
-function fecharModal(id) {
-    document.getElementById(id).style.display = "none";
-}
-
-function fecharModalFora(event, id) {
-    if (event.target.id === id) {
-        fecharModal(id);
-    }
-}
-
+// ==========================================
+// FUNÇÃO DE EDITAR PRODUTO
+// ==========================================
 function abrirModalEditar(botao) {
+    if (window.event) window.event.stopPropagation();
 
-    document.getElementById("editNome").value =
-        botao.dataset.nome;
+    document.getElementById("editNome").value = botao.dataset.nome;
+    document.getElementById("editPreco").value = botao.dataset.preco;
+    document.getElementById("editEstoque").value = botao.dataset.estoque;
+    document.getElementById("editCategoria").value = botao.dataset.categoria;
 
-    document.getElementById("editPreco").value =
-        botao.dataset.preco;
-
-    document.getElementById("editEstoque").value =
-        botao.dataset.estoque;
-
-    document.getElementById("editCategoria").value =
-        botao.dataset.categoria;
-
-    document.getElementById("formEditarProduto").action =
-        `/produtos/${botao.dataset.id}/editar`;
-
-    document.getElementById("modalEditarProduto").style.display =
-        "flex";
-}
-
-let produtoIdDesativar = null;
-
-// 1. Função que abre o modal e captura os dados do botão clicado
-function abrirModalDesativar(botao) {
-    try {
-        // Captura o ID e o Nome armazenados nos data-attributes do botão
-        produtoIdDesativar = botao.dataset.id;
-        const nomeProduto = botao.dataset.nome;
-
-        // Injeta o nome do produto na tag <strong> que está dentro do modal
-        const elementoTexto = document.querySelector("#overlay strong");
-        if (elementoTexto) {
-            elementoTexto.textContent = nomeProduto;
-        }
-
-        // Exibe o modal na tela
-        const modal = document.getElementById("overlay");
-        if (modal) {
-            modal.style.display = "flex";
-        }
-    } catch (erro) {
-        console.error("Erro ao abrir o modal de desativação:", erro);
+    const form = document.getElementById("formEditarProduto");
+    if (form) {
+        form.action = `/produtos/${botao.dataset.id}/editar`;
     }
+    
+    abrirModal("modalEditarProduto");
 }
 
-// 2. Função que cria o formulário invisível e envia o POST para o banco de dados
-function desativarProduto() {
-    if (!produtoIdDesativar) return;
+// ==========================================
+// CONTROLE DE STATUS (ATIVAR / DESATIVAR)
+// ==========================================
+function abrirModalStatus(botao) {
+    if (window.event) window.event.stopPropagation();
+    
+    produtoIdStatus = botao.dataset.id;
+    acaoStatus = botao.dataset.acao;
+    const nomeProduto = botao.dataset.nome;
 
-    // Cria o formulário dinamicamente
+    const tituloModal = document.querySelector("#overlay h2");
+    const textoModal = document.querySelector("#overlay p");
+    const botaoConfirmar = document.querySelector("#overlay button:last-child");
+
+    if (tituloModal && textoModal && botaoConfirmar) {
+        if (acaoStatus === "ativar") {
+            tituloModal.textContent = "Ativar produto";
+            textoModal.innerHTML = `Tem certeza que deseja ativar <strong style="color: #111; font-weight: 700;">${nomeProduto}</strong>? Ele voltará a ficar visível no catálogo.`;
+            botaoConfirmar.textContent = "Ativar";
+            botaoConfirmar.style.background = "#2ecc71";
+        } else {
+            tituloModal.textContent = "Desativar produto";
+            textoModal.innerHTML = `Tem certeza que deseja desativar <strong style="color: #111; font-weight: 700;">${nomeProduto}</strong>? O produto não estará mais disponível no catálogo.`;
+            botaoConfirmar.textContent = "Desativar";
+            botaoConfirmar.style.background = "#e67e22";
+        }
+    }
+
+    const modal = document.getElementById("overlay");
+    if (modal) modal.style.display = "flex";
+}
+
+function desativarProduto() {
+    if (!produtoIdStatus) return;
+
     const form = document.createElement("form");
     form.method = "POST";
-    form.action = `/produtos/${produtoIdDesativar}/desativar`;
+    form.action = `/produtos/${produtoIdStatus}/${acaoStatus}`;
 
     document.body.appendChild(form);
-
-    // Envia o formulário de forma segura
-    if (typeof form.requestSubmit === "function") {
-        form.requestSubmit();
-    } else {
-        form.submit();
-    }
+    form.submit();
 }
 
-// Aguarda o HTML carregar para monitorar o select de categorias
+// ==========================================
+// CONTROLE DE EXCLUSÃO DE PRODUTO
+// ==========================================
+function abrirModalExcluir(botao) {
+    if (window.event) window.event.stopPropagation();
+
+    produtoIdExcluir = botao.dataset.id;
+    const nomeProduto = botao.dataset.nome;
+
+    const elementoTexto = document.getElementById("nome-produto-excluir");
+    if (elementoTexto) {
+        elementoTexto.textContent = nomeProduto;
+    }
+
+    const modal = document.getElementById("overlay-excluir");
+    if (modal) modal.style.display = "flex";
+}
+
+function excluirProduto() {
+    if (!produtoIdExcluir) return;
+
+    const form = document.createElement("form");
+    form.method = "POST";
+    form.action = `/produtos/${produtoIdExcluir}/excluir`;
+
+    document.body.appendChild(form);
+    form.submit();
+}
+
+// ==========================================
+// MONITOR DE CATEGORIAS (FILTRO DINÂMICO)
+// ==========================================
 document.addEventListener("DOMContentLoaded", () => {
     const selectCategoria = document.getElementById("produtoCategoria");
     const grupoTamanho = document.getElementById("grupoTamanho");
     const inputTamanho = document.getElementById("produtoTamanho");
 
-    if (selectCategoria) {
+    if (selectCategoria && grupoTamanho && inputTamanho) {
         selectCategoria.addEventListener("change", (event) => {
-            // Se o ID selecionado for igual a 10
             if (event.target.value === "10") {
-                grupoTamanho.style.display = "block"; // Mostra o campo
+                grupoTamanho.style.display = "block";
             } else {
-                grupoTamanho.style.display = "none";  // Esconde o campo
-                inputTamanho.value = "";              // Limpa o valor caso mude de ideia
+                grupoTamanho.style.display = "none";
+                inputTamanho.value = "";
             }
         });
     }

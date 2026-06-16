@@ -1,6 +1,9 @@
 import os
 import shutil
 import uuid
+
+from fastapi import APIRouter, Depends, Request, Form, UploadFile, File, status
+from fastapi.responses import RedirectResponse, JSONResponse
 from fastapi import APIRouter, Depends, HTTPException, Request, Form, UploadFile, File, status
 from fastapi.responses import RedirectResponse
 from fastapi.templating import Jinja2Templates
@@ -30,10 +33,16 @@ def listar_produtos(
     request: Request,
     busca: str = "",
     categoria_id: int = 0,
+    status: str = "ativos",
     db: Session = Depends(get_db),
     usuario = Depends(get_usuario_logado)
 ):
-    query = db.query(Produto).filter(Produto.ativa == True)
+    query = db.query(Produto)
+
+    if status == "inativos":
+        produtos = query.filter(Produto.ativa == False).all()
+    else:
+        produtos = query.filter(Produto.ativa == True).all()
 
     if busca:
         query = query.filter(Produto.nome.ilike(f"%{busca}%"))
@@ -54,6 +63,7 @@ def listar_produtos(
             "categorias":   categorias,
             "busca":        busca,
             "categoria_id": categoria_id,
+            "status_atual": status
         }
     )
 
@@ -88,10 +98,11 @@ async def criar_produto(
     categoria_id: int = Form(...),
     preco: float = Form(...),
     estoque_atual: int = Form(...),
+    imagem: UploadFile = File(None), 
+    db: Session = Depends(get_db),
+    admin = Depends(get_admin),
     descricao: str = Form(""),
     tamanho: str = Form(None), # Recebe o tamanho enviado pelo JS (pode ser None)
-    imagem: UploadFile = File(None),
-    db: Session = Depends(get_db)
 ):
     try:
         # 1. Tratar o caminho da imagem se ela existir
@@ -101,6 +112,24 @@ async def criar_produto(
             # Exemplo: imagem_path = f"img/produtos/{imagem.filename}"
             pass
 
+    # Verifica duplicidade de nome
+        if db.query(Produto).filter(Produto.nome.ilike(nome)).first():
+            return templates.TemplateResponse(
+                request,
+                "produtos/index.html",
+                    {
+                    "request": request,
+                    "usuario": admin,
+                    "editando": None,
+                    "categorias": categorias,
+                    "erro": "Já existe um produto com este nome.",
+                    "valores": {"nome": nome, "preco": preco,
+                                "estoque_atual": estoque_atual,
+                                "categoria_id": categoria_id}
+                },
+                status_code=400
+            )
+    
         # 2. Criar a instância do Produto Principal
         novo_produto = Produto(
             nome=nome,
@@ -110,7 +139,7 @@ async def criar_produto(
             descricao=descricao,
             imagem_path=imagem_path,
             ativa=True
-        )
+    )
 
         db.add(novo_produto)
         db.flush() # O flush gera o ID do produto sem fechar a transação no banco!
@@ -240,15 +269,22 @@ async def editar_produto(
         _remover_imagem(editando.imagem_path)
         editando.imagem_path = nova_imagem_path
 
-    editando.nome          = nome
-    editando.preco         = preco
+    editando.nome = nome
+    editando.preco = preco
     editando.estoque_atual = estoque_atual
-    editando.categoria_id  = categoria_id or None
+    editando.categoria_id = categoria_id or None
 
-    db.commit()
+    try:
+        db.commit()
+    except Exception as e:
+        db.rollback()
+        print("ERRO AO EDITAR:", repr(e))
+        raise
 
-    return RedirectResponse(url=f"/produtos/{produto_id}?editado=ok", status_code=302)
-
+    return RedirectResponse(
+        url=f"/produtos/{produto_id}?editado=ok",
+        status_code=302
+    )
 
 # ============================================================
 # DESATIVAR
@@ -267,6 +303,40 @@ def desativar_produto(
         db.commit()
 
     return RedirectResponse(url="/produtos?desativado=ok", status_code=302)
+
+@router.post("/{produto_id}/ativar")
+def ativar_produto(
+    produto_id: int,
+    db: Session = Depends(get_db),
+    admin = Depends(get_admin)
+):
+    produto = db.query(Produto).filter(Produto.id == produto_id).first()
+
+    if not produto:
+        raise HTTPException(status_code=404, detail="Produto não encontrado")
+
+    produto.ativa = True  # Altera para True para reativar o produto
+    db.commit()
+
+    # Redireciona com um parâmetro indicando que foi ativado com sucesso
+    return RedirectResponse(url="/produtos?ativado=ok", status_code=status.HTTP_302_FOUND)
+
+@router.post("/{produto_id}/excluir")
+def excluir_produto(
+    produto_id: int,
+    db: Session = Depends(get_db),
+    admin = Depends(get_admin)
+):
+    produto = db.query(Produto).filter(Produto.id == produto_id).first()
+
+    if not produto:
+        raise HTTPException(status_code=404, detail="Produto não encontrado")
+
+    db.delete(produto)  # Remove o registro fisicamente do banco de dados
+    db.commit()
+
+    # Redireciona com um parâmetro indicando que foi excluído com sucesso
+    return RedirectResponse(url="/produtos?excluido=ok", status_code=status.HTTP_302_FOUND)
 
 
 # ============================================================
