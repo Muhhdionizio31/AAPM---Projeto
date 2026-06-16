@@ -1,4 +1,3 @@
-<!-- produtos/index.html -->
 <!DOCTYPE html>
 <html lang="pt-br">
 
@@ -153,16 +152,28 @@
 
                         <div class="modal-cabecalho">
                             <h2>Novo Produto</h2>
-                            <button class="btn-fechar-modal" onclick="fecharModal('modalProduto')">✕</button>
+                            <button type="button" class="btn-fechar-modal" onclick="fecharModal('modalProduto')">
+                                ✕
+                            </button>
                         </div>
 
                         <div class="form-linha">
+
                             <div class="form-group">
                                 <label>Nome do Produto</label>
                                 <input type="text" id="produtoNome" placeholder="Digite o nome do produto">
                             </div>
 
                             <div class="form-group">
+<<<<<<< HEAD
+                                <label>Categoria</label>
+                                <select id="produtoCategoria">
+                                    <option value="">Selecione</option>
+                                    {% for c in categorias %}
+                                    <option value="{{ c.id }}">{{ c.nome }}</option>
+                                    {% endfor %}
+                                </select>
+=======
                                 <div class="form-linha">
                                     <div class="form-group">
                                         <label>Categoria</label>
@@ -179,10 +190,13 @@
                                         <input type="text" id="produtoTamanho" placeholder="Ex: P, M, G ou 42">
                                     </div>
                                 </div>
+>>>>>>> f044175f7ad914e2b84286959faeb9ab6b8adda3
                             </div>
+
                         </div>
 
                         <div class="form-linha">
+
                             <div class="form-group">
                                 <label>Preço</label>
                                 <input type="number" step="0.01" id="produtoPreco" placeholder="0,00">
@@ -192,6 +206,7 @@
                                 <label>Estoque</label>
                                 <input type="number" id="produtoEstoque" placeholder="Quantidade">
                             </div>
+
                         </div>
 
                         <div class="form-group">
@@ -200,13 +215,15 @@
                         </div>
 
                         <div class="acoes-modal">
-                            <button class="btn-cancelar" onclick="fecharModal('modalProduto')">
+
+                            <button type="button" class="btn-cancelar" onclick="fecharModal('modalProduto')">
                                 Cancelar
                             </button>
 
-                            <button class="btn-salvar" onclick="salvarProduto()">
+                            <button type="button" class="btn-salvar" onclick="salvarProduto()">
                                 Cadastrar Produto
                             </button>
+
                         </div>
 
                     </div>
@@ -360,7 +377,7 @@
                             <div class="form-group">
                                 <label>Estoque</label>
 
-                                <input type="number" id="editEstoque" name="estoque">
+                                <input type="number" id="editEstoque" name="estoque_atual">
                             </div>
 
                         </div>
@@ -404,7 +421,31 @@
                                 <line x1="12" y1="16" x2="12.01" y2="16"></line>
                             </svg>
                         </div>
+<<<<<<< HEAD
                         <h2 style="margin: 0; font-size: 18px; font-weight: 500; color: #111;">Alterar Status</h2>
+=======
+<<<<<<< HEAD
+                        <h2 style="margin: 0; font-size: 18px; font-weight: 500; color: #111;">Desativar produto
+                        </h2>
+=======
+
+                        <p style="margin: 0 0 1.5rem; font-size: 14px; color: #555; line-height: 1.6;">
+                            Tem certeza que deseja desativar <strong style="color: #111; font-weight: 700;">Produto</strong>? O produto não estará mais disponível no catálogo.
+                        </p>
+
+                        <div style="border-top: 1px solid #e5e5e5; padding-top: 1rem; display: flex; justify-content: flex-end; gap: 8px;">
+                            <button onclick="document.getElementById('overlay').style.display='none'"
+                                style="padding: 9px 20px; border-radius: 8px; border: 1px solid #ccc; background: #fff; color: #333; font-size: 14px; cursor: pointer;">
+                                Cancelar
+                            </button>
+                            <button onclick="desativarProduto()"
+                                style="padding: 9px 20px; border-radius: 8px; border: none; background: #CC0000; color: #fff; font-size: 14px; font-weight: 500; cursor: pointer;">
+                                Desativar
+                            </button>
+                        </div>
+
+>>>>>>> f044175f7ad914e2b84286959faeb9ab6b8adda3
+>>>>>>> 728fd54ea23e85410d8517c836fca3bd4d69a88c
                     </div>
                     <p style="margin: 0 0 1.5rem; font-size: 14px; color: #555; line-height: 1.6;">
                         Tem certeza que deseja alterar o status deste produto?
