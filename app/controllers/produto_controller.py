@@ -1,13 +1,11 @@
 import os
 import shutil
 import uuid
-<<<<<<< HEAD
+
 from fastapi import APIRouter, Depends, Request, Form, UploadFile, File, status
 from fastapi.responses import RedirectResponse, JSONResponse
-=======
 from fastapi import APIRouter, Depends, HTTPException, Request, Form, UploadFile, File, status
 from fastapi.responses import RedirectResponse
->>>>>>> f044175f7ad914e2b84286959faeb9ab6b8adda3
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
 
@@ -93,17 +91,14 @@ async def criar_produto(
     categoria_id: int = Form(...),
     preco: float = Form(...),
     estoque_atual: int = Form(...),
-<<<<<<< HEAD
     categoria_id: str = Form(""),
     imagem: UploadFile = File(None), 
-    db: Session        = Depends(get_db),
-    admin              = Depends(get_admin)
-=======
+    db: Session = Depends(get_db),
+    admin = Depends(get_admin)
     descricao: str = Form(""),
     tamanho: str = Form(None), # Recebe o tamanho enviado pelo JS (pode ser None)
     imagem: UploadFile = File(None),
     db: Session = Depends(get_db)
->>>>>>> f044175f7ad914e2b84286959faeb9ab6b8adda3
 ):
     try:
         # 1. Tratar o caminho da imagem se ela existir
