@@ -31,18 +31,6 @@ async function salvarProduto() {
     const estoqueInput = document.getElementById("produtoEstoque").value;
     const imagem = document.getElementById("produtoImagem").files[0];
 
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
-    if (!nome || !categoria || !preco || !estoque) {
-        alert("Preencha nome, categoria, preco e estoque.");
-        return;
-    }
-
-    const formData = new FormData();
-=======
-    // Validações básicas no Front-End para evitar requisições inúteis
->>>>>>> 728fd54ea23e85410d8517c836fca3bd4d69a88c
     if (!nome) {
         alert("O nome do produto é obrigatório.");
         return;
@@ -51,7 +39,6 @@ async function salvarProduto() {
         alert("Por favor, selecione uma categoria. Ela é obrigatória.");
         return;
     }
->>>>>>> f044175f7ad914e2b84286959faeb9ab6b8adda3
 
     const preco = parseFloat(precoInput) || 0.0;
     const estoqueAtual = parseInt(estoqueInput) || 0;
@@ -61,17 +48,8 @@ async function salvarProduto() {
     formData.append("nome", nome);
     formData.append("categoria_id", categoriaId);
     formData.append("preco", preco);
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
-    formData.append("estoque_atual", estoque);
-=======
-    
-    // CORREÇÃO AQUI: Mudamos de "estoque" para "estoque_atual" para bater com o banco
->>>>>>> 728fd54ea23e85410d8517c836fca3bd4d69a88c
     formData.append("estoque_atual", estoqueAtual); 
     formData.append("descricao", ""); 
->>>>>>> f044175f7ad914e2b84286959faeb9ab6b8adda3
 
     if (imagem) {
         formData.append("imagem", imagem);
@@ -84,7 +62,7 @@ async function salvarProduto() {
         });
 
         if (resposta.ok) {
-            window.location.href = "/produtos?criado=ok";
+            window.location.reload();
         } else {
             const erroDetalhado = await resposta.json();
             console.error("Detalhes do erro enviados pelo servidor:", erroDetalhado);
@@ -155,21 +133,7 @@ function desativarProduto() {
     form.action = `/produtos/${produtoIdStatus}/${acaoStatus}`;
 
     document.body.appendChild(form);
-<<<<<<< HEAD
     form.submit();
-=======
-
-<<<<<<< HEAD
-    form.submit();
-}
-=======
-    // Envia o formulário de forma segura
-    if (typeof form.requestSubmit === "function") {
-        form.requestSubmit();
-    } else {
-        form.submit();
-    }
->>>>>>> 728fd54ea23e85410d8517c836fca3bd4d69a88c
 }
 
 // ==========================================
@@ -220,4 +184,3 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 });
->>>>>>> f044175f7ad914e2b84286959faeb9ab6b8adda3
