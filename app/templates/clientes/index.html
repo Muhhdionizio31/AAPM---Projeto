@@ -45,12 +45,11 @@
           Estoque
         </a>
       </li>
-      
-       <li>
+
+      <li>
         <a href="/categorias/">
-          <svg viewBox="0 0 24 24">
-            <path
-              d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
+          <svg viewBox="0 0 24 24" fill="currentColor">
+            <path d="M3 3h7v7H3V3zm11 0h7v7h-7V3zM3 14h7v7H3v-7zm11 0h7v7h-7v-7z" />
           </svg>
           Categorias
         </a>
@@ -81,11 +80,13 @@
 
       <li>
         <a href="/usuarios/">
-          <svg viewBox="0 0 24 24">
-            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
-            <circle cx="9" cy="7" r="4" />
-            <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
-            <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+            stroke-linejoin="round">
+            <rect x="2" y="5" width="20" height="14" rx="2"></rect>
+            <circle cx="8" cy="11" r="2"></circle>
+            <path d="M5.5 16c0-1.4 1.1-2.5 2.5-2.5s2.5 1.1 2.5 2.5"></path>
+            <line x1="14" y1="10" x2="19" y2="10"></line>
+            <line x1="14" y1="14" x2="17" y2="14"></line>
           </svg>
           Usuarios
         </a>
@@ -113,13 +114,7 @@
 
       <div class="acoes-cabecalho">
         <form class="barra-busca" method="get" action="/clientes/">
-          <input
-            type="text"
-            id="inputBusca"
-            name="busca"
-            value="{{ busca or '' }}"
-            placeholder="Buscar cliente..."
-          >
+          <input type="text" id="inputBusca" name="busca" value="{{ busca or '' }}" placeholder="Buscar cliente...">
 
           {% if apenas_associados %}
           <input type="hidden" name="apenas_associados" value="true">
@@ -199,18 +194,13 @@
             </div>
 
             <div class="acoes-produto">
-              <button
-                class="btn-acao btn-editar"
-                type="button"
-                title="Editar"
-                onclick='abrirModalEditar(
+              <button class="btn-acao btn-editar" type="button" title="Editar" onclick='abrirModalEditar(
                   {{ c.id|tojson }},
                   {{ c.nome|tojson }},
                   {{ (c.matricula or "")|tojson }},
                   {{ (c.telefone or "")|tojson }},
                   {{ c.is_associado|tojson }}
-                )'
-              >
+                )'>
                 <svg viewBox="0 0 24 24">
                   <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
                   <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
