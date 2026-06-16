@@ -163,14 +163,22 @@
                             </div>
 
                             <div class="form-group">
-                                <label>Categoria</label>
-                                <select id="produtoCategoria">
-                                    <option value="">Selecione</option>
-                                    <option>Papelaria e Escrita</option>
-                                    <option>Ferramentas e Acessórios</option>
-                                    <option>Costura e Modelagem</option>
-                                    <option>Segurança e EPIs</option>
-                                </select>
+                                <div class="form-linha">
+                                    <div class="form-group">
+                                        <label>Categoria</label>
+                                        <select id="produtoCategoria">
+                                            <option value="">Selecione</option>
+                                            {% for c in categorias %}
+                                            <option value="{{ c.id }}">{{ c.nome }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+
+                                    <div class="form-group" id="grupoTamanho" style="display: none;">
+                                        <label>Tamanho do Produto</label>
+                                        <input type="text" id="produtoTamanho" placeholder="Ex: P, M, G ou 42">
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
@@ -303,6 +311,8 @@
 
                                 </select>
                             </div>
+                            <div class="form-linha">
+
 
                         </div>
 
@@ -351,58 +361,44 @@
                 </a>
             </p>
 
-            <!-- Modal Desativar Produto -->
             <div id="overlay" style="position: fixed; inset:0;
-            background:rgba(0,0,0,.45);
-            display:none;
-            align-items:center;
-            justify-content:center;
-            z-index:9999;">
-                <div
-                    style="background: #fff; border-radius: 12px; padding: 2rem 2rem 1.5rem; width: 380px; max-width: 90%;">
+                background:rgba(0,0,0,.45);
+                display:none;
+                align-items:center;
+                justify-content:center;
+                z-index:9999;">
+                    <div style="background: #fff; border-radius: 12px; padding: 2rem 2rem 1.5rem; width: 380px; max-width: 90%;">
 
-                    <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
-                        <div
-                            style="width: 40px; height: 40px; border-radius: 50%; background: #fff0f0; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
-                            <!-- Ícone de alerta (opcional, remova se não quiser) -->
-                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
-                                fill="none" stroke="#CC0000" stroke-width="2" stroke-linecap="round"
-                                stroke-linejoin="round">
-                                <path
-                                    d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
-                                <line x1="12" y1="9" x2="12" y2="13" />
-                                <line x1="12" y1="17" x2="12.01" y2="17" />
-                            </svg>
+                        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
+                            <div style="width: 40px; height: 40px; border-radius: 50%; background: #fff0f0; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                                    fill="none" stroke="#CC0000" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round">
+                                    <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
+                                    <line x1="12" y1="9" x2="12" y2="13" />
+                                    <line x1="12" y1="17" x2="12.01" y2="17" />
+                                </svg>
+                            </div>
+                            <h2 style="margin: 0; font-size: 18px; font-weight: 500; color: #111;">Desativar produto</h2>
                         </div>
-                        <h2 style="margin: 0; font-size: 18px; font-weight: 500; color: #111;">Desativar produto</h2>
+
+                        <p style="margin: 0 0 1.5rem; font-size: 14px; color: #555; line-height: 1.6;">
+                            Tem certeza que deseja desativar <strong style="color: #111; font-weight: 700;">Produto</strong>? O produto não estará mais disponível no catálogo.
+                        </p>
+
+                        <div style="border-top: 1px solid #e5e5e5; padding-top: 1rem; display: flex; justify-content: flex-end; gap: 8px;">
+                            <button onclick="document.getElementById('overlay').style.display='none'"
+                                style="padding: 9px 20px; border-radius: 8px; border: 1px solid #ccc; background: #fff; color: #333; font-size: 14px; cursor: pointer;">
+                                Cancelar
+                            </button>
+                            <button onclick="desativarProduto()"
+                                style="padding: 9px 20px; border-radius: 8px; border: none; background: #CC0000; color: #fff; font-size: 14px; font-weight: 500; cursor: pointer;">
+                                Desativar
+                            </button>
+                        </div>
+
                     </div>
-
-                    <p style="margin: 0 0 1.5rem; font-size: 14px; color: #555; line-height: 1.6;">
-                        Tem certeza que deseja desativar <strong style="color: #111; font-weight: 500;">2ª via de
-                            crachá</strong>? O produto não estará mais disponível no catálogo.
-                    </p>
-
-                    <div
-                        style="border-top: 1px solid #e5e5e5; padding-top: 1rem; display: flex; justify-content: flex-end; gap: 8px;">
-                        <button onclick="document.getElementById('overlay').style.display='none'"
-                            style="padding: 9px 20px; border-radius: 8px; border: 1px solid #ccc; background: #fff; color: #333; font-size: 14px; cursor: pointer;">
-                            Cancelar
-                        </button>
-                        <button onclick="desativarProduto()"
-                            style="padding: 9px 20px; border-radius: 8px; border: none; background: #CC0000; color: #fff; font-size: 14px; font-weight: 500; cursor: pointer;">
-                            Desativar
-                        </button>
-                    </div>
-
-                </div>
             </div>
-
-            <script>
-                function desativarProduto() {
-                    // Sua lógica de desativação aqui
-                    document.getElementById('overlay').style.display = 'none';
-                }
-            </script>
 
         </main>
 
