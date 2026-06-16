@@ -5,6 +5,10 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Comprovante da Venda</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Lato:wght@400;600;700;900&family=Montserrat:wght@700;800&display=swap"
+    rel="stylesheet" />
   <link rel="stylesheet" href="/static/css/vendas.css" />
 </head>
 
@@ -15,59 +19,94 @@
       <div class="alerta-sucesso">Venda registrada com sucesso.</div>
       {% endif %}
 
-      <div class="painel">
-        <div class="painel-cabecalho">
-          <span class="painel-titulo">Comprovante #{{ venda.id }}</span>
-          <a href="/pdv/" class="btn-novo" style="text-decoration:none;">Voltar</a>
+      <div class="barra-acoes-comprovante">
+        <a href="/pdv/" class="btn-comprovante">Voltar para vendas</a>
+      </div>
+
+      <section class="comprovante">
+        <div class="comprovante-topo">
+          <div class="marca">
+            <strong>SENAI <span>///</span> AAPM</strong>
+            <small>Associacao de Alunos, Ex-alunos, Pais e Mestres</small>
+          </div>
+
+          <div class="comprovante-numero">
+            <small>Comprovante de venda</small>
+            <span>#{{ venda.id }}</span>
+          </div>
         </div>
 
-        <div class="detalhe-secao">
-          <h3>Informacoes</h3>
-          <div class="detalhe-linha">
-            <span>Cliente</span>
-            <span>{{ venda.cliente.nome if venda.cliente else "Cliente Balcao" }}</span>
+        <div class="comprovante-corpo">
+          <div class="resumo-grid">
+            <div class="resumo-item">
+              <span>Cliente</span>
+              <strong>{{ venda.cliente.nome if venda.cliente else "Cliente Balcao" }}</strong>
+            </div>
+
+            <div class="resumo-item">
+              <span>Operador</span>
+              <strong>{{ venda.usuario.nome if venda.usuario else usuario.nome if usuario else "-" }}</strong>
+            </div>
+
+            <div class="resumo-item">
+              <span>Data</span>
+              <strong>{{ venda.criado_em.strftime('%d/%m/%Y %H:%M') if venda.criado_em else "-" }}</strong>
+            </div>
           </div>
-          <div class="detalhe-linha">
-            <span>Operador</span>
-            <span>{{ venda.usuario.nome if venda.usuario else usuario.nome if usuario else "-" }}</span>
-          </div>
-          <div class="detalhe-linha">
-            <span>Data</span>
-            <span>{{ venda.criado_em.strftime('%d/%m/%Y %H:%M') if venda.criado_em else "-" }}</span>
-          </div>
+
           {% if venda.observacao %}
-          <div class="detalhe-linha">
-            <span>Observacao</span>
-            <span>{{ venda.observacao }}</span>
+          <div class="secao-comprovante">
+            <h3 class="secao-titulo">Observacao</h3>
+            <div class="observacao">{{ venda.observacao }}</div>
           </div>
           {% endif %}
-        </div>
 
-        <div class="detalhe-secao">
-          <h3>Itens</h3>
-          {% for item in venda.itens %}
-          <div class="detalhe-linha">
-            <span>{{ item.produto_nome }} x {{ item.quantidade }}</span>
-            <span>R$ {{ "%.2f"|format(item.subtotal) }}</span>
-          </div>
-          {% endfor %}
-        </div>
+          <div class="secao-comprovante">
+            <h3 class="secao-titulo">Itens da venda</h3>
 
-        <div class="detalhe-secao">
-          <div class="detalhe-linha">
-            <span>Total bruto</span>
-            <span>R$ {{ "%.2f"|format(venda.total_bruto) }}</span>
+            <table class="tabela-itens">
+              <thead>
+                <tr>
+                  <th>Produto</th>
+                  <th>Qtd.</th>
+                  <th>Subtotal</th>
+                </tr>
+              </thead>
+
+              <tbody>
+                {% for item in venda.itens %}
+                <tr>
+                  <td>{{ item.produto_nome }}</td>
+                  <td>{{ item.quantidade }}</td>
+                  <td>R$ {{ "%.2f"|format(item.subtotal) }}</td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
           </div>
-          <div class="detalhe-linha">
-            <span>Desconto</span>
-            <span>{{ venda.desconto_percentual }}%</span>
+
+          <div class="totais">
+            <div class="total-linha">
+              <span>Total bruto</span>
+              <strong>R$ {{ "%.2f"|format(venda.total_bruto) }}</strong>
+            </div>
+
+            <div class="total-linha">
+              <span>Desconto</span>
+              <strong>{{ venda.desconto_percentual }}%</strong>
+            </div>
+
+            <div class="total-final">
+              <span>Total liquido</span>
+              <strong>R$ {{ "%.2f"|format(venda.total_liquido) }}</strong>
+            </div>
           </div>
-          <div class="detalhe-total">
-            <span class="rotulo">Total liquido</span>
-            <span class="valor">R$ {{ "%.2f"|format(venda.total_liquido) }}</span>
+
+          <div class="rodape-comprovante">
+            Obrigado pela compra. Guarde este comprovante para futuras consultas.
           </div>
         </div>
-      </div>
+      </section>
     </main>
   </div>
 </body>

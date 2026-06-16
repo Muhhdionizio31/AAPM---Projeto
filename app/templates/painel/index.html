@@ -25,7 +25,7 @@
 
     <ul class="barra-nav">
       <li>
-        <a href="/" class="ativo">
+        <a href="/painel" class="ativo">
           <svg viewBox="0 0 24 24">
             <line x1="18" y1="20" x2="18" y2="10" />
             <line x1="12" y1="20" x2="12" y2="4" />
@@ -44,6 +44,17 @@
           Estoque
         </a>
       </li>
+      
+      <li>
+        <a href="/categorias/">
+          <svg viewBox="0 0 24 24">
+            <path
+              d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
+          </svg>
+          Categorias
+        </a>
+      </li>
+
       <li>
         <a href="/pdv/">
           <svg viewBox="0 0 24 24">
@@ -78,7 +89,6 @@
       </li>
     </ul>
 
-
     <div class="barra-rodape">
       <div class="barra-usuario">
         <div class="avatar-usuario">{{ usuario.nome[0] | upper if usuario else 'AD' }}</div>
@@ -102,7 +112,6 @@
 
     <main class="area-conteudo">
 
-      <!-- Boas-vindas -->
       <div class="bloco-boas-vindas">
         <div class="bv-texto">
           <h2>Bem-vinda de volta, <span>{{ usuario.nome if usuario else 'Gidalva' }}</span> 👋</h2>
@@ -111,7 +120,6 @@
         <div class="bv-badge">AAPM · SENAI</div>
       </div>
 
-      <!-- Cards métricas -->
       <div class="grade-metricas">
         <div class="card-metrica">
           <div class="cm-topo">
@@ -188,14 +196,12 @@
         </div>
       </div>
 
-      <!-- Gráficos principais -->
       <div class="grade-graficos">
 
-        <!-- Vendas mensais -->
         <div class="card-grafico">
           <div class="card-grafico-cabecalho">
             <h3>Vendas por Mês</h3>
-            <span>2025 – 2026</span>
+            <span>Ano Vigente</span>
           </div>
           <div class="legenda-grafico">
             <div class="legenda-item">
@@ -206,9 +212,7 @@
             </div>
           </div>
           <div style="position:relative;height:220px;">
-            <canvas id="graficoVendas" role="img"
-              aria-label="Gráfico de barras com vendas mensais de julho 2025 a junho 2026">Vendas mensais: Jul 95, Ago
-              110, Set 88, Out 130, Nov 145, Dez 200, Jan 160, Fev 140, Mar 175, Abr 183, Mai 190, Jun 210.</canvas>
+            <canvas id="graficoVendas" role="img" aria-label="Gráfico de barras com vendas mensais atualizadas em tempo real do banco de dados"></canvas>
           </div>
         </div>
 
@@ -218,34 +222,20 @@
             <h3>Por Categoria</h3>
             <span>Estoque atual</span>
           </div>
-          <div class="legenda-grafico">
-            <div class="legenda-item">
-              <div class="legenda-cor" style="background:#c8102e;"></div>Mat. Escolar 52%
-            </div>
-            <div class="legenda-item">
-              <div class="legenda-cor" style="background:#111111;"></div>Uniforme 31%
-            </div>
-            <div class="legenda-item">
-              <div class="legenda-cor" style="background:#e0e0e0;"></div>Apostila 17%
-            </div>
-          </div>
+
           <div style="position:relative;height:220px;">
-            <canvas id="graficoCategorias" role="img"
-              aria-label="Gráfico de rosca com distribuição por categoria: Material Escolar 52%, Uniforme 31%, Apostila 17%">Material
-              Escolar: 52%, Uniforme: 31%, Apostila: 17%.</canvas>
+            <canvas id="graficoCategorias" role="img" aria-label="Gráfico de rosca com distribuição real por categorias do estoque"></canvas>
           </div>
         </div>
 
       </div>
 
-      <!-- Gráficos secundários -->
       <div class="grade-graficos-2">
 
-        <!-- Receita mensal -->
         <div class="card-grafico">
           <div class="card-grafico-cabecalho">
             <h3>Receita Mensal (R$)</h3>
-            <span>Últimos 6 meses</span>
+            <span>Histórico recente</span>
           </div>
           <div class="legenda-grafico">
             <div class="legenda-item">
@@ -253,17 +243,14 @@
             </div>
           </div>
           <div style="position:relative;height:180px;">
-            <canvas id="graficoReceita" role="img"
-              aria-label="Gráfico de linha com receita mensal dos últimos 6 meses">Receita: Jan 5200, Fev 4800, Mar
-              6100, Abr 7200, Mai 7800, Jun 8420.</canvas>
+            <canvas id="graficoReceita" role="img" aria-label="Gráfico de linha com receita mensal histórica"></canvas>
           </div>
         </div>
 
-        <!-- Movimentações recentes -->
         <div class="card-grafico">
           <div class="card-grafico-cabecalho">
             <h3>Movimentações Recentes</h3>
-            <span>Hoje</span>
+            <span>Últimos registros</span>
           </div>
           <table class="tabela-recente">
             <thead>
@@ -277,19 +264,34 @@
             <tbody>
               {% for item in ultimas_vendas %}
               <tr>
-                <td>{{ item.produto_nome }}</td>
+                <td>
+                  {% if item.produto_nome is defined %}
+                    {{ item.produto_nome }}
+                  {% else %}
+                    {{ item.produto.nome }}
+                  {% endif %}
+                </td>
+                
                 <td><span class="tag-tipo verde">Venda</span></td>
+                
                 <td>{{ item.quantidade }}</td>
-                <td>R$ {{ "%.2f"|format(item.preco_unitario * item.quantidade) }}</td>
+                
+                <td>
+                  R$ 
+                  {% if item.preco_unitario is defined %}
+                    {{ "%.2f"|format(item.preco_unitario * item.quantidade) }}
+                  {% else %}
+                    {{ "%.2f"|format(item.produto.preco * item.quantidade) }}
+                  {% endif %}
+                </td>
               </tr>
               {% else %}
               <tr>
                 <td colspan="4" style="text-align: center; color: #777; padding: 20px;">
-                  Nenhuma venda ou movimentação registrada hoje.
+                  Nenhuma venda ou movimentação registrada recentemente.
                 </td>
               </tr>
               {% endfor %}
-
             </tbody>
           </table>
         </div>
@@ -304,18 +306,17 @@
   </div>
 
   <div id="dados-grafico-categorias"
-    data-labels='{{ categorias_labels | tojson if categorias_labels else "[\"Sem dados\"]" }}'
-    data-valores='{{ categorias_valores | tojson if categorias_valores else "[1]" }}' 
-    style="display: none;"></div>
-
-  <div id="dados-grafico-vendas"
-    data-vendas="{{ vendas_mensais_lista | tojson if vendas_mensais_lista else '[0,0,0,0,0,0,0,0,0,0,0,0]' }}"
+    data-labels='{{ categorias_labels | tojson }}'
+    data-valores='{{ categorias_valores | tojson }}' 
     style="display: none;">
   </div>
 
+  <div id="dados-grafico-vendas"
+    data-vendas='{{ vendas_mensais_lista | tojson }}'
+    style="display: none;">
+  </div>
 
   <script src="/static/js/painel.js"></script>
 
 </body>
-
 </html>

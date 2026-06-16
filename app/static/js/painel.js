@@ -1,120 +1,150 @@
-// Data atual no cabeçalho
-const now = new Date();
-const opts = { weekday: 'long', day: '2-digit', month: 'long', year: 'numeric' };
-document.getElementById('dataAtual').textContent =
-  now.toLocaleDateString('pt-BR', opts).replace(/^\w/, c => c.toUpperCase());
-
-// Cores
-const vermelho = '#c8102e';
-const preto = '#111111';
-const cinza = '#e0e0e0';
-
-
-// Gráfico 1 – Vendas mensais (barras)
-const elementoDados = document.getElementById('dados-grafico-vendas');
-const DADOS_VENDAS_BANCO = elementoDados ? JSON.parse(elementoDados.dataset.vendas) : [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-
-const ctxVendas = document.getElementById('graficoVendas').getContext('2d');
-const graficoVendas = new Chart(ctxVendas, {
-  type: 'bar',
-  data: {
-    labels: ['Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez', 'Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun'],
-    datasets: [
-      {
-        label: 'Vendas',
-        data: DADOS_VENDAS_BANCO,
-        backgroundColor: vermelho,
-        borderRadius: 5,
-        borderSkipped: false,
-      },
-      {
-        label: 'Meta',
-        data: [150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150],
-        type: 'line',
-        borderColor: preto,
-        borderWidth: 1.5,
-        borderDash: [6, 4],
-        pointRadius: 0,
-        fill: false,
-        tension: 0,
-      }
-    ]
-  },
-  options: {
-    responsive: true,
-    maintainAspectRatio: false,
-    plugins: { legend: { display: false } },
-    scales: {
-      x: { grid: { display: false }, ticks: { font: { family: 'Montserrat', size: 11, weight: '700' }, color: '#bbb' } },
-      y: { grid: { color: '#f0f0f0' }, ticks: { font: { family: 'Lato', size: 11 }, color: '#bbb' }, beginAtZero: true }
+document.addEventListener("DOMContentLoaded", function () {
+    // 1. Atualiza a data no cabeçalho da página
+    const dataAtualSpan = document.getElementById("dataAtual");
+    if (dataAtualSpan) {
+        const opcoes = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+        dataAtualSpan.textContent = new Date().toLocaleDateString('pt-BR', opcoes);
     }
-  }
-});
 
-// Gráfico 2 – Categorias (rosca)
-const elementoCategorias = document.getElementById('dados-grafico-categorias');
-// Carrega os dados reais ou adota um padrão caso não encontre o elemento
-const LABELS_CATEGORIAS = (elementoCategorias && elementoCategorias.dataset.labels) 
-  ? JSON.parse(elementoCategorias.dataset.labels) 
-  : ['Mat. Escolar', 'Uniforme', 'Apostila'];
+    // 2. RECUPERA OS DADOS REAIS DO HTML (Injetados pelo FastAPI/Jinja2)
+    const divCategorias = document.getElementById("dados-grafico-categorias");
+    const divVendas = document.getElementById("dados-grafico-vendas");
 
-const VALORES_CATEGORIAS = (elementoCategorias && elementoCategorias.dataset.valores) 
-  ? JSON.parse(elementoCategorias.dataset.valores) 
-  : [0, 0, 0];
-  
-const ctxCategorias = document.getElementById('graficoCategorias').getContext('2d');
-
-const graficoCategorias = new Chart(ctxCategorias,{
-  type: 'doughnut',
-  data: {
-    labels: LABELS_CATEGORIAS,
-    datasets: [{
-      data: VALORES_CATEGORIAS,
-      backgroundColor: [vermelho, preto, cinza],
-      borderWidth: 0,
-      hoverOffset: 6,
-    }]
-  },
-  options: {
-    responsive: true,
-    maintainAspectRatio: false,
-    cutout: '65%',
-    plugins: { legend: { display: false } }
-  }
-});
-
-// Gráfico 3 – Receita (linha)
-new Chart(document.getElementById('graficoReceita'), {
-  type: 'line',
-  data: {
-    labels: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun'],
-    datasets: [{
-      label: 'Receita',
-      data: [5200, 4800, 6100, 7200, 7800, 8420],
-      borderColor: vermelho,
-      borderWidth: 2.5,
-      pointBackgroundColor: vermelho,
-      pointRadius: 4,
-      pointHoverRadius: 6,
-      fill: true,
-      backgroundColor: 'rgba(200,16,46,0.07)',
-      tension: 0.4,
-    }]
-  },
-  options: {
-    responsive: true,
-    maintainAspectRatio: false,
-    plugins: { legend: { display: false } },
-    scales: {
-      x: { grid: { display: false }, ticks: { font: { family: 'Montserrat', size: 11, weight: '700' }, color: '#bbb' } },
-      y: {
-        grid: { color: '#f0f0f0' },
-        ticks: {
-          font: { family: 'Lato', size: 11 }, color: '#bbb',
-          callback: v => 'R$' + (v / 1000).toFixed(1) + 'k'
-        },
-        beginAtZero: false
-      }
+    if (!divCategorias || !divVendas) {
+        console.warn("Elementos de dados do painel não foram encontrados nesta página.");
+        return;
     }
-  }
+
+    const categoriasLabels = JSON.parse(divCategorias.getAttribute("data-labels"));
+    const categoriasValores = JSON.parse(divCategorias.getAttribute("data-valores"));
+    const vendasMensais = JSON.parse(divVendas.getAttribute("data-vendas"));
+
+  // 3. RENDERIZAÇÃO DO GRÁFICO DE CATEGORIAS (Rosca/Doughnut)
+  const canvasCategorias = document.getElementById("graficoCategorias");
+    if (canvasCategorias) {
+        const ctxCategorias = canvasCategorias.getContext("2d");
+
+        // Paleta de cores do SENAI (Vermelho, Grafite, Cinza) + cores auxiliares modernas
+        const paletaCores = [
+            '#c8102e', // Vermelho Principal
+            '#111111', // Grafite Escuro
+            '#7f8c8d', // Cinza Médio
+            '#e67e22', // Laranja
+            '#2ce6c8', // Azul Turquesa
+            '#9b59b6', // Roxo
+            '#27ae60', // Verde
+            '#f1c40f'  // Amarelo
+        ];
+
+        // Mapeia as cores para a quantidade de categorias reais vindas do banco
+        const coresDoGrafico = categoriasLabels.map((_, index) => {
+            return paletaCores[index % paletaCores.length];
+        });
+
+        new Chart(ctxCategorias, {
+            type: 'doughnut',
+            data: {
+                labels: categoriasLabels, // Nomes das categorias reais
+                datasets: [{
+                    data: categoriasValores, // Quantidade de produtos por categoria
+                    backgroundColor: coresDoGrafico, // Lista de cores dinâmicas
+                    borderWidth: 2,
+                    borderColor: '#ffffff', // Linha fina branca separando os gomos
+                    hoverOffset: 8 // Faz o gomo "saltar" levemente ao passar o mouse
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false // Mantém a legenda padrão oculta (pois você usa a do HTML)
+                    },
+                    tooltip: {
+                        enabled: true, // Garante que a caixinha preta ao passar o mouse está ativa
+                        backgroundColor: 'rgba(17, 17, 17, 0.9)', // Fundo grafite elegante
+                        titleFont: { family: 'Montserrat', size: 13, weight: 'bold' },
+                        bodyFont: { family: 'Lato', size: 13 },
+                        padding: 10,
+                        cornerRadius: 6,
+                        displayColors: true, // Mostra o quadradinho da cor ao lado do texto no hover
+                        callbacks: {
+                            // Customiza o texto que aparece dentro do balão do mouse
+                            label: function(context) {
+                                const quantidade = context.raw;
+                                return ` Produtos: ${quantidade} un.`;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    // 4. RENDERIZAÇÃO DO GRÁFICO DE VENDAS (Barras)
+    const canvasVendas = document.getElementById("graficoVendas");
+    if (canvasVendas) {
+        new Chart(canvasVendas.getContext("2d"), {
+            type: 'bar',
+            data: {
+                labels: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
+                datasets: [
+                    {
+                        label: 'Vendas (unid.)',
+                        data: vendasMensais, // Injeção dos dados dinâmicos do banco
+                        backgroundColor: '#c8102e',
+                        borderRadius: 4
+                    },
+                    {
+                        label: 'Meta',
+                        data: Array(12).fill(150),
+                        type: 'line',
+                        borderColor: '#111111',
+                        borderDash: [5, 5],
+                        fill: false,
+                        pointRadius: 0
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: {
+                    y: { beginAtZero: true }
+                }
+            }
+        });
+    }
+
+    // 5. RENDERIZAÇÃO DO GRÁFICO DE RECEITA MENSAL (Dados 100% Reais)
+    const divReceita = document.getElementById("dados-grafico-receita");
+    const canvasReceita = document.getElementById("graficoReceita");
+    
+    if (divReceita && canvasReceita) {
+        const receitaLabels = JSON.parse(divReceita.getAttribute("data-labels"));
+        const receitaValores = JSON.parse(divReceita.getAttribute("data-valores"));
+        
+        new Chart(canvasReceita.getContext("2d"), {
+            type: 'line',
+            data: {
+                labels: receitaLabels, // Meses reais vindos do banco (ex: ['Jan', 'Fev'...])
+                datasets: [{
+                    label: 'Receita Real (R$)',
+                    data: receitaValores, // Faturamento real somado por mês
+                    borderColor: '#c8102e',
+                    backgroundColor: 'rgba(200, 16, 46, 0.1)',
+                    fill: true,
+                    tension: 0.3,
+                    pointRadius: 3
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: { y: { beginAtZero: true } }
+            }
+        });
+    }
 });
