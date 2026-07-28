@@ -65,6 +65,7 @@
         </a>
       </li>
       <li>
+        {% if usuario.role == 'admin' %}
         <a href="/clientes/">
           <svg viewBox="0 0 24 24">
             <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
@@ -74,8 +75,10 @@
           </svg>
           Clientes
         </a>
+        {% endif %}
       </li>
       <li>
+        {% if usuario.role == 'admin' %}
         <a href="/usuarios/">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
             stroke-linejoin="round">
@@ -87,6 +90,7 @@
           </svg>
           Usuarios
         </a>
+        {% endif %}
       </li>
     </ul>
 
