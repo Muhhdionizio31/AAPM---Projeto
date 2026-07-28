@@ -5,3 +5,4 @@ from app.models import movimentacao
 from app.models import produto_variacao
 from app.models import cliente
 from app.models import venda
+from app.models import reset_token

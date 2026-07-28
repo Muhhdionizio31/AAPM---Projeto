@@ -64,7 +64,7 @@ def fazer_usuario(
     # Redirecionar para a tela de login
     return RedirectResponse(url="/auth/login?cadastro=successo", status_code=302)
 
-#Rota de login 
+#ROTA DE LOGIN
 @router.post("/login")
 def login(
     request: Request,
@@ -128,7 +128,7 @@ def login(
 
 
 
-
+#ROTA DE ESQUECI A SENHA 
 @router.get("/esqueci-senha")
 def tela_esqueci_senha(request: Request):
     return templates.TemplateResponse(
