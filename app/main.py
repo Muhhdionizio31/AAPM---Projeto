@@ -169,6 +169,20 @@ def visualizar_painel(
     usuario = Depends(get_usuario_opcional)
 ):
 
+    todos_armarios = db.query(Armario).filter(
+        Armario.ativo == True
+    ).all()
+
+    armarios_disponiveis = sum(
+        1 for a in todos_armarios
+        if a.status == StatusArmario.DISPONIVEL
+    )
+
+    armarios_alugados = sum(
+        1 for a in todos_armarios
+        if a.status == StatusArmario.ALUGADO
+    )
+
     # ── 2. CARDS DE MÉTRICAS EM TEMPO REAL ──
     total_produtos = db.query(func.count(Produto.id)).scalar() or 0
     estoque_critico = db.query(Produto).filter(Produto.estoque_atual <= 7).count()
@@ -301,16 +315,3 @@ def api_vendas_mensais(db: Session = Depends(get_db)):
             lista[int(float(d.mes)) - 1] = d.total
     return {"vendas": lista}
 
-# ----------------------------------------------------------
-# ARMÁRIOS
-# ----------------------------------------------------------
-
-todos_armarios   = db.query(Armario).filter(Armario.ativo == True).all()
-armarios_disponiveis = sum(
-     1 for a in todos_armarios
-    if a.status == StatusArmario.DISPONIVEL
-)
-armarios_alugados = sum(
-    1 for a in todos_armarios
-    if a.status == StatusArmario.ALUGADO
-)
