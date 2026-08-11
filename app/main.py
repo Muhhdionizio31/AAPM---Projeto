@@ -15,6 +15,7 @@ from app.controllers import variacao_controller
 from app.controllers import movimentacao_controller
 from app.controllers import cliente_controller
 from app.controllers import pdv_controllers
+from app.controllers import armario_controller
 
 
 from dotenv import load_dotenv
@@ -25,6 +26,7 @@ from sqlalchemy.orm import Session, joinedload
 from app.models.categoria import Categoria
 from app.models.produto import Produto
 from app.models.venda import Venda, ItemVenda
+from app.models.armario import Armario, StatusArmario
 
 
 
@@ -44,6 +46,7 @@ app.include_router(variacao_controller.router)
 app.include_router(movimentacao_controller.router)
 app.include_router(cliente_controller.router)
 app.include_router(pdv_controllers.router)
+app.include_router(armario_controller.router)
 
 
 
@@ -297,3 +300,17 @@ def api_vendas_mensais(db: Session = Depends(get_db)):
         if d.mes:
             lista[int(float(d.mes)) - 1] = d.total
     return {"vendas": lista}
+
+# ----------------------------------------------------------
+# ARMÁRIOS
+# ----------------------------------------------------------
+
+todos_armarios   = db.query(Armario).filter(Armario.ativo == True).all()
+armarios_disponiveis = sum(
+     1 for a in todos_armarios
+    if a.status == StatusArmario.DISPONIVEL
+)
+armarios_alugados = sum(
+    1 for a in todos_armarios
+    if a.status == StatusArmario.ALUGADO
+)
