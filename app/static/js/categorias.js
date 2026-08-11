@@ -40,3 +40,25 @@
   document.querySelectorAll('.sobreposicao-modal').forEach(el => {
     el.addEventListener('click', e => { if (e.target === el) el.classList.remove('aberto'); });
   });
+
+    function abrirModalCategoria() {
+    document.getElementById('modalCategoria').classList.add('ativo');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function fecharModalCategoria() {
+    document.getElementById('modalCategoria').classList.remove('ativo');
+    document.body.style.overflow = '';
+    // Se preferir voltar para a listagem em vez de só fechar visualmente:
+    // window.location.href = '/categorias';
+  }
+
+  // Fecha ao clicar fora da caixa
+  document.getElementById('modalCategoria').addEventListener('click', function (e) {
+    if (e.target === this) fecharModalCategoria();
+  });
+
+  // Fecha com a tecla ESC
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') fecharModalCategoria();
+  });
