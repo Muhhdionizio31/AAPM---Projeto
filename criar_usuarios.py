@@ -3,6 +3,7 @@
 from app.database import Session
 from app.models.usuario import Usuario
 from app.auth import hash_senha
+from app.models.armario import Armario, StatusArmario
 
 USUARIOS = [
     {

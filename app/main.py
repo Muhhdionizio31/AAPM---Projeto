@@ -17,7 +17,7 @@ from app.controllers import cliente_controller
 from app.controllers import pdv_controllers
 from app.controllers import armario_controller
 
-
+from app.database import engine, Base
 from dotenv import load_dotenv
 import os
 from app.database import get_db
@@ -28,7 +28,7 @@ from app.models.produto import Produto
 from app.models.venda import Venda, ItemVenda
 from app.models.armario import Armario, StatusArmario
 
-
+Base.metadata.create_all(bind=engine)
 
 load_dotenv()
 
@@ -295,7 +295,9 @@ def visualizar_painel(
             "categorias_labels": categorias_labels,
             "categorias_valores": categorias_valores,
             "receita_mensal_lista": receita_mensal_lista,
-            "meses_labels": meses_labels
+            "meses_labels": meses_labels,
+            "armarios_disponiveis": armarios_disponiveis,
+            "armarios_alugados": armarios_alugados
         }       
     )
 
