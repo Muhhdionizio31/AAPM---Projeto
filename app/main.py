@@ -305,7 +305,7 @@ def api_vendas_mensais(db: Session = Depends(get_db)):
 # ARMÁRIOS
 # ----------------------------------------------------------
 
-todos_armarios   = db.query(Armario).filter(Armario.ativo == True).all()
+todos_armarios  = db.query(Armario).filter(Armario.ativo == True).all()
 armarios_disponiveis = sum(
      1 for a in todos_armarios
     if a.status == StatusArmario.DISPONIVEL

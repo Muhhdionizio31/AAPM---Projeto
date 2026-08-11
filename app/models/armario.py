@@ -1,5 +1,5 @@
 # ============================================================
-# models/armario.py — Tabela de armários
+#  Tabela de armários
 # ============================================================
 
 from sqlalchemy import Column, Integer, String, Boolean, DateTime, Enum
@@ -22,7 +22,6 @@ class Armario(Base):
     # Número visível na porta do armário — ex: "A01", "B12", "42"
     numero = Column(String(20), nullable=False, unique=True)
 
-    # Localização opcional — ex: "Bloco A - Térreo"
     localizacao = Column(String(100), nullable=True)
 
     status = Column(
@@ -31,24 +30,14 @@ class Armario(Base):
         default=StatusArmario.DISPONIVEL
     )
 
-    # ----------------------------------------------------------
-    # Dados do locatário atual — preenchidos pelo admin.
-    # Ficam NULL quando o armário está disponível ou inativo.
-    # ----------------------------------------------------------
-
-    # Nome do aluno/cliente que alugou
     locatario_nome = Column(String(150), nullable=True)
 
-    # Semestre fixo do contrato — ex: "2025.1", "2025.2"
-    # O admin define manualmente — não calculamos por data.
     semestre = Column(String(10), nullable=True)
 
-    # Observação livre — ex: "Chave reserva com portaria"
     observacao = Column(String(255), nullable=True)
 
     ativo = Column(Boolean, default=True)
 
-    # Data em que o aluguel atual começou
     alugado_em     = Column(DateTime, nullable=True)
     criado_em      = Column(DateTime, server_default=func.now())
     atualizado_em  = Column(DateTime, server_default=func.now(), onupdate=func.now())
