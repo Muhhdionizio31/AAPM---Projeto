@@ -105,17 +105,16 @@
       </li>
     </ul>
 
-    <div class="barra-rodape">
-      <div class="barra-usuario">
-        <div class="avatar-usuario">{{ usuario.nome[0] | upper if usuario else 'AD' }}</div>
-        <div class="info-usuario">
-          <strong>{{ usuario.nome if usuario else 'Usuário' }}</strong>
-          <small>Administrador</small>
-        </div>
-      </div>
-      <button class="btn-sair" onclick="window.location.href='/auth/logout'">
-        Sair
-      </button>
+    <div class="info-usuario">
+      <strong>{{ usuario.nome if usuario else 'Usuário' }}</strong>
+      <small>
+        {{ usuario.role | capitalize if usuario else 'Usuário' }}
+      </small>
+    </div>
+    </div>
+    <button class="btn-sair" onclick="window.location.href='/auth/logout'">
+      Sair
+    </button>
     </div>
   </aside>
 
