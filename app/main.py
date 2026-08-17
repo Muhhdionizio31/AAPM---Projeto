@@ -137,8 +137,7 @@ def politica(
     )
 
 # Rota para acesso não autenticado
-ROTAS_PUBLICAS = ["/auth/login", "/inicio", "/static", "/catalogo", "/horario", "/politica"]
-
+ROTAS_PUBLICAS = ["/auth/login", "/inicio", "/static", "/catalogo", "/horario", "/politica", "/auth/esqueci-senha", "/auth/recuperar-senha"] 
 @app.middleware("http")
 async def verificar_login_middleware(request: Request, call_next):
     # 1. Se o usuário digitar só o IP/Domínio (ex: 127.0.0.1:49669), 
