@@ -94,17 +94,32 @@
       </li>
     </ul>
 
-    <div class="info-usuario">
-      <strong>{{ usuario.nome if usuario else 'Usuário' }}</strong>
-      <small>
-        {{ usuario.role | capitalize if usuario else 'Usuário' }}
-      </small>
+    <div class="barra-rodape">
+
+      <div class="barra-usuario">
+
+        <div class="avatar-usuario">
+          {{ usuario.nome[0] | upper if usuario and usuario.nome else 'U' }}
+        </div>
+
+        <div class="info-usuario">
+          <strong>
+            {{ usuario.nome if usuario else 'Usuário' }}
+          </strong>
+
+          <small>
+            {{ usuario.role | capitalize if usuario else 'Usuário' }}
+          </small>
+        </div>
+
+      </div>
+
+      <button class="btn-sair" type="button" onclick="window.location.href='/auth/logout'">
+        Sair
+      </button>
+
     </div>
-    </div>
-    <button class="btn-sair" onclick="window.location.href='/auth/logout'">
-      Sair
-    </button>
-    </div>
+
   </aside>
 
   <div class="conteudo-principal">
