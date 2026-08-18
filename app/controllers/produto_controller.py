@@ -46,9 +46,11 @@ def listar_produtos(
     query = db.query(Produto)
 
     if status == "inativos":
-        produtos = query.filter(Produto.ativa == False).all()
+        query = query.filter(Produto.ativa == False)
+    elif status == "ativos":
+        query = query.filter(Produto.ativa == True)
     else:
-        produtos = query.filter(Produto.ativa == True).all()
+        status = "todos"
 
     if busca:
         query = query.filter(Produto.nome.ilike(f"%{busca}%"))

@@ -343,7 +343,18 @@
             border-radius: 8px;
             letter-spacing: 0.5px;
             white-space: nowrap;
+            border: none;
+            cursor: pointer;
             transition: background var(--transicao), transform var(--transicao);
+        }
+
+        .btn-novo svg {
+            width: 16px;
+            height: 16px;
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 2.5;
+            stroke-linecap: round;
         }
 
         .btn-novo:hover {
@@ -586,6 +597,111 @@
             text-align: center;
             font-size: 0.78rem;
             color: #aaa;
+        }
+
+        /* Ações e filtros seguem o mesmo padrão visual da tela de categorias. */
+        .filtros-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .card-tabela-acoes {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .btn-filtro {
+            border: 1px solid var(--cinza-medio);
+            background: var(--branco);
+            color: var(--cinza-texto);
+            border-radius: 999px;
+            padding: 7px 16px;
+            font: 700 0.76rem 'Lato', sans-serif;
+            cursor: pointer;
+        }
+
+        .btn-filtro.ativo {
+            background: var(--vermelho);
+            border-color: var(--vermelho);
+            color: var(--branco);
+        }
+
+        .btn-filtro:not(.ativo):hover {
+            border-color: #bbb;
+            color: var(--preto);
+        }
+
+        .celula-acoes {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            gap: 6px;
+        }
+
+        .btn-acao {
+            width: 30px !important;
+            height: 30px !important;
+            padding: 0 !important;
+            border: none !important;
+            border-radius: 7px !important;
+            display: inline-flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            cursor: pointer;
+            transition: background var(--transicao), transform var(--transicao) !important;
+        }
+
+        .btn-acao:hover {
+            transform: translateY(-1px) !important;
+        }
+
+        .btn-acao svg {
+            width: 15px;
+            height: 15px;
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .btn-acao.btn-editar {
+            background: #f1f1f1 !important;
+            color: #555 !important;
+        }
+
+        .btn-acao.btn-editar:hover {
+            background: #e5e5e5 !important;
+            color: var(--preto) !important;
+        }
+
+        .btn-acao.btn-toggle-desativar {
+            background: #fff4cc !important;
+            color: #b77900 !important;
+        }
+
+        .btn-acao.btn-toggle-desativar:hover {
+            background: #ffedb0 !important;
+        }
+
+        .btn-acao.btn-toggle-ativar {
+            background: #dcfce7 !important;
+            color: #15803d !important;
+        }
+
+        .btn-acao.btn-toggle-ativar:hover {
+            background: #bbf7d0 !important;
+        }
+
+        .btn-acao.btn-excluir {
+            background: #fff0f2 !important;
+            color: var(--vermelho) !important;
+        }
+
+        .btn-acao.btn-excluir:hover {
+            background: #ffe0e5 !important;
         }
 
         @media (max-width: 1100px) {
