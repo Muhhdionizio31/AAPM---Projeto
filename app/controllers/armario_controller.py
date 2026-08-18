@@ -6,6 +6,7 @@
 # ============================================================
 
 from datetime import datetime, timezone
+import math
 from fastapi import APIRouter, Depends, Request, Form
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
@@ -29,6 +30,8 @@ def listar_armarios(
     request: Request,
     status: str = "",           # filtra por status
     localizacao: str = "",      # filtra por localização
+    page: int = 1,
+    per_page: int = 15,
     db: Session = Depends(get_db),
     usuario = Depends(get_usuario_logado)
 ):
@@ -44,7 +47,17 @@ def listar_armarios(
     if localizacao:
         query = query.filter(Armario.localizacao.ilike(f"%{localizacao}%"))
 
-    armarios = query.order_by(Armario.numero).all()
+    total_armarios = query.count()
+    page = max(page, 1)
+    per_page = max(per_page, 1)
+    total_pages = math.ceil(total_armarios / per_page) if total_armarios else 1
+    page = min(page, total_pages)
+    armarios = (
+        query.order_by(Armario.numero)
+        .offset((page - 1) * per_page)
+        .limit(per_page)
+        .all()
+    )
 
     # Contadores para o resumo no topo da página
     todos     = db.query(Armario).filter(Armario.ativo == True).all()
@@ -70,6 +83,10 @@ def listar_armarios(
             "localizacao":  localizacao,
             "localizacoes": localizacoes,
             "StatusArmario": StatusArmario,
+            "page": page,
+            "per_page": per_page,
+            "total_pages": total_pages,
+            "total_armarios": total_armarios,
         }
     )
 

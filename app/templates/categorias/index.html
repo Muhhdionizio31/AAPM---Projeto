@@ -334,7 +334,6 @@
               <!-- PRODUTOS -->
 
               <td>
-
                 <span class="badge-contagem">
 
                   {{
@@ -343,31 +342,23 @@
                   | list
                   | length
                   }}
-
                 </span>
-
               </td>
-
 
               <!-- STATUS -->
 
               <td>
-
                 <span class="badge-status {{ 'ativa' if c.ativa else 'inativa' }}">
                   {{ "Ativa" if c.ativa else "Inativa" }}
                 </span>
-
               </td>
 
 
               <!-- AÇÕES -->
 
               {% if usuario.role == 'admin' %}
-
               <td>
-
                 <div class="celula-acoes">
-
                   <!-- EDITAR -->
 
                   <button type="button" class="btn-acao btn-editar" title="Editar" data-id="{{ c.id }}"
@@ -423,9 +414,7 @@
                       </svg>
 
                     </button>
-
                     {% endif %}
-
                   </form>
 
 
@@ -447,9 +436,7 @@
                         <path d="M14 11v6" />
 
                         <path d="M9 6V4h6v2" />
-
                       </svg>
-
                     </button>
 
                   </form>
@@ -525,7 +512,6 @@
 
     <br>
 
-    {% if total_pages > 1 %}
     <div class="paginacao">
 
       <span class="paginacao-info">
@@ -555,7 +541,6 @@
         {% endif %}
 
     </div>
-    {% endif %}
     <br>
 
     <!-- RODAPÉ -->

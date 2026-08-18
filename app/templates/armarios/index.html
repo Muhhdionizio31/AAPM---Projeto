@@ -708,6 +708,24 @@
           class="paginacao oculta">
         </div>
 
+        <nav class="paginacao-servidor" aria-label="Paginação de armários">
+          {% if page > 1 %}
+          <a class="btn-pagina"
+            href="/armarios/?page={{ page - 1 }}&per_page={{ per_page }}&status={{ status }}&localizacao={{ localizacao }}">Anterior</a>
+          {% else %}
+          <span class="btn-pagina desabilitado">Anterior</span>
+          {% endif %}
+
+          <span class="paginacao-info">Página {{ page }} de {{ total_pages }}</span>
+
+          {% if page < total_pages %}
+          <a class="btn-pagina"
+            href="/armarios/?page={{ page + 1 }}&per_page={{ per_page }}&status={{ status }}&localizacao={{ localizacao }}">Próxima</a>
+          {% else %}
+          <span class="btn-pagina desabilitado">Próxima</span>
+          {% endif %}
+        </nav>
+
       </div>
 
 
@@ -717,9 +735,7 @@
     <!-- RODAPÉ -->
 
     <footer class="rodape-admin">
-      Painel de Controle
-      &nbsp;·&nbsp;
-      © 2026 Todos os direitos reservados
+      Gerenciamento de Armários &nbsp;·&nbsp;© 2026 Todos os direitos reservados
     </footer>
 
 
@@ -1023,7 +1039,8 @@
      * BUSCA + FILTRO POR CHIPS + PAGINAÇÃO
      * ========================================================= */
 
-    const TAMANHO_PAGINA = 8;
+    // A paginação é feita no servidor; o JavaScript só filtra os itens da página atual.
+    const TAMANHO_PAGINA = Number.MAX_SAFE_INTEGER;
 
     const busca = document.getElementById("buscaArmario");
     const grupoFiltroStatus = document.getElementById("grupoFiltroStatus");

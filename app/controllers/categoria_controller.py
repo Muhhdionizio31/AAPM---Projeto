@@ -17,7 +17,7 @@ templates = Jinja2Templates(directory="app/templates")
 def listar_categorias(
     request: Request,
     page: int = 1,
-    per_page: int = 15,
+    per_page: int = 8,
     db: Session = Depends(get_db),
     usuario = Depends(get_usuario_logado)
 ):
