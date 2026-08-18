@@ -231,7 +231,7 @@
           </strong>
 
           <small>
-            Administrador
+            {{ usuario.role|capitalize if usuario and usuario.role else 'Usuário' }}
           </small>
 
         </div>
