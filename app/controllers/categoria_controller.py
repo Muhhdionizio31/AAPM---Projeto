@@ -1,3 +1,5 @@
+import math
+
 from fastapi import APIRouter, Depends, Request, Form
 from fastapi.responses import RedirectResponse
 from fastapi.templating import Jinja2Templates
@@ -14,13 +16,21 @@ templates = Jinja2Templates(directory="app/templates")
 @router.get("")
 def listar_categorias(
     request: Request,
+    page: int = 1,
+    per_page: int = 15,
     db: Session = Depends(get_db),
     usuario = Depends(get_usuario_logado)
 ):
     """
     Lista todas as categorias ordenadas por nome.
     """
-    categorias = db.query(Categoria).order_by(Categoria.nome).all()
+    query = db.query(Categoria).order_by(Categoria.nome)
+    total_categorias = query.count()
+    page = max(page, 1)
+    per_page = max(per_page, 1)
+    total_pages = math.ceil(total_categorias / per_page) if total_categorias else 1
+    page = min(page, total_pages)
+    categorias = query.offset((page - 1) * per_page).limit(per_page).all()
 
     return templates.TemplateResponse(
         request,
@@ -29,6 +39,10 @@ def listar_categorias(
             "request":    request,
             "usuario":    usuario,
             "categorias": categorias,
+            "page": page,
+            "per_page": per_page,
+            "total_pages": total_pages,
+            "total_categorias": total_categorias,
         }
     )
 
