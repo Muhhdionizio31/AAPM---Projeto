@@ -34,7 +34,7 @@ function gerenciarExibicaoGrade(selectId, grupoId, estoqueId, containerId) {
     const estoque = document.getElementById(estoqueId);
     const container = document.getElementById(containerId);
 
-    if (select.value === "10") {
+    if (select.value) {
         grupo.style.display = "block";
         estoque.readOnly = true;
         estoque.style.backgroundColor = "#f3f4f6";
@@ -130,7 +130,7 @@ async function salvarProduto() {
     if (imagem) { formData.append("imagem", imagem); }
 
     // Se categoria for Vestuário (10), serializa as variações no Form
-    if (categoria === "10") {
+    if (categoria) {
         const variacoes = capturarDadosGrade("container-grades");
         formData.append("variacoes_json", JSON.stringify(variacoes));
     }
@@ -175,7 +175,7 @@ async function abrirModalEditar(botao) {
     container.innerHTML = ""; // Limpa a grade antiga
 
     // Se for categoria 10, aguarda a resposta da API para construir a grade de forma assíncrona
-    if (botao.dataset.categoria === "10") {
+    if (botao.dataset.categoria) {
         try {
             const res = await fetch(`/produtos/${pId}/variacoes`);
             if (res.ok) {
@@ -199,7 +199,7 @@ async function abrirModalEditar(botao) {
     gerenciarExibicaoGrade("editCategoria", "editGrupoTamanho", "editEstoque", "edit-container-grades");
     
     // Força a soma total correta na tela somente após todas as linhas terem sido inseridas
-    if (botao.dataset.categoria === "10") {
+    if (botao.dataset.categoria === "1") {
         somarGradeNaTela("edit-container-grades", "editEstoque");
     }
 
@@ -213,7 +213,7 @@ async function salvarEdicaoProduto(event) {
     const formData = new FormData(formElement);
 
     // Se for vestuário, capturamos a grade exatamente do jeito que está em exibição
-    if (document.getElementById("editCategoria").value === "10") {
+    if (document.getElementById("editCategoria").value === "1") {
         const variacoes = capturarDadosGrade("edit-container-grades");
         
         // Remove do envio qualquer valor antigo ou congelado do input estoque_atual

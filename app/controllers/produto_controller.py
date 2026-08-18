@@ -138,7 +138,7 @@ async def criar_produto(
     db.flush() 
 
     # 3. Se for categoria de Uniformes (10), insere as variações associadas
-    if categoria_id == 10 and variacoes_json:
+    if categoria_id and variacoes_json:
         try:
             lista_variacoes = json.loads(variacoes_json)
             for item in lista_variacoes:
@@ -240,14 +240,10 @@ async def editar_produto(
     produto.categoria_id = categoria_id
     produto.preco = preco
 
-    # Se NÃO for vestuário, o estoque vem direto do campo comum do formulário
-    if categoria_id != 10:
-        produto.estoque_atual = estoque_atual
-
     # =========================================================
     # 2. LOGICA DE VARIÁÇÕES (Roda APENAS para Vestuário)
     # =========================================================
-    if categoria_id == 10 and variacoes_json:
+    if categoria_id and variacoes_json:
         try:
             lista_variacoes = json.loads(variacoes_json)
             
