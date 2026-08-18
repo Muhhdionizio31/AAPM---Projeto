@@ -11,219 +11,215 @@
     href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Lato:wght@300;400;700&display=swap"
     rel="stylesheet" />
 
-  <!-- ÚNICA FOLHA DE ESTILO DESTA PÁGINA -->
   <link rel="stylesheet" href="/static/css/armarios.css" />
+
+  <style>
+    /* ==========================================================
+       ESTILOS DOS MODAIS (Novo Armário / Alugar Armário)
+       Isolados aqui para não depender de classes que talvez não
+       existam ainda em armarios.css. Se você já tiver um padrão
+       de modal no CSS global, pode apagar este bloco e trocar
+       as classes abaixo pelas suas.
+       ========================================================== */
+    .modal-sobreposicao {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.55);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+
+    .modal-sobreposicao.visivel {
+      display: flex;
+    }
+
+    body.modal-aberto-body {
+      overflow: hidden;
+    }
+
+    .modal-caixa {
+      background: #fff;
+      width: 100%;
+      max-width: 520px;
+      max-height: 90vh;
+      overflow-y: auto;
+      border-radius: 12px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25);
+      animation: modalEntrar 0.18s ease-out;
+    }
+
+    @keyframes modalEntrar {
+      from { opacity: 0; transform: translateY(-8px) scale(0.98); }
+      to   { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    .modal-cabecalho {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 20px 24px;
+      border-bottom: 1px solid #eef0f3;
+    }
+
+    .modal-cabecalho h3 {
+      margin: 0 0 2px 0;
+      font-family: "Montserrat", sans-serif;
+    }
+
+    .modal-cabecalho span {
+      font-family: "Lato", sans-serif;
+      font-size: 0.85rem;
+      color: #6b7280;
+    }
+
+    .modal-fechar {
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 4px;
+      border-radius: 6px;
+      color: #6b7280;
+      line-height: 0;
+    }
+
+    .modal-fechar:hover {
+      background: #f3f4f6;
+      color: #111827;
+    }
+
+    .modal-fechar svg {
+      width: 20px;
+      height: 20px;
+      stroke: currentColor;
+      stroke-width: 2;
+      fill: none;
+    }
+
+    .modal-corpo {
+      padding: 24px;
+    }
+  </style>
 </head>
 
 <body>
 
-  <!-- Sobreposição escura usada só no mobile, atrás da barra lateral -->
-  <div
-    id="barraSobreposicao"
-    class="barra-sobreposicao"
-    onclick="fecharMenuMobile()">
-  </div>
+  <div id="barraSobreposicao" class="barra-sobreposicao" onclick="fecharMenuMobile()"></div>
 
 
   <!-- =========================================================
        BARRA LATERAL
        ========================================================= -->
 
-  <aside
-    class="barra-lateral"
-    id="barraLateral">
+  <aside class="barra-lateral" id="barraLateral">
 
     <div class="barra-logo">
-
-      <span class="barra-logo-texto">
-        SENAI <span>///</span>
-      </span>
-
+      <img class="barra-logo-senai" src="/static/uploads/foto-senai.png" alt="SENAI">
       <div class="barra-logo-separador"></div>
+      <img class="barra-logo-aapm" src="/static/uploads/logo-aapm.png" alt="AAPM">
 
-      <span class="barra-logo-sub">
-        AAPM
-      </span>
-
-      <!-- Fechar menu no mobile -->
-      <button
-        type="button"
-        class="barra-fechar-mobile"
-        aria-label="Fechar menu"
-        onclick="fecharMenuMobile()">
-
+      <button type="button" class="barra-fechar-mobile" aria-label="Fechar menu" onclick="fecharMenuMobile()">
         <svg viewBox="0 0 24 24">
           <line x1="18" y1="6" x2="6" y2="18" />
           <line x1="6" y1="6" x2="18" y2="18" />
         </svg>
-
       </button>
-
     </div>
 
-
-    <span class="barra-menu-titulo">
-      Menu
-    </span>
-
+    <span class="barra-menu-titulo">Menu</span>
 
     <ul class="barra-nav">
 
-      <!-- PAINEL -->
       <li>
         <a href="/painel">
-
           <svg viewBox="0 0 24 24">
             <line x1="18" y1="20" x2="18" y2="10" />
             <line x1="12" y1="20" x2="12" y2="4" />
             <line x1="6" y1="20" x2="6" y2="14" />
           </svg>
-
           Painel
-
         </a>
       </li>
 
-
-      <!-- ESTOQUE -->
       <li>
         <a href="/produtos/">
-
           <svg viewBox="0 0 24 24">
-            <path
-              d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
+            <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
           </svg>
-
           Estoque
-
         </a>
       </li>
 
-
-      <!-- CATEGORIAS -->
       <li>
         <a href="/categorias/">
-
           <svg viewBox="0 0 24 24" fill="currentColor">
-            <path
-              d="M3 3h7v7H3V3zm11 0h7v7h-7V3zM3 14h7v7H3v-7zm11 0h7v7h-7v-7z" />
+            <path d="M3 3h7v7H3V3zm11 0h7v7h-7V3zM3 14h7v7H3v-7zm11 0h7v7h-7v-7z" />
           </svg>
-
           Categorias
-
         </a>
       </li>
 
-
-      <!-- VENDAS -->
       <li>
         <a href="/pdv/">
-
           <svg viewBox="0 0 24 24">
-
-            <path
-              d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" />
-
+            <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" />
             <line x1="3" y1="6" x2="21" y2="6" />
-
             <path d="M16 10a4 4 0 0 1-8 0" />
-
           </svg>
-
           Vendas
-
         </a>
       </li>
 
-
-      <!-- =====================================================
-           ARMÁRIOS — PÁGINA ATUAL
-           ===================================================== -->
-
       <li>
-
         <a href="/armarios/" class="ativo" aria-current="page">
-
           <svg viewBox="0 0 24 24">
-
             <rect x="3" y="3" width="7" height="18" rx="1" />
             <rect x="14" y="3" width="7" height="18" rx="1" />
             <line x1="7" y1="8" x2="7" y2="8.01" />
             <line x1="18" y1="8" x2="18" y2="8.01" />
-
           </svg>
-
           Armários
-
         </a>
-
       </li>
 
-
-      <!-- CLIENTES -->
       {% if usuario.role == 'admin' %}
-
       <li>
-
         <a href="/clientes/">
-
           <svg viewBox="0 0 24 24">
-
             <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
             <circle cx="9" cy="7" r="4" />
             <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
             <path d="M16 3.13a4 4 0 0 1 0 7.75" />
-
           </svg>
-
           Clientes
-
         </a>
-
       </li>
-
       {% endif %}
 
-
-      <!-- USUÁRIOS -->
       {% if usuario.role == 'admin' %}
-
       <li>
-
         <a href="/usuarios/">
-
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
             stroke-linecap="round" stroke-linejoin="round">
-
             <rect x="2" y="5" width="20" height="14" rx="2"></rect>
             <circle cx="8" cy="11" r="2"></circle>
             <path d="M5.5 16c0-1.4 1.1-2.5 2.5-2.5s2.5 1.1 2.5 2.5"></path>
             <line x1="14" y1="10" x2="19" y2="10"></line>
             <line x1="14" y1="14" x2="17" y2="14"></line>
-
           </svg>
-
           Usuários
-
         </a>
-
       </li>
-
       {% endif %}
 
     </ul>
 
-
-    <!-- RODAPÉ DA BARRA -->
-
     <div class="barra-rodape">
-
       <div class="barra-usuario">
-
-        <div class="avatar-usuario">
-          {{ usuario.nome[0] | upper if usuario else 'AD' }}
-        </div>
-
+        <div class="avatar-usuario">{{ usuario.nome[0] | upper if usuario else 'AD' }}</div>
         <div class="info-usuario">
 
           <strong>
@@ -235,17 +231,8 @@
           </small>
 
         </div>
-
       </div>
-
-      <button
-        class="btn-sair"
-        onclick="window.location.href='/auth/logout'">
-
-        Sair
-
-      </button>
-
+      <button class="btn-sair" onclick="window.location.href='/auth/logout'">Sair</button>
     </div>
 
   </aside>
@@ -257,416 +244,232 @@
 
   <div class="conteudo-principal">
 
-
-    <!-- CABEÇALHO -->
-
     <header class="cabecalho-pagina">
 
       <div class="cabecalho-titulo">
 
-        <!-- Abrir menu no mobile -->
-        <button
-          type="button"
-          class="btn-menu-mobile"
-          aria-label="Abrir menu"
-          onclick="abrirMenuMobile()">
-
+        <button type="button" class="btn-menu-mobile" aria-label="Abrir menu" onclick="abrirMenuMobile()">
           <svg viewBox="0 0 24 24">
             <line x1="3" y1="6" x2="21" y2="6" />
             <line x1="3" y1="12" x2="21" y2="12" />
             <line x1="3" y1="18" x2="21" y2="18" />
           </svg>
-
         </button>
 
-        <h1>
-          Aluguel de Armários
-        </h1>
+        <h1>Aluguel de Armários</h1>
 
       </div>
 
-      <span
-        class="cabecalho-data"
-        id="dataAtual">
-      </span>
+      <span class="cabecalho-data" id="dataAtual"></span>
 
     </header>
 
 
-    <!-- =======================================================
-         ÁREA DOS ARMÁRIOS
-         ======================================================= -->
-
     <main class="area-conteudo">
-
-
-      <!-- TÍTULO -->
 
       <div class="bloco-boas-vindas">
 
         <div class="bv-texto">
-
-          <h2>
-            Controle de Aluguel de Armários
-          </h2>
-
-          <p>
-            Gerencie locações, vencimentos e devoluções dos armários da AAPM SENAI Francisco Matarazzo.
-          </p>
-
+          <h2>Controle de Aluguel de Armários</h2>
+          <p>Gerencie locações e liberações dos armários da AAPM SENAI Francisco Matarazzo.</p>
         </div>
 
-        <div class="bv-badge">
-          AAPM · SENAI
-        </div>
+        <div class="bv-badge">AAPM · SENAI</div>
 
       </div>
 
 
-      <!-- =====================================================
-           MÉTRICAS DE ALUGUEL
-           ===================================================== -->
+      {% set qp = request.query_params %}
 
-      {% set total_armarios = armarios|length %}
-      {% set alugados = armarios|selectattr('status', 'equalto', 'alugado')|list %}
-      {% set atrasados = armarios|selectattr('status', 'equalto', 'atrasado')|list %}
-      {% set livres = armarios|selectattr('status', 'equalto', 'livre')|list %}
+      {% if qp.get('criado') == 'ok' %}
+      <div class="alerta-sucesso">Armário cadastrado com sucesso.</div>
+      {% elif qp.get('erro') == 'ja_alugado' %}
+      <div class="alerta-erro">Este armário já foi alugado por outra pessoa.</div>
+      {% elif qp.get('erro') == 'desativar_alugado' %}
+      <div class="alerta-erro">Não é possível desativar um armário alugado. Libere-o primeiro.</div>
+      {% endif %}
 
+
+      <!-- MÉTRICAS -->
       <div class="grade-metricas">
 
         <div class="card-metrica">
-
           <div class="cm-topo">
-
-            <span class="cm-label">
-              Armários Cadastrados
-            </span>
-
+            <span class="cm-label">Armários Cadastrados</span>
             <div class="cm-icone azul">
-
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                 stroke-linecap="round" stroke-linejoin="round">
                 <rect x="3" y="3" width="7" height="18" rx="1" />
                 <rect x="14" y="3" width="7" height="18" rx="1" />
               </svg>
-
             </div>
-
           </div>
-
-          <div class="cm-valor">
-            {{ total_armarios }}
-          </div>
-
-          <div class="cm-variacao neutro">
-            Capacidade total
-          </div>
-
+          <div class="cm-valor">{{ total }}</div>
+          <div class="cm-variacao neutro">Capacidade total</div>
         </div>
 
-
         <div class="card-metrica">
-
           <div class="cm-topo">
-
-            <span class="cm-label">
-              Armários Alugados
-            </span>
-
+            <span class="cm-label">Armários Alugados</span>
             <div class="cm-icone vermelho">
-
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                 stroke-linecap="round" stroke-linejoin="round">
                 <rect x="3" y="11" width="18" height="10" rx="2" />
                 <path d="M7 11V7a5 5 0 0 1 10 0v4" />
               </svg>
-
             </div>
-
           </div>
-
-          <div class="cm-valor">
-            {{ alugados|length }}
-          </div>
-
+          <div class="cm-valor">{{ alugados }}</div>
           <div class="cm-variacao positivo">
-            {{ ((alugados|length / total_armarios * 100) | round | int) if total_armarios else 0 }}% de ocupação
+            {{ ((alugados / total * 100) | round | int) if total else 0 }}% de ocupação
           </div>
-
         </div>
 
-
         <div class="card-metrica">
-
           <div class="cm-topo">
-
-            <span class="cm-label">
-              Armários Livres
-            </span>
-
+            <span class="cm-label">Armários Disponíveis</span>
             <div class="cm-icone verde">
-
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                 stroke-linecap="round" stroke-linejoin="round">
                 <polyline points="20 6 9 17 4 12" />
               </svg>
-
             </div>
-
           </div>
-
-          <div class="cm-valor">
-            {{ livres|length }}
-          </div>
-
-          <div class="cm-variacao neutro">
-            Disponíveis para locação
-          </div>
-
-        </div>
-
-
-        <div class="card-metrica">
-
-          <div class="cm-topo">
-
-            <span class="cm-label">
-              Aluguéis em Atraso
-            </span>
-
-            <div class="cm-icone laranja">
-
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                stroke-linecap="round" stroke-linejoin="round">
-                <path d="M12 9v4" />
-                <path d="M12 17h.01" />
-                <path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
-              </svg>
-
-            </div>
-
-          </div>
-
-          <div class="cm-valor">
-            {{ atrasados|length }}
-          </div>
-
-          <div class="cm-variacao {{ 'negativo' if atrasados|length else 'positivo' }}">
-            {{ 'Requer atenção' if atrasados|length else 'Tudo em dia' }}
-          </div>
-
+          <div class="cm-valor">{{ disponiveis }}</div>
+          <div class="cm-variacao neutro">Prontos para nova locação</div>
         </div>
 
       </div>
 
 
-      <!-- =====================================================
-           ÁREA PRINCIPAL DOS ARMÁRIOS
-           ===================================================== -->
-
+      <!-- ÁREA PRINCIPAL -->
       <div class="armarios-card">
 
         <div class="card-cabecalho">
-
           <div>
-
-            <h3>
-              Locações
-            </h3>
-
-            <span>
-              Controle de aluguel e devolução
-            </span>
-
+            <h3>Locações</h3>
+            <span>Controle de aluguel e liberação</span>
           </div>
 
-          <button
-            type="button"
-            class="btn-principal"
-            onclick="abrirModalArmario()">
-
-            + Novo Aluguel
-
+          <!-- ANTES: <a href="/armarios/novo" class="btn-principal">+ Novo Armário</a> -->
+          <button type="button" class="btn-principal" onclick="abrirModalNovo()">
+            + Novo Armário
           </button>
-
         </div>
 
-
-        <!-- ===================================================
-             FILTROS: busca + chips de status
-             =================================================== -->
 
         <div class="filtros-armarios">
 
           <label class="barra-busca-armario">
-
             <svg viewBox="0 0 24 24">
               <circle cx="11" cy="11" r="7" />
               <line x1="21" y1="21" x2="16.65" y2="16.65" />
             </svg>
-
             <input
               type="text"
               id="buscaArmario"
-              placeholder="Buscar por armário, locatário ou matrícula..."
+              placeholder="Buscar por armário, locatário ou localização..."
               autocomplete="off"
               aria-label="Buscar aluguel" />
-
           </label>
 
-
-          <div
-            class="grupo-chips"
-            id="grupoFiltroStatus"
-            role="group"
-            aria-label="Filtrar por status">
-
-            <button type="button" class="btn-filtro ativo" data-status="">
-              Todos
-            </button>
-
-            <button type="button" class="btn-filtro" data-status="livre">
-              Livre
-            </button>
-
-            <button type="button" class="btn-filtro" data-status="alugado">
-              Alugado
-            </button>
-
-            <button type="button" class="btn-filtro" data-status="atrasado">
-              Atrasado
-            </button>
-
-            <button type="button" class="btn-filtro" data-status="manutencao">
-              Manutenção
-            </button>
-
+          <div class="grupo-chips" id="grupoFiltroStatus" role="group" aria-label="Filtrar por status">
+            <button type="button" class="btn-filtro ativo" data-status="">Todos</button>
+            <button type="button" class="btn-filtro" data-status="disponivel">Disponível</button>
+            <button type="button" class="btn-filtro" data-status="alugado">Alugado</button>
           </div>
 
         </div>
 
-
-        <!-- ===================================================
-             TABELA DE ALUGUÉIS
-             =================================================== -->
 
         <div class="tabela-container">
 
           <table class="tabela-armarios">
 
             <thead>
-
               <tr>
                 <th>Armário</th>
                 <th>Localização</th>
                 <th>Locatário</th>
-                <th>Matrícula</th>
-                <th>Início</th>
-                <th>Vencimento</th>
-                <th>Valor</th>
+                <th>Semestre</th>
+                <th>Alugado em</th>
                 <th>Status</th>
                 <th>Ações</th>
               </tr>
-
             </thead>
-
 
             <tbody id="tabelaArmarios">
 
-              <!--
-                Se o seu FastAPI/Jinja já envia uma lista
-                chamada "armarios", os registros serão
-                exibidos aqui. Cada armário pode conter:
-                numero, localizacao, locatario, matricula,
-                data_inicio, data_vencimento, valor, status
-              -->
-
               {% for armario in armarios %}
 
-              <tr
-                data-status="{{ armario.status }}"
-                class="{{ 'linha-atrasada' if armario.status == 'atrasado' else '' }}">
+              <tr data-status="{{ armario.status.value }}">
 
                 <td>{{ armario.numero }}</td>
-                <td>{{ armario.localizacao }}</td>
-                <td>{{ armario.locatario or '-' }}</td>
-                <td>{{ armario.matricula or '-' }}</td>
-                <td>{{ armario.data_inicio or '-' }}</td>
-                <td>{{ armario.data_vencimento or '-' }}</td>
-                <td>{{ 'R$ %.2f'|format(armario.valor) if armario.valor else '-' }}</td>
+                <td>{{ armario.localizacao or '-' }}</td>
+                <td>{{ armario.locatario_nome or '-' }}</td>
+                <td>{{ armario.semestre or '-' }}</td>
+                <td>{{ armario.alugado_em.strftime('%d/%m/%Y') if armario.alugado_em else '-' }}</td>
 
                 <td>
-
-                  {% if armario.status == 'alugado' %}
+                  {% if armario.status.value == 'alugado' %}
                   <span class="tag-tipo azul">Alugado</span>
-                  {% elif armario.status == 'atrasado' %}
-                  <span class="tag-tipo vermelho">Atrasado</span>
-                  {% elif armario.status == 'manutencao' %}
-                  <span class="tag-tipo laranja">Manutenção</span>
+                  {% elif armario.status.value == 'inativo' %}
+                  <span class="tag-tipo cinza">Inativo</span>
                   {% else %}
-                  <span class="tag-tipo verde">Livre</span>
+                  <span class="tag-tipo verde">Disponível</span>
                   {% endif %}
-
                 </td>
 
-
                 <td>
-
                   <div class="acoes-armario">
 
-                    {% if armario.status == 'livre' %}
+                    <a href="/armarios/{{ armario.id }}" class="btn-acao">Ver</a>
 
+                    {% if armario.status.value == 'disponivel' %}
+
+                    <!-- ANTES: <a href="/armarios/{{ armario.id }}/alugar" class="btn-acao btn-alugar">Alugar</a> -->
                     <button
                       type="button"
-                      class="btn-acao btn-alugar"
-                      onclick="alugarArmario('{{ armario.id }}')">
-
+                      class="btn-acao btn-alugar btn-abrir-alugar"
+                      data-armario-id="{{ armario.id }}"
+                      data-armario-numero="{{ armario.numero | e }}"
+                      data-armario-localizacao="{{ (armario.localizacao or 'Localização não informada') | e }}">
                       Alugar
-
                     </button>
+
+                    <form
+                      method="post"
+                      action="/armarios/{{ armario.id }}/toggle-ativo"
+                      class="form-acao-inline"
+                      onsubmit="return confirm('Desativar o armário #{{ armario.numero }}?');">
+                      <button type="submit" class="btn-acao btn-excluir">Desativar</button>
+                    </form>
+
+                    {% elif armario.status.value == 'alugado' %}
+
+                    <form
+                      method="post"
+                      action="/armarios/{{ armario.id }}/liberar"
+                      class="form-acao-inline"
+                      onsubmit="return confirm('Confirmar a liberação do armário #{{ armario.numero }}? Ele ficará disponível para novo aluguel.');">
+                      <button type="submit" class="btn-acao btn-devolver">Liberar</button>
+                    </form>
 
                     {% else %}
 
-                    <button
-                      type="button"
-                      class="btn-acao btn-renovar"
-                      onclick="renovarArmario('{{ armario.id }}')">
-
-                      Renovar
-
-                    </button>
-
-                    <button
-                      type="button"
-                      class="btn-acao btn-devolver"
-                      onclick="devolverArmario('{{ armario.id }}')">
-
-                      Devolver
-
-                    </button>
+                    <form
+                      method="post"
+                      action="/armarios/{{ armario.id }}/toggle-ativo"
+                      class="form-acao-inline"
+                      onsubmit="return confirm('Reativar o armário #{{ armario.numero }}?');">
+                      <button type="submit" class="btn-acao btn-alugar">Reativar</button>
+                    </form>
 
                     {% endif %}
 
-                    <button
-                      type="button"
-                      class="btn-acao"
-                      onclick="editarArmario('{{ armario.id }}')">
-
-                      Editar
-
-                    </button>
-
-                    <button
-                      type="button"
-                      class="btn-acao btn-excluir"
-                      onclick="excluirArmario('{{ armario.id }}')">
-
-                      Excluir
-
-                    </button>
+                    <a href="/armarios/{{ armario.id }}/editar" class="btn-acao">Editar</a>
 
                   </div>
-
                 </td>
 
               </tr>
@@ -678,35 +481,20 @@
           </table>
 
 
-          <!-- Estado vazio exibido/escondido via JS, cobre tanto
-               "sem armários cadastrados" quanto "sem resultado no filtro" -->
-
-          <div
-            id="estadoVazio"
-            class="estado-vazio"
-            style="display: none;">
-
+          <div id="estadoVazio" class="estado-vazio" style="display: none;">
             <svg viewBox="0 0 24 24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
               <rect x="3" y="3" width="7" height="18" rx="1" />
               <rect x="14" y="3" width="7" height="18" rx="1" />
               <line x1="7" y1="8" x2="7" y2="8.01" />
               <line x1="18" y1="8" x2="18" y2="8.01" />
             </svg>
-
             <p id="estadoVazioTitulo">Nenhum armário cadastrado</p>
-            <span id="estadoVazioSub">Clique em "+ Novo Aluguel" para começar.</span>
-
+            <span id="estadoVazioSub">Clique em "+ Novo Armário" para começar.</span>
           </div>
 
         </div>
 
-
-        <!-- PAGINAÇÃO (só aparece com a lista completa, sem filtro ativo) -->
-
-        <div
-          id="paginacaoArmarios"
-          class="paginacao oculta">
-        </div>
+        <div id="paginacaoArmarios" class="paginacao oculta"></div>
 
         <nav class="paginacao-servidor" aria-label="Paginação de armários">
           {% if page > 1 %}
@@ -728,210 +516,192 @@
 
       </div>
 
-
     </main>
 
 
-    <!-- RODAPÉ -->
-
     <footer class="rodape-admin">
+<<<<<<< HEAD
       Gerenciamento de Armários &nbsp;·&nbsp;© 2026 Todos os direitos reservados
+=======
+      Painel de Controle &nbsp;·&nbsp; © 2026 Todos os direitos reservados
+>>>>>>> 0b13814e56a4c400dc8def2284acb26acee0ff06
     </footer>
 
-
   </div>
 
 
   <!-- =========================================================
-       MODAL - NOVO ALUGUEL / EDIÇÃO
+       MODAL: NOVO ARMÁRIO
        ========================================================= -->
 
-  <div
-    id="modalArmario"
-    class="modal-armario"
-    role="dialog"
-    aria-modal="true"
-    aria-labelledby="modalArmarioTitulo">
-
-    <div class="modal-conteudo">
+  <div class="modal-sobreposicao" id="modalNovoSobreposicao" onclick="fecharModalNovoClique(event)">
+    <div class="modal-caixa" id="modalNovoCaixa">
 
       <div class="modal-cabecalho">
-
-        <h2 id="modalArmarioTitulo">
-          Novo Aluguel
-        </h2>
-
-        <button
-          type="button"
-          class="modal-fechar"
-          aria-label="Fechar"
-          onclick="fecharModalArmario()">
-
-          ×
-
+        <div>
+          <h3>Cadastrar novo armário</h3>
+          <span>Preencha os dados do armário</span>
+        </div>
+        <button type="button" class="modal-fechar" aria-label="Fechar" onclick="fecharModalNovo()">
+          <svg viewBox="0 0 24 24">
+            <line x1="18" y1="6" x2="6" y2="18" />
+            <line x1="6" y1="6" x2="18" y2="18" />
+          </svg>
         </button>
-
       </div>
 
+      <div class="modal-corpo">
 
-      <form
-        id="formArmario"
-        method="post"
-        action="/armarios/criar"
-        novalidate>
+        {% if erro_novo %}
+        <div class="alerta-erro">{{ erro_novo }}</div>
+        {% endif %}
 
+        <form id="formNovoArmario" method="post" action="/armarios/novo" novalidate>
 
-        <div class="campo-form-grade">
+          <div class="campo-form-grade">
 
-          <div class="campo-form" id="campoNumero">
+            <div class="campo-form" id="campoNumeroNovo">
+              <label for="numeroNovo">Número do Armário</label>
+              <input
+                type="text"
+                id="numeroNovo"
+                name="numero"
+                value="{{ valores_novo.numero if valores_novo else '' }}"
+                required />
+              <span class="campo-erro">Informe o número do armário.</span>
+            </div>
 
-            <label for="numero">Número do Armário</label>
+            <div class="campo-form">
+              <label for="localizacaoNovo">Localização</label>
+              <input
+                type="text"
+                id="localizacaoNovo"
+                name="localizacao"
+                placeholder="Ex: Bloco A"
+                value="{{ valores_novo.localizacao if valores_novo else '' }}" />
+            </div>
 
-            <input
-              type="text"
-              id="numero"
-              name="numero"
-              required />
-
-            <span class="campo-erro">Informe o número do armário.</span>
-
-          </div>
-
-
-          <div class="campo-form">
-
-            <label for="localizacao">Localização</label>
-
-            <input
-              type="text"
-              id="localizacao"
-              name="localizacao"
-              placeholder="Ex: Bloco A" />
-
-          </div>
-
-        </div>
-
-
-        <div class="campo-form">
-
-          <label for="locatario">Locatário (Aluno)</label>
-
-          <input
-            type="text"
-            id="locatario"
-            name="locatario"
-            placeholder="Nome completo" />
-
-        </div>
-
-
-        <div class="campo-form">
-
-          <label for="matricula">Matrícula</label>
-
-          <input
-            type="text"
-            id="matricula"
-            name="matricula" />
-
-        </div>
-
-
-        <div class="campo-form-grade">
-
-          <div class="campo-form">
-            <label for="data_inicio">Início do Aluguel</label>
-            <input type="date" id="data_inicio" name="data_inicio" />
           </div>
 
           <div class="campo-form">
-            <label for="data_vencimento">Vencimento</label>
-            <input type="date" id="data_vencimento" name="data_vencimento" />
+            <label for="observacaoNovo">Observação</label>
+            <textarea
+              id="observacaoNovo"
+              name="observacao"
+              rows="3"
+              placeholder="Anotações internas sobre este armário (opcional)">{{ valores_novo.observacao if valores_novo else '' }}</textarea>
           </div>
 
-        </div>
-
-
-        <div class="campo-form-grade">
-
-          <div class="campo-form">
-            <label for="valor">Valor do Aluguel (R$)</label>
-            <input type="number" id="valor" name="valor" min="0" step="0.01" placeholder="0,00" />
+          <div class="modal-acoes">
+            <button type="button" class="btn-cancelar" onclick="fecharModalNovo()">Cancelar</button>
+            <button type="submit" class="btn-principal">Cadastrar Armário</button>
           </div>
 
-          <div class="campo-form">
+        </form>
 
-            <label for="status">Status</label>
-
-            <select id="status" name="status">
-              <option value="livre">Livre</option>
-              <option value="alugado">Alugado</option>
-              <option value="atrasado">Atrasado</option>
-              <option value="manutencao">Manutenção</option>
-            </select>
-
-          </div>
-
-        </div>
-
-
-        <div class="modal-acoes">
-
-          <button type="button" class="btn-cancelar" onclick="fecharModalArmario()">
-            Cancelar
-          </button>
-
-          <button type="submit" class="btn-principal">
-            Salvar Aluguel
-          </button>
-
-        </div>
-
-
-      </form>
-
+      </div>
     </div>
-
   </div>
 
 
   <!-- =========================================================
-       TOAST DE FEEDBACK
+       MODAL: ALUGAR ARMÁRIO
        ========================================================= -->
 
-  <div id="toast" class="toast" role="status" aria-live="polite">
+  <div class="modal-sobreposicao" id="modalAlugarSobreposicao" onclick="fecharModalAlugarClique(event)">
+    <div class="modal-caixa" id="modalAlugarCaixa">
 
+      <div class="modal-cabecalho">
+        <div>
+          <h3 id="modalAlugarTitulo">Alugar Armário</h3>
+          <span id="modalAlugarSub"></span>
+        </div>
+        <button type="button" class="modal-fechar" aria-label="Fechar" onclick="fecharModalAlugar()">
+          <svg viewBox="0 0 24 24">
+            <line x1="18" y1="6" x2="6" y2="18" />
+            <line x1="6" y1="6" x2="18" y2="18" />
+          </svg>
+        </button>
+      </div>
+
+      <div class="modal-corpo">
+
+        {% if erro_alugar %}
+        <div class="alerta-erro">{{ erro_alugar }}</div>
+        {% endif %}
+
+        <form
+          id="formAlugarArmario"
+          method="post"
+          action="{{ '/armarios/' ~ abrir_alugar_id ~ '/alugar' if abrir_alugar_id else '#' }}"
+          novalidate>
+
+          <div class="campo-form" id="campoLocatarioModal">
+            <label for="locatario_nome_modal">Nome do Locatário (Aluno)</label>
+            <input
+              type="text"
+              id="locatario_nome_modal"
+              name="locatario_nome"
+              placeholder="Nome completo"
+              value="{{ valores_alugar.locatario_nome if valores_alugar else '' }}"
+              required />
+            <span class="campo-erro">Informe o nome do locatário.</span>
+          </div>
+
+          <div class="campo-form" id="campoSemestreModal">
+            <label for="semestre_modal">Semestre</label>
+            <input
+              type="text"
+              id="semestre_modal"
+              name="semestre"
+              placeholder="Ex: 2026/2"
+              value="{{ valores_alugar.semestre if valores_alugar else '' }}"
+              required />
+            <span class="campo-erro">Informe o semestre.</span>
+          </div>
+
+          <div class="campo-form">
+            <label for="observacao_modal">Observação</label>
+            <textarea
+              id="observacao_modal"
+              name="observacao"
+              rows="3"
+              placeholder="Anotações sobre este aluguel (opcional)">{{ valores_alugar.observacao if valores_alugar else '' }}</textarea>
+          </div>
+
+          <div class="modal-acoes">
+            <button type="button" class="btn-cancelar" onclick="fecharModalAlugar()">Cancelar</button>
+            <button type="submit" class="btn-principal">Confirmar Aluguel</button>
+          </div>
+
+        </form>
+
+      </div>
+    </div>
+  </div>
+
+
+  <!-- TOAST -->
+  <div id="toast" class="toast" role="status" aria-live="polite">
     <span class="toast-icone">
       <svg viewBox="0 0 24 24">
         <polyline points="20 6 9 17 4 12" />
       </svg>
     </span>
-
     <span id="toastTexto">Ação realizada.</span>
-
   </div>
 
-
-  <!-- =========================================================
-       JAVASCRIPT
-       ========================================================= -->
 
   <script>
 
     /* =============================================================
      * DATA ATUAL
      * ========================================================= */
-
     const dataAtual = document.getElementById("dataAtual");
-
     if (dataAtual) {
       const agora = new Date();
       dataAtual.textContent = agora.toLocaleDateString("pt-BR", {
-        weekday: "long",
-        day: "2-digit",
-        month: "long",
-        year: "numeric"
+        weekday: "long", day: "2-digit", month: "long", year: "numeric"
       });
     }
 
@@ -939,7 +709,6 @@
     /* =============================================================
      * MENU MOBILE
      * ========================================================= */
-
     const barraLateral = document.getElementById("barraLateral");
     const barraSobreposicao = document.getElementById("barraSobreposicao");
 
@@ -947,7 +716,6 @@
       barraLateral.classList.add("aberta");
       barraSobreposicao.classList.add("visivel");
     }
-
     function fecharMenuMobile() {
       barraLateral.classList.remove("aberta");
       barraSobreposicao.classList.remove("visivel");
@@ -955,92 +723,154 @@
 
 
     /* =============================================================
-     * TOAST
+     * MODAL: NOVO ARMÁRIO
      * ========================================================= */
-
-    let toastTimeout = null;
-
-    function mostrarToast(mensagem, tipo) {
-
-      const toast = document.getElementById("toast");
-      const texto = document.getElementById("toastTexto");
-
-      texto.textContent = mensagem;
-      toast.classList.toggle("erro", tipo === "erro");
-      toast.classList.add("visivel");
-
-      clearTimeout(toastTimeout);
-      toastTimeout = setTimeout(function () {
-        toast.classList.remove("visivel");
-      }, 2600);
-
+    function abrirModalNovo() {
+      document.getElementById("modalNovoSobreposicao").classList.add("visivel");
+      document.body.classList.add("modal-aberto-body");
+      document.getElementById("numeroNovo").focus();
+    }
+    function fecharModalNovo() {
+      document.getElementById("modalNovoSobreposicao").classList.remove("visivel");
+      document.body.classList.remove("modal-aberto-body");
+    }
+    function fecharModalNovoClique(event) {
+      if (event.target.id === "modalNovoSobreposicao") fecharModalNovo();
     }
 
-
-    /* =============================================================
-     * MODAL
-     * ========================================================= */
-
-    const modalArmario = document.getElementById("modalArmario");
-    const formArmario = document.getElementById("formArmario");
-
-    function abrirModalArmario(titulo) {
-
-      document.getElementById("modalArmarioTitulo").textContent =
-        titulo || "Novo Aluguel";
-
-      modalArmario.classList.add("aberto");
-
-      const primeiroCampo = document.getElementById("numero");
-      if (primeiroCampo) {
-        setTimeout(function () { primeiroCampo.focus(); }, 50);
-      }
-
-    }
-
-    function fecharModalArmario() {
-      modalArmario.classList.remove("aberto");
-      document.getElementById("campoNumero").classList.remove("invalido");
-    }
-
-    // Fechar clicando fora do conteúdo
-    modalArmario.addEventListener("click", function (event) {
-      if (event.target === modalArmario) {
-        fecharModalArmario();
-      }
-    });
-
-    // Fechar com a tecla Esc
-    document.addEventListener("keydown", function (event) {
-      if (event.key === "Escape" && modalArmario.classList.contains("aberto")) {
-        fecharModalArmario();
-      }
-    });
-
-    // Validação simples antes de enviar
-    formArmario.addEventListener("submit", function (event) {
-
-      const numero = document.getElementById("numero");
-      const campoNumero = document.getElementById("campoNumero");
-
+    document.getElementById("formNovoArmario").addEventListener("submit", function (event) {
+      const numero = document.getElementById("numeroNovo");
+      const campoNumero = document.getElementById("campoNumeroNovo");
       if (!numero.value.trim()) {
         event.preventDefault();
         campoNumero.classList.add("invalido");
         numero.focus();
+      } else {
+        campoNumero.classList.remove("invalido");
+      }
+    });
+
+
+    /* =============================================================
+     * MODAL: ALUGAR ARMÁRIO
+     * ========================================================= */
+    document.addEventListener("click", function (event) {
+      const botao = event.target.closest(".btn-abrir-alugar");
+      if (!botao) return;
+
+      abrirModalAlugar(
+        botao.dataset.armarioId,
+        botao.dataset.armarioNumero,
+        botao.dataset.armarioLocalizacao
+      );
+    });
+
+    function abrirModalAlugar(id, numero, localizacao) {
+      const form = document.getElementById("formAlugarArmario");
+      const modal = document.getElementById("modalAlugarSobreposicao");
+      const titulo = document.getElementById("modalAlugarTitulo");
+      const sub = document.getElementById("modalAlugarSub");
+      const nome = document.getElementById("locatario_nome_modal");
+
+      if (!form || !modal || !titulo || !sub || !nome) {
+        console.error("Modal de aluguel: elemento não encontrado.");
         return;
       }
 
-      campoNumero.classList.remove("invalido");
+      form.action = "/armarios/" + encodeURIComponent(id) + "/alugar";
+      titulo.textContent = "Alugar Armário #" + numero;
+      sub.textContent = localizacao;
+      modal.classList.add("visivel");
+      document.body.classList.add("modal-aberto-body");
+      nome.focus();
+    }
+    function fecharModalAlugar() {
+      document.getElementById("modalAlugarSobreposicao").classList.remove("visivel");
+      document.body.classList.remove("modal-aberto-body");
+    }
+    function fecharModalAlugarClique(event) {
+      if (event.target.id === "modalAlugarSobreposicao") fecharModalAlugar();
+    }
 
+    document.getElementById("formAlugarArmario").addEventListener("submit", function (event) {
+      const nome = document.getElementById("locatario_nome_modal");
+      const semestre = document.getElementById("semestre_modal");
+      let valido = true;
+
+      if (!nome.value.trim()) {
+        document.getElementById("campoLocatarioModal").classList.add("invalido");
+        valido = false;
+      } else {
+        document.getElementById("campoLocatarioModal").classList.remove("invalido");
+      }
+
+      if (!semestre.value.trim()) {
+        document.getElementById("campoSemestreModal").classList.add("invalido");
+        valido = false;
+      } else {
+        document.getElementById("campoSemestreModal").classList.remove("invalido");
+      }
+
+      if (!valido) event.preventDefault();
     });
+
+
+    /* Reabre o modal certo automaticamente se o backend
+       devolveu erro de validação (número duplicado / já alugado) */
+    {% if abrir_novo %}
+    document.addEventListener("DOMContentLoaded", function () {
+      abrirModalNovo();
+    });
+    {% endif %}
+
+    {% if abrir_alugar_id %}
+    document.addEventListener("DOMContentLoaded", function () {
+      abrirModalAlugar(
+        {{ abrir_alugar_id }},
+        {{ abrir_alugar_numero | tojson }},
+        {{ abrir_alugar_localizacao | tojson }}
+      );
+    });
+    {% endif %}
+
+
+    /* =============================================================
+     * TOAST
+     * ========================================================= */
+    let toastTimeout = null;
+    function mostrarToast(mensagem, tipo) {
+      const toast = document.getElementById("toast");
+      const texto = document.getElementById("toastTexto");
+      texto.textContent = mensagem;
+      toast.classList.toggle("erro", tipo === "erro");
+      toast.classList.add("visivel");
+      clearTimeout(toastTimeout);
+      toastTimeout = setTimeout(function () {
+        toast.classList.remove("visivel");
+      }, 2600);
+    }
+
+    (function () {
+      const alertaSucesso = document.querySelector(".alerta-sucesso");
+      const alertaErro = document.querySelector(".alerta-erro");
+      if (alertaSucesso) {
+        mostrarToast(alertaSucesso.textContent.trim(), "sucesso");
+      } else if (alertaErro) {
+        mostrarToast(alertaErro.textContent.trim(), "erro");
+      }
+    })();
 
 
     /* =============================================================
      * BUSCA + FILTRO POR CHIPS + PAGINAÇÃO
      * ========================================================= */
+<<<<<<< HEAD
 
     // A paginação é feita no servidor; o JavaScript só filtra os itens da página atual.
     const TAMANHO_PAGINA = Number.MAX_SAFE_INTEGER;
+=======
+    const TAMANHO_PAGINA = 8;
+>>>>>>> 0b13814e56a4c400dc8def2284acb26acee0ff06
 
     const busca = document.getElementById("buscaArmario");
     const grupoFiltroStatus = document.getElementById("grupoFiltroStatus");
@@ -1055,21 +885,14 @@
     let paginaAtual = 1;
 
     function linhasFiltradas() {
-
       const texto = busca.value.toLowerCase().trim();
-
       return todasLinhas.filter(function (linha) {
-
         const status = linha.dataset.status || "";
         const conteudo = linha.textContent.toLowerCase();
-
         const correspondeStatus = !statusAtivo || status === statusAtivo;
         const correspondeTexto = !texto || conteudo.includes(texto);
-
         return correspondeStatus && correspondeTexto;
-
       });
-
     }
 
     function filtroAtivo() {
@@ -1077,14 +900,11 @@
     }
 
     function renderizarTabela() {
-
       const filtradas = linhasFiltradas();
 
-      // Sem nenhum armário cadastrado
       if (todasLinhas.length === 0) {
-        todasLinhas.forEach(function (l) { l.style.display = "none"; });
         estadoVazioTitulo.textContent = "Nenhum armário cadastrado";
-        estadoVazioSub.textContent = 'Clique em "+ Novo Aluguel" para começar.';
+        estadoVazioSub.textContent = 'Clique em "+ Novo Armário" para começar.';
         estadoVazio.style.display = "flex";
         estadoVazio.style.flexDirection = "column";
         estadoVazio.style.alignItems = "center";
@@ -1092,13 +912,10 @@
         return;
       }
 
-      // Com filtro ativo: mostra todos os resultados, sem paginação
       if (filtroAtivo()) {
-
         todasLinhas.forEach(function (linha) {
           linha.style.display = filtradas.includes(linha) ? "" : "none";
         });
-
         paginacaoEl.classList.add("oculta");
 
         if (filtradas.length === 0) {
@@ -1110,12 +927,9 @@
         } else {
           estadoVazio.style.display = "none";
         }
-
         return;
-
       }
 
-      // Sem filtro: paginação normal
       estadoVazio.style.display = "none";
 
       const totalPaginas = Math.max(1, Math.ceil(todasLinhas.length / TAMANHO_PAGINA));
@@ -1129,11 +943,9 @@
       });
 
       renderizarPaginacao(totalPaginas);
-
     }
 
     function renderizarPaginacao(totalPaginas) {
-
       if (totalPaginas <= 1) {
         paginacaoEl.classList.add("oculta");
         paginacaoEl.innerHTML = "";
@@ -1149,27 +961,16 @@
       btnAnterior.setAttribute("aria-label", "Página anterior");
       btnAnterior.textContent = "‹";
       btnAnterior.disabled = paginaAtual === 1;
-      btnAnterior.onclick = function () {
-        paginaAtual--;
-        renderizarTabela();
-      };
+      btnAnterior.onclick = function () { paginaAtual--; renderizarTabela(); };
       paginacaoEl.appendChild(btnAnterior);
 
       for (let pagina = 1; pagina <= totalPaginas; pagina++) {
-
         const btn = document.createElement("button");
         btn.className = "btn-pagina" + (pagina === paginaAtual ? " ativo" : "");
         btn.type = "button";
         btn.textContent = pagina;
-        btn.onclick = (function (p) {
-          return function () {
-            paginaAtual = p;
-            renderizarTabela();
-          };
-        })(pagina);
-
+        btn.onclick = (function (p) { return function () { paginaAtual = p; renderizarTabela(); }; })(pagina);
         paginacaoEl.appendChild(btn);
-
       }
 
       const btnProximo = document.createElement("button");
@@ -1178,12 +979,8 @@
       btnProximo.setAttribute("aria-label", "Próxima página");
       btnProximo.textContent = "›";
       btnProximo.disabled = paginaAtual === totalPaginas;
-      btnProximo.onclick = function () {
-        paginaAtual++;
-        renderizarTabela();
-      };
+      btnProximo.onclick = function () { paginaAtual++; renderizarTabela(); };
       paginacaoEl.appendChild(btnProximo);
-
     }
 
     if (busca) {
@@ -1194,84 +991,24 @@
     }
 
     if (grupoFiltroStatus) {
-
       grupoFiltroStatus.addEventListener("click", function (event) {
-
         const botao = event.target.closest(".btn-filtro");
         if (!botao) return;
-
         grupoFiltroStatus.querySelectorAll(".btn-filtro").forEach(function (b) {
           b.classList.remove("ativo");
         });
-
         botao.classList.add("ativo");
         statusAtivo = botao.dataset.status || "";
         paginaAtual = 1;
-
         renderizarTabela();
-
       });
-
     }
 
     renderizarTabela();
 
-
-    /* =============================================================
-     * AÇÕES DE ALUGUEL
-     * ========================================================= */
-
-    function alugarArmario(id) {
-      formArmario.action = "/armarios/" + id + "/alugar";
-      abrirModalArmario("Alugar Armário");
-    }
-
-    function renovarArmario(id) {
-      mostrarToast("Renovando aluguel...");
-      setTimeout(function () {
-        window.location.href = "/armarios/" + id + "/renovar";
-      }, 350);
-    }
-
-    function devolverArmario(id) {
-
-      const confirmar = confirm(
-        "Confirmar a devolução deste armário? Ele ficará livre para novo aluguel."
-      );
-
-      if (!confirmar) return;
-
-      mostrarToast("Devolvendo armário...");
-
-      setTimeout(function () {
-        window.location.href = "/armarios/" + id + "/devolver";
-      }, 350);
-
-    }
-
-    function editarArmario(id) {
-      window.location.href = "/armarios/editar/" + id;
-    }
-
-    function excluirArmario(id) {
-
-      const confirmar = confirm("Tem certeza que deseja excluir este armário?");
-      if (!confirmar) return;
-
-      mostrarToast("Excluindo armário...", "erro");
-
-      setTimeout(function () {
-        window.location.href = "/armarios/excluir/" + id;
-      }, 350);
-
-    }
-
   </script>
 
-
-  <!-- JS específico dos armários, caso exista -->
   <script src="/static/js/armarios.js"></script>
-
 
 </body>
 
