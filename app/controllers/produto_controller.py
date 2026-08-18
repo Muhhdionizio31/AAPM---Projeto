@@ -32,13 +32,15 @@ os.makedirs(UPLOAD_DIR, exist_ok=True)
 # LISTAGEM
 # ============================================================
 
-@router.get("/")
+@router.get("")
 def listar_produtos(
     request: Request,
     busca: str = "",
     categoria_id: int = 0,
     status: str = "ativos",
     db: Session = Depends(get_db),
+    page: int = 1,
+    per_page: int = 15,
     usuario = Depends(get_usuario_logado)
 ):
     query = db.query(Produto)
@@ -54,13 +56,14 @@ def listar_produtos(
     if categoria_id:
         query = query.filter(Produto.categoria_id == categoria_id)
 
+
     total_produtos = query.count()
     page = max(page, 1)
     per_page = max(per_page, 1)
     total_pages = math.ceil(total_produtos / per_page) if total_produtos else 1
+    page = min(page, total_pages)
     offset = (page - 1) * per_page
     produtos    = query.offset(offset).limit(per_page).all()
-
     categorias  = db.query(Categoria).filter(Categoria.ativa == True).all()
 
     return templates.TemplateResponse(
@@ -73,8 +76,11 @@ def listar_produtos(
             "categorias":   categorias,
             "busca":        busca,
             "categoria_id": categoria_id,
-            "status_atual": status
-           
+            "status_atual": status,
+            "page":         page,
+            "per_page":     per_page,
+            "total_pages":  total_pages,
+            "total_produtos": total_produtos
         }
     )
 

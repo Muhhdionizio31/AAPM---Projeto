@@ -101,30 +101,30 @@
 <br>
 
 {% if total_pages > 1 %}
-<div class="pagination">
+<div class="paginacao">
 
-  <span class="pagination-info">
+  <span class="paginacao-info">
     Página {{ page }} de {{ total_pages }}
   </span>
 
   {% if page > 1 %}
-  <a class="pagination-btn"
+  <a class="paginacao-btn"
     href="/catalogo?page={{ page - 1 }}&per_page={{ per_page }}&busca={{ busca }}&categoria_id={{ categoria_id }}">
     Anterior
   </a>
   {% else %}   
 
-  <span class="pagination-btn disabled">
+  <span class="paginacao-btn disabled">
     Anterior
   </span>
   {% endif %}
 
-  {% if page < total_pages %} <a class="pagination-btn"
+  {% if page < total_pages %} <a class="paginacao-btn"
     href="/catalogo?page={{ page + 1 }}&per_page={{ per_page }}&busca={{ busca }}&categoria_id={{ categoria_id }}">
     Próxima 
     </a>
     {% else %}
-    <span class="pagination-btn disabled">
+    <span class="paginacao-btn disabled">
       Próxima 
     </span>
   {% endif %}
