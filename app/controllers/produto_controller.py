@@ -1,4 +1,5 @@
 import os
+import math
 import shutil
 import uuid
 import json
@@ -31,7 +32,7 @@ os.makedirs(UPLOAD_DIR, exist_ok=True)
 # LISTAGEM
 # ============================================================
 
-@router.get("")
+@router.get("/")
 def listar_produtos(
     request: Request,
     busca: str = "",
@@ -53,7 +54,13 @@ def listar_produtos(
     if categoria_id:
         query = query.filter(Produto.categoria_id == categoria_id)
 
-    produtos    = query.order_by(Produto.nome).all()
+    total_produtos = query.count()
+    page = max(page, 1)
+    per_page = max(per_page, 1)
+    total_pages = math.ceil(total_produtos / per_page) if total_produtos else 1
+    offset = (page - 1) * per_page
+    produtos    = query.offset(offset).limit(per_page).all()
+
     categorias  = db.query(Categoria).filter(Categoria.ativa == True).all()
 
     return templates.TemplateResponse(
@@ -67,6 +74,7 @@ def listar_produtos(
             "busca":        busca,
             "categoria_id": categoria_id,
             "status_atual": status
+           
         }
     )
 

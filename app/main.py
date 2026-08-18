@@ -16,6 +16,7 @@ from app.controllers import movimentacao_controller
 from app.controllers import cliente_controller
 from app.controllers import pdv_controllers
 from app.controllers import armario_controller
+from app.controllers import catalogo_controller
 
 from app.database import engine, Base
 from dotenv import load_dotenv
@@ -47,7 +48,7 @@ app.include_router(movimentacao_controller.router)
 app.include_router(cliente_controller.router)
 app.include_router(pdv_controllers.router)
 app.include_router(armario_controller.router)
-
+app.include_router(catalogo_controller.router)
 
 
 #Rota para a página inicial
