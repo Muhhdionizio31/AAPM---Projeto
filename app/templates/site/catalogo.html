@@ -101,24 +101,35 @@
 <br>
 
 {% if total_pages > 1 %}
-  <div>
-    <p>
-      Página {{ page }} de {{ total_pages }}
-    </p>
+<div class="pagination">
 
-    {% if page > 1 %}
-    <a href="/produtos/?page={{ page - 1 }}&per_page={{ per_page }}
-              &busca={{ busca }}&categoria_id={{ categoria_id }}">
-      Anterior
+  <span class="pagination-info">
+    Página {{ page }} de {{ total_pages }}
+  </span>
+
+  {% if page > 1 %}
+  <a class="pagination-btn"
+    href="/catalogo?page={{ page - 1 }}&per_page={{ per_page }}&busca={{ busca }}&categoria_id={{ categoria_id }}">
+    Anterior
+  </a>
+  {% else %}   
+
+  <span class="pagination-btn disabled">
+    Anterior
+  </span>
+  {% endif %}
+
+  {% if page < total_pages %} <a class="pagination-btn"
+    href="/catalogo?page={{ page + 1 }}&per_page={{ per_page }}&busca={{ busca }}&categoria_id={{ categoria_id }}">
+    Próxima 
     </a>
-    {% endif %}
+    {% else %}
+    <span class="pagination-btn disabled">
+      Próxima 
+    </span>
+  {% endif %}
 
-    {% if page < total_pages %} <a href="/produtos/?page={{ page + 1 }}&per_page={{ per_page }}
-              &busca={{ busca }}&categoria_id={{ categoria_id }}">
-      Próxima
-      </a>
-      {% endif %}
-  </div>
+</div>
 {% endif %}
 
 <br>

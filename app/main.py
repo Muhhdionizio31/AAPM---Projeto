@@ -97,26 +97,6 @@ def horario(
 
 
 # Rota para o catálogo de produtos
-@app.get("/catalogo")
-def catalogo(
-    request: Request,
-    usuario = Depends(get_usuario_opcional),
-    db: Session = Depends(get_db) 
-):
-    categorias = db.query(Categoria).all()
-    produtos = (db.query(Produto).filter(Produto.ativa == True).options(joinedload(Produto.categoria)).all())
-
-    return templates.TemplateResponse(
-        request,
-        "site/catalogo.html",
-        {
-            "request": request, 
-            "usuario": usuario,
-            "produtos": produtos,
-            "categorias": categorias
-        }
-    )
-
 @app.get("/login")
 def login(
     request: Request,
