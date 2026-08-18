@@ -225,9 +225,9 @@ def finalizar_venda(
     db.commit()
 
     return RedirectResponse(
-        url=f"/pdv/venda/{venda.id}?sucesso=ok",
-        status_code=302
-    )
+    url="/pdv/?criado=ok",
+    status_code=302
+)
 
 
 @router.get("/venda/{venda_id}")
@@ -249,6 +249,67 @@ def detalhe_venda(
         {"request": request, "usuario": usuario, "venda": venda}
     )
 
+@router.get("/venda/{venda_id}/json")
+def detalhe_venda_json(
+    venda_id: int,
+    db: Session = Depends(get_db),
+    usuario=Depends(get_usuario_logado)
+):
+    venda = (
+        db.query(Venda)
+        .filter(Venda.id == venda_id)
+        .first()
+    )
+
+    if not venda:
+        return {
+            "erro": True,
+            "mensagem": "Venda não encontrada."
+        }
+
+    # Nome do cliente
+    if venda.cliente:
+        nome_cliente = venda.cliente.nome
+    else:
+        nome_cliente = "Cliente Balcão"
+
+    # Nome do operador
+    if venda.usuario:
+        nome_operador = venda.usuario.nome
+    else:
+        nome_operador = "-"
+
+    # Itens
+    itens = []
+
+    for item in venda.itens:
+        preco = float(item.preco_unitario or 0)
+        quantidade = int(item.quantidade or 0)
+
+        itens.append({
+            "produto_nome": item.produto_nome,
+            "quantidade": quantidade,
+            "preco_unitario": preco,
+            "subtotal": round(preco * quantidade, 2)
+        })
+
+    return {
+        "id": venda.id,
+        "cliente": nome_cliente,
+        "operador": nome_operador,
+        "data": (
+            venda.criado_em.strftime("%d/%m/%Y %H:%M")
+            if venda.criado_em
+            else "-"
+        ),
+        "observacao": venda.observacao or "",
+        "total_bruto": float(venda.total_bruto or 0),
+        "desconto_percentual": float(
+            venda.desconto_percentual or 0
+        ),
+        "total_liquido": float(venda.total_liquido or 0),
+        "itens": itens
+    }
 
 @router.get("/historico")
 def historico_vendas(
