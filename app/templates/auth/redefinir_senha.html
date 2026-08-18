@@ -1,0 +1,120 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Redefinir senha - AAPM</title>
+
+</head>
+
+<body>
+
+    <main class="auth-container">
+
+        <div class="auth-card">
+
+            {% if token_invalido %}
+
+                <h1>Link inválido</h1>
+
+                <div class="alert alert-error">
+                    {{ erro }}
+                </div>
+
+                <div class="auth-footer">
+
+                    <a href="/auth/esqueci-senha">
+                        Solicitar novo link
+                    </a>
+
+                    <a href="/auth/login">
+                        Voltar para o login
+                    </a>
+
+                </div>
+
+            {% else %}
+
+                <h1>Redefinir senha</h1>
+
+                <p class="auth-description">
+                    Digite sua nova senha abaixo.
+                </p>
+
+                {% if erro %}
+                    <div class="alert alert-error">
+                        {{ erro }}
+                    </div>
+                {% endif %}
+
+                <form
+                    method="POST"
+                    action="/auth/redefinir-senha/{{ token }}"
+                >
+
+                    <div class="form-group">
+
+                        <label for="senha">
+                            Nova senha
+                        </label>
+
+                        <input
+                            type="password"
+                            id="senha"
+                            name="senha"
+                            placeholder="Digite sua nova senha"
+                            required
+                            minlength="6"
+                            autocomplete="new-password"
+                        >
+
+                    </div>
+
+                    <div class="form-group">
+
+                        <label for="confirmar_senha">
+                            Confirmar nova senha
+                        </label>
+
+                        <input
+                            type="password"
+                            id="confirmar_senha"
+                            name="confirmar_senha"
+                            placeholder="Digite novamente sua senha"
+                            required
+                            minlength="6"
+                            autocomplete="new-password"
+                        >
+
+                    </div>
+
+                    <button
+                        type="submit"
+                        class="btn-primary"
+                    >
+                        Redefinir senha
+                    </button>
+
+                </form>
+
+                <div class="auth-footer">
+
+                    <a href="/auth/login">
+                        Voltar para o login
+                    </a>
+
+                </div>
+
+            {% endif %}
+
+        </div>
+
+    </main>
+
+</body>
+
+</html>
+

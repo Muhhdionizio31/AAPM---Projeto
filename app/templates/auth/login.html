@@ -3,6 +3,7 @@
 {% block titulo %}Login — AAPM SENAI{% endblock %}
 
 {% block css %}
+    <link rel="stylesheet" href="/static/css/esqueci_senha.css" />
     <link rel="stylesheet" href="/static/css/login.css" />
 {% endblock %}
 
@@ -87,7 +88,9 @@
                         <input type="checkbox" id="lembrar" name="lembrar" />
                         Lembrar de mim
                     </label>
-                    <a href="/auth/esqueci-senha" class="forgot-link">Esqueci minha senha</a>
+                    <button class="btn-esqueci"type="button" onclick="abrirModalSenha()">
+                        Esqueci minha senha
+                    </button>
                 </div>
 
                 <button type="submit" class="btn-login">Entrar</button>
@@ -104,7 +107,41 @@
             </a>
         </div>
     </div>
+    
+    <dialog id="modal-esqueci-senha" class="modal">
+        <div class="modal-content">
 
+            <button type="button" class="modal-close" onclick="fecharModalSenha()" aria-label="Fechar">
+                &times;
+            </button>
+
+            <h2>Esqueci minha senha</h2>
+            <p class="auth-description">
+                Informe o e-mail do administrador para receber o link de redefinição de senha.
+            </p>
+
+            <div id="modal-alert-area"></div>
+
+            <form id="form-esqueci-senha" method="POST" action="/auth/esqueci-senha">
+                <div class="form-group">
+                    <label for="modal-email">E-mail</label>
+                    <input
+                        type="email"
+                        id="modal-email"
+                        name="email"
+                        placeholder="Digite seu e-mail"
+                        required
+                        autocomplete="email"
+                    >
+                </div>
+
+                <button type="submit" class="btn-primary">Enviar link</button>
+            </form>
+
+        </div>
+    </dialog>
 </div>
-
+{% block js %}
+    <script src="/static/js/esqueci_senha.js"></script>
+{% endblock %}
 {% endblock %}

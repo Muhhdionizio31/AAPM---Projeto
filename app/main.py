@@ -16,6 +16,7 @@ from app.controllers import movimentacao_controller
 from app.controllers import cliente_controller
 from app.controllers import pdv_controllers
 from app.controllers import armario_controller
+from app.controllers import catalogo_controller
 
 from app.database import engine, Base
 from dotenv import load_dotenv
@@ -47,7 +48,7 @@ app.include_router(movimentacao_controller.router)
 app.include_router(cliente_controller.router)
 app.include_router(pdv_controllers.router)
 app.include_router(armario_controller.router)
-
+app.include_router(catalogo_controller.router)
 
 
 #Rota para a página inicial
@@ -140,8 +141,7 @@ def politica(
     )
 
 # Rota para acesso não autenticado
-ROTAS_PUBLICAS = ["/auth/login", "/inicio", "/static", "/catalogo", "/horario", "/politica"]
-
+ROTAS_PUBLICAS = ["/auth/login", "/inicio", "/static", "/catalogo", "/horario", "/politica", "/auth/esqueci-senha", "/auth/recuperar-senha"] 
 @app.middleware("http")
 async def verificar_login_middleware(request: Request, call_next):
     # 1. Se o usuário digitar só o IP/Domínio (ex: 127.0.0.1:49669), 
