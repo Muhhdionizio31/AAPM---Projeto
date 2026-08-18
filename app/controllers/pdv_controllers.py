@@ -4,6 +4,7 @@ from fastapi.templating import Jinja2Templates
 from sqlalchemy import String, cast, func
 from sqlalchemy.orm import Session
 from datetime import datetime
+import math
 import json
 
 from app.database import get_db
@@ -23,6 +24,8 @@ DESCONTO_ASSOCIADO = 10.0
 @router.get("/")
 def tela_pdv(
     request: Request,
+    page: int = 1,
+    per_page: int = 10,
     db: Session = Depends(get_db),
     usuario=Depends(get_usuario_logado)
 ):
@@ -102,7 +105,13 @@ def tela_pdv(
             (cast(Venda.id, String).ilike(f"%{busca}%"))
         )
 
-    vendas = (
+    total_vendas = vendas_query.count()
+    page = max(page, 1)
+    per_page = max(per_page, 1)
+    total_pages = math.ceil(total_vendas / per_page) if total_vendas else 1
+    page = min(page, total_pages)
+
+    vendas_filtradas = (
         vendas_query
         .order_by(Venda.criado_em.desc())
         .all()
@@ -110,20 +119,28 @@ def tela_pdv(
 
     faturamento_total = sum(
         float(v.total_liquido or 0)
-        for v in vendas
+        for v in vendas_filtradas
     )
 
     clientes_atendidos = len({
         v.cliente_id
-        for v in vendas
+        for v in vendas_filtradas
         if v.cliente_id is not None
     })
 
     resumos = {
         "faturamento_total": faturamento_total,
-        "vendas_concluidas": len(vendas),
+        "vendas_concluidas": total_vendas,
         "clientes_atendidos": clientes_atendidos,
     }
+
+    vendas = (
+        vendas_query
+        .order_by(Venda.criado_em.desc())
+        .offset((page - 1) * per_page)
+        .limit(per_page)
+        .all()
+    )
 
     top_produtos = (
         db.query(
@@ -175,6 +192,10 @@ def tela_pdv(
             "busca": busca,
             "produtos_pdv": produtos_pdv,
             "venda_criada": venda_criada,
+            "page": page,
+            "per_page": per_page,
+            "total_pages": total_pages,
+            "total_vendas": total_vendas,
         }
     )
 

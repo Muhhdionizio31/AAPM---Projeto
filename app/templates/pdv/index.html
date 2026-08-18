@@ -173,7 +173,7 @@
 
       </div>
 
-      <a href="/sair">
+      <a href="/auth/logout">
         <button class="btn-sair" type="button">
           Sair
         </button>
@@ -373,6 +373,8 @@
               action="/pdv/"
               class="barra-busca-tabela">
 
+              <input type="hidden" name="mes" value="{{ mes_selecionado }}" />
+
               <input
                 type="text"
                 name="busca"
@@ -485,15 +487,39 @@
 
             <span id="infoTabela">
 
-              {{ vendas|length if vendas else 0 }}
+              {{ total_vendas }}
 
-              venda{{ 's' if (vendas and vendas|length != 1) else '' }}
+              venda{{ 's' if total_vendas != 1 else '' }}
 
               encontrada(s)
 
             </span>
 
           </div>
+
+          {% if total_pages > 1 %}
+          <nav class="paginacao" aria-label="Paginação do histórico de vendas">
+            {% if page > 1 %}
+            <a class="paginacao-btn"
+              href="/pdv/?page={{ page - 1 }}&per_page={{ per_page }}&mes={{ mes_selecionado }}&busca={{ busca }}">
+              Anterior
+            </a>
+            {% else %}
+            <span class="paginacao-btn desabilitado">Anterior</span>
+            {% endif %}
+
+            <span class="paginacao-info">Página {{ page }} de {{ total_pages }}</span>
+
+            {% if page < total_pages %}
+            <a class="paginacao-btn"
+              href="/pdv/?page={{ page + 1 }}&per_page={{ per_page }}&mes={{ mes_selecionado }}&busca={{ busca }}">
+              Próxima
+            </a>
+            {% else %}
+            <span class="paginacao-btn desabilitado">Próxima</span>
+            {% endif %}
+          </nav>
+          {% endif %}
 
         </div>
 
