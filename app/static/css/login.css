@@ -434,3 +434,21 @@ button.btn-esqueci:focus-visible {
     outline: 2px solid rgba(200, 16, 46, 0.35) !important;
     outline-offset: 2px !important;
 }
+
+/* ── LOGO AAPM ── */
+.hero-badge {
+    width: 100%;
+    max-width: 230px;
+    margin-bottom: 32px;
+    position: relative;
+    z-index: 1;
+}
+
+.hero-badge img {
+    display: block;
+    width: 100%;
+    height: auto;
+    max-height: 100px;
+    object-fit: contain;
+    object-position: left center;
+}

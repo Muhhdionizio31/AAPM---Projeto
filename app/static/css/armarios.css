@@ -72,23 +72,23 @@ body {
 }
 
 .barra-logo {
+  --largura-logo: 62px;
+  --altura-logo: 16px;
+
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
   padding: 22px 24px 18px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
 
-.barra-logo-texto {
-  font-family: 'Montserrat', sans-serif;
-  font-weight: 800;
-  font-size: 1.15rem;
-  color: var(--branco);
-  letter-spacing: 1px;
-}
-
-.barra-logo-texto span {
-  color: var(--vermelho);
+.barra-logo-senai,
+.barra-logo-aapm {
+  display: block;
+  width: var(--largura-logo);
+  height: var(--altura-logo);
+  object-fit: contain;
+  flex-shrink: 0;
 }
 
 .barra-logo-separador {
@@ -96,14 +96,6 @@ body {
   height: 18px;
   background: var(--vermelho);
   border-radius: 2px;
-}
-
-.barra-logo-sub {
-  font-family: 'Montserrat', sans-serif;
-  font-weight: 700;
-  font-size: 0.8rem;
-  color: rgba(255, 255, 255, 0.5);
-  letter-spacing: 2px;
 }
 
 .barra-fechar-mobile {
