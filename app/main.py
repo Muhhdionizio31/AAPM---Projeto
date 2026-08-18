@@ -317,3 +317,21 @@ def api_vendas_mensais(db: Session = Depends(get_db)):
             lista[int(float(d.mes)) - 1] = d.total
     return {"vendas": lista}
 
+@app.get("/api/vendas-mensais")
+def api_vendas_mensais(db: Session = Depends(get_db)):
+    ano_atual = datetime.now().year
+
+    dados = db.query(
+        func.extract('month', Venda.criado_em).label('mes'),
+        func.count(Venda.id).label('total')
+    ).filter(
+        func.extract('year', Venda.criado_em) == ano_atual
+    ).group_by('mes').all()
+
+    lista = [0] * 12
+
+    for d in dados:
+        if d.mes:
+            lista[int(float(d.mes)) - 1] = d.total
+
+    return {"vendas": lista}

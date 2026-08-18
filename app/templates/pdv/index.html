@@ -11,8 +11,7 @@
 
   <link
     href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Lato:wght@300;400;600;700;900&display=swap"
-    rel="stylesheet"
-  />
+    rel="stylesheet" />
 
   <link rel="stylesheet" href="/static/css/vendas.css" />
 </head>
@@ -64,8 +63,7 @@
 
           <svg viewBox="0 0 24 24">
             <path
-              d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"
-            />
+              d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
           </svg>
 
           Estoque
@@ -139,14 +137,8 @@
       <li>
         <a href="/usuarios/">
 
-          <svg
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          >
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+            stroke-linejoin="round">
             <rect x="2" y="5" width="20" height="14" rx="2"></rect>
             <circle cx="8" cy="11" r="2"></circle>
             <path d="M5.5 16c0-1.4 1.1-2.5 2.5-2.5s2.5 1.1 2.5 2.5"></path>
@@ -218,12 +210,7 @@
 
         <!-- FILTRO DE DATA -->
 
-        <form
-          method="get"
-          action="/pdv/"
-          class="filtro-data-form"
-          style="display:flex;gap:10px;"
-        >
+        <form method="get" action="/pdv/" class="filtro-data-form" style="display:flex;gap:10px;">
 
           <div class="filtro-data">
 
@@ -234,13 +221,7 @@
               <line x1="3" y1="10" x2="21" y2="10" />
             </svg>
 
-            <input
-              type="month"
-              id="filtroMes"
-              name="mes"
-              value="{{ mes_selecionado }}"
-              onchange="this.form.submit()"
-            />
+            <input type="month" id="filtroMes" name="mes" value="{{ mes_selecionado }}" onchange="this.form.submit()" />
 
           </div>
 
@@ -251,11 +232,7 @@
 
         {% if not usuario or usuario.role == 'admin' or usuario.role == 'operador' %}
 
-        <button
-          class="btn-novo"
-          id="btnNovaVenda"
-          type="button"
-        >
+        <button class="btn-novo" id="btnNovaVenda" type="button">
 
           <svg viewBox="0 0 24 24">
             <line x1="12" y1="5" x2="12" y2="19" />
@@ -302,10 +279,7 @@
 
       {% if request and request.query_params.get('erro') %}
 
-      <div
-        class="alerta-sucesso"
-        style="background:#fee2e2;color:#991b1b;border-color:#fecaca;"
-      >
+      <div class="alerta-sucesso" style="background:#fee2e2;color:#991b1b;border-color:#fecaca;">
         Não foi possível registrar a venda.
         Erro: {{ request.query_params.get('erro') }}.
       </div>
@@ -321,10 +295,7 @@
 
         <!-- FATURAMENTO -->
 
-        <div
-          class="cartao-resumo vermelho"
-          style="animation-delay:0s"
-        >
+        <div class="cartao-resumo vermelho" style="animation-delay:0s">
 
           <div class="resumo-icone">
 
@@ -355,10 +326,7 @@
 
         <!-- VENDAS -->
 
-        <div
-          class="cartao-resumo verde"
-          style="animation-delay:0.08s"
-        >
+        <div class="cartao-resumo verde" style="animation-delay:0.08s">
 
           <div class="resumo-icone">
 
@@ -387,10 +355,7 @@
 
         <!-- CLIENTES -->
 
-        <div
-          class="cartao-resumo azul"
-          style="animation-delay:0.16s"
-        >
+        <div class="cartao-resumo azul" style="animation-delay:0.16s">
 
           <div class="resumo-icone">
 
@@ -436,23 +401,11 @@
               Histórico de Vendas
             </span>
 
-            <form
-              method="get"
-              action="/pdv/"
-              class="barra-busca-tabela"
-            >
+            <form method="get" action="/pdv/" class="barra-busca-tabela">
 
-              <input
-                type="text"
-                name="busca"
-                placeholder="Buscar por cliente..."
-                value="{{ busca or '' }}"
-              />
+              <input type="text" name="busca" placeholder="Buscar por cliente..." value="{{ busca or '' }}" />
 
-              <button
-                type="submit"
-                class="btn-buscar-tabela"
-              >
+              <button type="submit" class="btn-buscar-tabela">
 
                 <svg viewBox="0 0 24 24">
                   <circle cx="11" cy="11" r="8" />
@@ -521,13 +474,8 @@
 
                   <!-- ABRE O COMPROVANTE -->
 
-                  <button
-                    class="btn-ver"
-                    type="button"
-                    onclick="verDetalhesVenda('{{ v.id }}')"
-                    title="Ver comprovante"
-                    style="background:none;border:none;cursor:pointer;"
-                  >
+                  <button class="btn-ver" type="button" onclick="verDetalhesVenda('{{ v.id }}')" title="Ver comprovante"
+                    style="background:none;border:none;cursor:pointer;">
                     👁️
                   </button>
 
@@ -544,9 +492,7 @@
 
                 <td colspan="7">
 
-                  <div
-                    style="text-align:center;padding:30px;color:#999;"
-                  >
+                  <div style="text-align:center;padding:30px;color:#999;">
                     Nenhuma venda encontrada para este período.
                   </div>
 
@@ -601,14 +547,12 @@
 
               {% for item in top_produtos %}
 
-              <div
-                style="
+              <div style="
                   display:flex;
                   justify-content:space-between;
                   margin-bottom:10px;
                   font-size:0.9rem;
-                "
-              >
+                ">
 
                 <span>
                   {{ item.produto_nome }}
@@ -625,14 +569,12 @@
 
               {% if not top_produtos %}
 
-              <div
-                style="
+              <div style="
                   color:#999;
                   font-size:0.85rem;
                   text-align:center;
                   padding:10px;
-                "
-              >
+                ">
                 Sem dados no período.
               </div>
 
@@ -663,11 +605,7 @@
        MODAL NOVA VENDA
   ========================================================== -->
 
-  <div
-    class="sobreposicao-modal"
-    id="modalVenda"
-    onclick="fecharModalFora(event,'modalVenda')"
-  >
+  <div class="sobreposicao-modal" id="modalVenda" onclick="fecharModalFora(event,'modalVenda')">
 
     <div class="modal">
 
@@ -677,28 +615,16 @@
           Nova Venda
         </h2>
 
-        <button
-          class="btn-fechar-modal"
-          type="button"
-          onclick="fecharModal('modalVenda')"
-        >
+        <button class="btn-fechar-modal" type="button" onclick="fecharModal('modalVenda')">
           ✕
         </button>
 
       </div>
 
 
-      <form
-        id="formNovaVenda"
-        method="POST"
-        action="/pdv/finalizar"
-      >
+      <form id="formNovaVenda" method="POST" action="/pdv/finalizar">
 
-        <input
-          type="hidden"
-          name="carrinho_json"
-          id="carrinhoJson"
-        />
+        <input type="hidden" name="carrinho_json" id="carrinhoJson" />
 
 
         <div class="form-linha">
@@ -709,29 +635,20 @@
               Cliente
             </label>
 
-            <select
-              name="cliente_id"
-              id="modalCliente"
-            >
+            <select name="cliente_id" id="modalCliente">
 
-              <option
-                value="0"
-                data-desconto="0"
-              >
+              <option value="0" data-desconto="0">
                 Cliente não cadastrado
               </option>
 
               {% for cliente in clientes %}
 
-              <option
-                value="{{ cliente.id }}"
-                data-desconto="{{ desconto_associado if cliente.is_associado else 0 }}"
-              >
+              <option value="{{ cliente.id }}" data-desconto="{{ desconto_associado if cliente.is_associado else 0 }}">
 
                 {{ cliente.nome }}
 
                 {% if cliente.is_associado %}
-                  - Associado
+                - Associado
                 {% endif %}
 
               </option>
@@ -749,15 +666,7 @@
               Percentual de Desconto (%)
             </label>
 
-            <input
-              type="number"
-              step="0.1"
-              id="modalDesconto"
-              value="0.0"
-              min="0"
-              max="100"
-              readonly
-            />
+            <input type="number" step="0.1" id="modalDesconto" value="0.0" min="0" max="100" readonly />
 
           </div>
 
@@ -772,12 +681,7 @@
               Observação
             </label>
 
-            <input
-              type="text"
-              name="observacao"
-              id="modalObservacao"
-              placeholder="Ex: Venda balcão rápida"
-            />
+            <input type="text" name="observacao" id="modalObservacao" placeholder="Ex: Venda balcão rápida" />
 
           </div>
 
@@ -794,11 +698,7 @@
               Itens da Venda
             </span>
 
-            <button
-              type="button"
-              class="btn-add-item"
-              onclick="adicionarLinhaItem()"
-            >
+            <button type="button" class="btn-add-item" onclick="adicionarLinhaItem()">
 
               <svg viewBox="0 0 24 24">
                 <line x1="12" y1="5" x2="12" y2="19" />
@@ -812,10 +712,7 @@
           </div>
 
 
-          <div
-            class="lista-itens-modal"
-            id="listaItensModal"
-          ></div>
+          <div class="lista-itens-modal" id="listaItensModal"></div>
 
         </div>
 
@@ -839,18 +736,11 @@
 
         <div class="acoes-modal">
 
-          <button
-            type="button"
-            class="btn-cancelar"
-            onclick="fecharModal('modalVenda')"
-          >
+          <button type="button" class="btn-cancelar" onclick="fecharModal('modalVenda')">
             Cancelar
           </button>
 
-          <button
-            type="submit"
-            class="btn-salvar"
-          >
+          <button type="submit" class="btn-salvar">
             Registrar Venda
           </button>
 
@@ -867,50 +757,52 @@
        MODAL DO COMPROVANTE
   ========================================================== -->
 
-  <div
-    class="sobreposicao-modal"
-    id="modalDetalhe"
-    onclick="fecharModalFora(event,'modalDetalhe')"
-  >
+  <div class="modal-cabecalho">
 
-    <div class="modal modal-comprovante">
+    <h2>
+      Comprovante da Venda
+    </h2>
 
-      <!-- CABEÇALHO DO MODAL -->
+    <div class="comprovante-acoes-topo">
 
-      <div class="modal-cabecalho">
+      <button class="btn-baixar-comprovante" id="btnBaixarComprovante" type="button" onclick="baixarComprovante()"
+        disabled>
 
-        <h2>
-          Comprovante da Venda
-        </h2>
+        <svg viewBox="0 0 24 24">
+          <path d="M12 3v12" />
+          <path d="M7 10l5 5 5-5" />
+          <path d="M5 21h14" />
+        </svg>
 
-        <button
-          class="btn-fechar-modal"
-          type="button"
-          onclick="fecharModal('modalDetalhe')"
-        >
-          ✕
-        </button>
+        Baixar
 
-      </div>
+      </button>
 
+      <button class="btn-fechar-modal" type="button" onclick="fecharModal('modalDetalhe')">
+        ✕
+      </button>
 
-      <!-- =====================================================
+    </div>
+
+  </div>
+
+  <!-- =====================================================
            AQUI O JAVASCRIPT VAI INSERIR O COMPROVANTE
       ====================================================== -->
 
-      <div id="conteudoDetalhe">
+  <div id="conteudoDetalhe">
 
-        <div class="comprovante-loading">
+    <div class="comprovante-loading">
 
-          <span>
-            Carregando comprovante...
-          </span>
-
-        </div>
-
-      </div>
+      <span>
+        Carregando comprovante...
+      </span>
 
     </div>
+
+  </div>
+
+  </div>
 
   </div>
 
@@ -919,10 +811,7 @@
        TOAST
   ========================================================== -->
 
-  <div
-    class="toast"
-    id="toast"
-  >
+  <div class="toast" id="toast">
 
     <div class="toast-icone">
 
@@ -949,7 +838,8 @@
 
 
   <!-- JAVASCRIPT -->
-
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script src="/static/js/vendas.js"></script>
   <script src="/static/js/vendas.js"></script>
 
 </body>
