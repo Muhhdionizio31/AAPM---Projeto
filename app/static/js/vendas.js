@@ -6,9 +6,19 @@ const produtosPdv = Array.isArray(window.PRODUTOS_PDV)
   : [];
 
 
-// =========================================================
-// FORMATAÇÃO DE VALORES
-// =========================================================
+/* =========================================================
+   REFERÊNCIA DO BOTÃO DE BAIXAR COMPROVANTE
+
+   O botão é guardado em memória porque ele é movido para
+   dentro do comprovante, ao lado do Total Líquido.
+========================================================= */
+
+let botaoBaixarComprovante = null;
+
+
+/* =========================================================
+   FORMATAÇÃO DE VALORES
+========================================================= */
 
 const fmt = valor =>
   'R$ ' + Number(valor || 0)
@@ -16,40 +26,45 @@ const fmt = valor =>
     .replace('.', ',');
 
 
-// =========================================================
-// SEGURANÇA
-// Evita que dados vindos do banco sejam inseridos
-// diretamente como HTML.
-// =========================================================
+/* =========================================================
+   SEGURANÇA
+   Evita que dados vindos do banco sejam inseridos
+   diretamente como HTML.
+========================================================= */
 
 function escapeHtml(valor) {
+
   return String(valor ?? '')
     .replace(/&/g, '&amp;')
     .replace(/</g, '&lt;')
     .replace(/>/g, '&gt;')
     .replace(/"/g, '&quot;')
     .replace(/'/g, '&#039;');
+
 }
 
 
-// =========================================================
-// PRODUTOS
-// =========================================================
+/* =========================================================
+   PRODUTOS
+========================================================= */
 
 function getProdutoSelecionado(select) {
+
   return produtosPdv.find(
     produto => String(produto.id) === String(select.value)
   );
+
 }
 
 
-// =========================================================
-// DESCONTO
-// =========================================================
+/* =========================================================
+   DESCONTO
+========================================================= */
 
 function atualizarDesconto() {
 
-  const cliente = document.getElementById('modalCliente');
+  const cliente =
+    document.getElementById('modalCliente');
 
   const desconto =
     cliente?.selectedOptions?.[0]?.dataset?.desconto || '0';
@@ -58,15 +73,18 @@ function atualizarDesconto() {
     document.getElementById('modalDesconto');
 
   if (campoDesconto) {
+
     campoDesconto.value =
       Number(desconto).toFixed(1);
+
   }
+
 }
 
 
-// =========================================================
-// ABRIR MODAL DE NOVA VENDA
-// =========================================================
+/* =========================================================
+   ABRIR MODAL DE NOVA VENDA
+========================================================= */
 
 function abrirModalVenda() {
 
@@ -89,45 +107,61 @@ function abrirModalVenda() {
     document.getElementById('modalVenda');
 
   if (!modalVenda) {
+
     console.error('Modal de venda não encontrado.');
+
     return;
+
   }
 
   if (modalTitulo) {
+
     modalTitulo.textContent = 'Nova Venda';
+
   }
 
   if (modalCliente) {
+
     modalCliente.value = '0';
+
   }
 
   if (modalObservacao) {
+
     modalObservacao.value = '';
+
   }
 
   if (listaItens) {
+
     listaItens.innerHTML = '';
+
   }
 
   if (carrinhoJson) {
+
     carrinhoJson.value = '';
+
   }
 
   atualizarDesconto();
 
   if (produtosPdv.length > 0) {
+
     adicionarLinhaItem();
+
   }
 
   calcularTotal();
 
   modalVenda.classList.add('aberto');
+
 }
 
 
-// =========================================================
-// ADICIONAR LINHA DE ITEM
-// =========================================================
+/* =========================================================
+   ADICIONAR LINHA DE ITEM
+========================================================= */
 
 function adicionarLinhaItem(item = null) {
 
@@ -135,8 +169,11 @@ function adicionarLinhaItem(item = null) {
     document.getElementById('listaItensModal');
 
   if (!lista) {
+
     console.error('Lista de itens não encontrada.');
+
     return;
+
   }
 
   if (produtosPdv.length === 0) {
@@ -151,6 +188,7 @@ function adicionarLinhaItem(item = null) {
     `;
 
     return;
+
   }
 
   const div = document.createElement('div');
@@ -162,7 +200,7 @@ function adicionarLinhaItem(item = null) {
 
       const selected =
         item &&
-          String(item.produto_id) === String(produto.id)
+        String(item.produto_id) === String(produto.id)
           ? 'selected'
           : '';
 
@@ -213,19 +251,16 @@ function adicionarLinhaItem(item = null) {
   `;
 
 
-  // Alteração do produto
-
   div
     .querySelector('.item-produto')
     .addEventListener('change', () => {
 
       atualizarPrecoLinha(div);
+
       calcularTotal();
 
     });
 
-
-  // Alteração da quantidade
 
   div
     .querySelector('.item-quantidade')
@@ -234,8 +269,6 @@ function adicionarLinhaItem(item = null) {
       calcularTotal
     );
 
-
-  // Remover item
 
   div
     .querySelector('.btn-remover-item')
@@ -253,12 +286,13 @@ function adicionarLinhaItem(item = null) {
   atualizarPrecoLinha(div);
 
   calcularTotal();
+
 }
 
 
-// =========================================================
-// ATUALIZAR PREÇO DO ITEM
-// =========================================================
+/* =========================================================
+   ATUALIZAR PREÇO DO ITEM
+========================================================= */
 
 function atualizarPrecoLinha(linha) {
 
@@ -279,12 +313,13 @@ function atualizarPrecoLinha(linha) {
         : '0.00';
 
   }
+
 }
 
 
-// =========================================================
-// CALCULAR TOTAL DA VENDA
-// =========================================================
+/* =========================================================
+   CALCULAR TOTAL DA VENDA
+========================================================= */
 
 function calcularTotal() {
 
@@ -333,12 +368,13 @@ function calcularTotal() {
       fmt(totalLiquido);
 
   }
+
 }
 
 
-// =========================================================
-// PREPARAR ENVIO DA VENDA
-// =========================================================
+/* =========================================================
+   PREPARAR ENVIO DA VENDA
+========================================================= */
 
 function prepararEnvioVenda(event) {
 
@@ -358,6 +394,7 @@ function prepararEnvioVenda(event) {
     );
 
     return;
+
   }
 
 
@@ -389,6 +426,7 @@ function prepararEnvioVenda(event) {
       );
 
       return;
+
     }
 
 
@@ -405,6 +443,7 @@ function prepararEnvioVenda(event) {
       );
 
       return;
+
     }
 
 
@@ -433,20 +472,111 @@ function prepararEnvioVenda(event) {
       JSON.stringify(carrinho);
 
   }
+
 }
 
 
-// =========================================================
-// COMPROVANTE DA VENDA
-// =========================================================
-//
-// IMPORTANTE:
-// Aqui NÃO redirecionamos para outra página.
-//
-// O JavaScript abre o modal #modalDetalhe,
-// consulta /pdv/venda/{id}/json e monta o
-// comprovante dentro da janelinha.
-// =========================================================
+/* =========================================================
+   POSICIONAR BOTÃO NO TOTAL LÍQUIDO CORRETO
+========================================================= */
+
+function posicionarBotaoComprovante() {
+
+  const conteudo =
+    document.getElementById('conteudoDetalhe');
+
+  if (!conteudo) {
+
+    return;
+
+  }
+
+
+  const totalCorreto =
+    conteudo.querySelector('.comprovante-total');
+
+  if (!totalCorreto) {
+
+    return;
+
+  }
+
+
+  if (!botaoBaixarComprovante) {
+
+    botaoBaixarComprovante =
+      document.getElementById('btnBaixarComprovante');
+
+  }
+
+
+  if (!botaoBaixarComprovante) {
+
+    return;
+
+  }
+
+
+  /*
+    Move o MESMO botão para dentro do Total Líquido.
+    Não cria outro botão.
+  */
+
+  totalCorreto.appendChild(
+    botaoBaixarComprovante
+  );
+
+
+  botaoBaixarComprovante.disabled =
+    !vendaAtualCarregada;
+
+}
+
+
+/* =========================================================
+   RETIRAR BOTÃO DO COMPROVANTE ANTIGO
+
+   Isso é importante antes de trocar o innerHTML.
+   Sem isso, o botão seria apagado junto com o comprovante.
+========================================================= */
+
+function removerBotaoDoComprovante() {
+
+  if (!botaoBaixarComprovante) {
+
+    botaoBaixarComprovante =
+      document.getElementById('btnBaixarComprovante');
+
+  }
+
+
+  if (!botaoBaixarComprovante) {
+
+    return;
+
+  }
+
+
+  const rodapeOriginal =
+    document.querySelector(
+      '.comprovante-rodape-fixo'
+    );
+
+
+  if (rodapeOriginal) {
+
+    rodapeOriginal.appendChild(
+      botaoBaixarComprovante
+    );
+
+  }
+
+}
+
+
+/* =========================================================
+   COMPROVANTE DA VENDA
+========================================================= */
 
 async function verDetalhesVenda(id) {
 
@@ -464,75 +594,41 @@ async function verDetalhesVenda(id) {
     );
 
     return;
+
   }
 
-  // =========================================================
-  // BAIXAR COMPROVANTE COMO IMAGEM
-  // =========================================================
 
-  async function baixarComprovante() {
+  /*
+    Guarda o botão antes de trocar o conteúdo.
+  */
 
-    if (!vendaAtualCarregada) {
-      return;
-    }
+  if (!botaoBaixarComprovante) {
 
-    const elemento =
-      document.querySelector('#conteudoDetalhe .comprovante');
-
-    const btn =
+    botaoBaixarComprovante =
       document.getElementById('btnBaixarComprovante');
 
-    if (!elemento || !btn) {
-      return;
-    }
-
-    const conteudoOriginal = btn.innerHTML;
-
-    btn.disabled = true;
-    btn.innerHTML = 'Gerando...';
-
-    try {
-
-      const canvas = await html2canvas(elemento, {
-        scale: 2,
-        backgroundColor: '#ffffff',
-        useCORS: true
-      });
-
-      const link = document.createElement('a');
-
-      link.download = `comprovante-venda-${vendaAtualId}.png`;
-      link.href = canvas.toDataURL('image/png', 1.0);
-
-      document.body.appendChild(link);
-      link.click();
-      link.remove();
-
-    } catch (erro) {
-
-      console.error('Erro ao gerar comprovante:', erro);
-
-      exibirToast(
-        'Não foi possível baixar o comprovante.',
-        false
-      );
-
-    } finally {
-
-      btn.disabled = false;
-      btn.innerHTML = conteudoOriginal;
-
-    }
-
   }
 
 
-  // Abre a janelinha imediatamente
+  /*
+    Remove o botão do comprovante anterior antes
+    de limpar o conteúdo.
+  */
+
+  removerBotaoDoComprovante();
+
 
   modal.classList.add('aberto');
 
+  vendaAtualCarregada = false;
 
-  // Mostra carregamento
+
+  if (botaoBaixarComprovante) {
+
+    botaoBaixarComprovante.disabled = true;
+
+  }
+
 
   conteudo.innerHTML = `
     <div class="comprovante-loading">
@@ -544,18 +640,8 @@ async function verDetalhesVenda(id) {
     </div>
   `;
 
-  // Abre a janelinha imediatamente
-
-  modal.classList.add('aberto');
-
-  vendaAtualCarregada = false;
-
-  const btnBaixar = document.getElementById('btnBaixarComprovante');
-  if (btnBaixar) btnBaixar.disabled = true;
 
   try {
-
-    // Consulta a API FastAPI
 
     const resposta =
       await fetch(`/pdv/venda/${id}/json`, {
@@ -566,8 +652,6 @@ async function verDetalhesVenda(id) {
       });
 
 
-    // Verifica resposta HTTP
-
     if (!resposta.ok) {
 
       throw new Error(
@@ -577,13 +661,9 @@ async function verDetalhesVenda(id) {
     }
 
 
-    // Converte resposta para JSON
-
     const dados =
       await resposta.json();
 
-
-    // Verifica erro retornado pela API
 
     if (dados.erro) {
 
@@ -594,10 +674,6 @@ async function verDetalhesVenda(id) {
 
     }
 
-
-    // =====================================================
-    // ITENS DA VENDA
-    // =====================================================
 
     let itensHtml = '';
 
@@ -618,24 +694,24 @@ async function verDetalhesVenda(id) {
 
                   <strong>
                     ${escapeHtml(
-              item.produto_nome
-            )}
+                      item.produto_nome
+                    )}
                   </strong>
 
                   <small>
                     ${item.quantidade}
                     x
                     ${fmt(
-              item.preco_unitario
-            )}
+                      item.preco_unitario
+                    )}
                   </small>
 
                 </div>
 
                 <strong>
                   ${fmt(
-              item.subtotal
-            )}
+                    item.subtotal
+                  )}
                 </strong>
 
               </div>
@@ -659,16 +735,10 @@ async function verDetalhesVenda(id) {
     }
 
 
-    // =====================================================
-    // MONTA COMPROVANTE
-    // =====================================================
-
     conteudo.innerHTML = `
 
       <div class="comprovante">
 
-
-        <!-- CABEÇALHO -->
 
         <div class="comprovante-topo">
 
@@ -691,8 +761,6 @@ async function verDetalhesVenda(id) {
         </div>
 
 
-        <!-- INFORMAÇÕES -->
-
         <div class="comprovante-info">
 
 
@@ -704,8 +772,8 @@ async function verDetalhesVenda(id) {
 
             <strong>
               ${escapeHtml(
-      dados.cliente
-    )}
+                dados.cliente
+              )}
             </strong>
 
           </div>
@@ -719,8 +787,8 @@ async function verDetalhesVenda(id) {
 
             <strong>
               ${escapeHtml(
-      dados.operador
-    )}
+                dados.operador
+              )}
             </strong>
 
           </div>
@@ -734,8 +802,8 @@ async function verDetalhesVenda(id) {
 
             <strong>
               ${escapeHtml(
-      dados.data
-    )}
+                dados.data
+              )}
             </strong>
 
           </div>
@@ -743,8 +811,6 @@ async function verDetalhesVenda(id) {
 
         </div>
 
-
-        <!-- ITENS -->
 
         <div class="comprovante-itens">
 
@@ -757,8 +823,6 @@ async function verDetalhesVenda(id) {
         </div>
 
 
-        <!-- VALORES -->
-
         <div class="comprovante-valores">
 
 
@@ -770,8 +834,8 @@ async function verDetalhesVenda(id) {
 
             <strong>
               ${fmt(
-      dados.total_bruto
-    )}
+                dados.total_bruto
+              )}
             </strong>
 
           </div>
@@ -785,8 +849,8 @@ async function verDetalhesVenda(id) {
 
             <strong>
               ${Number(
-      dados.desconto_percentual || 0
-    ).toFixed(1)}%
+                dados.desconto_percentual || 0
+              ).toFixed(1)}%
             </strong>
 
           </div>
@@ -800,8 +864,8 @@ async function verDetalhesVenda(id) {
 
             <strong>
               ${fmt(
-      dados.total_liquido
-    )}
+                dados.total_liquido
+              )}
             </strong>
 
           </div>
@@ -810,10 +874,8 @@ async function verDetalhesVenda(id) {
         </div>
 
 
-        <!-- OBSERVAÇÃO -->
-
         ${dados.observacao
-        ? `
+          ? `
               <div class="comprovante-observacao">
 
                 <strong>
@@ -821,16 +883,14 @@ async function verDetalhesVenda(id) {
                 </strong>
 
                 ${escapeHtml(
-          dados.observacao
-        )}
+                  dados.observacao
+                )}
 
               </div>
             `
-        : ''
-      }
+          : ''
+        }
 
-
-        <!-- RODAPÉ -->
 
         <div
           style="
@@ -852,10 +912,19 @@ async function verDetalhesVenda(id) {
 
     `;
 
+
     vendaAtualId = dados.id;
+
     vendaAtualCarregada = true;
 
-    if (btnBaixar) btnBaixar.disabled = false;
+
+    /*
+      Agora que o comprovante foi criado,
+      coloca o botão ao lado do Total Líquido correto.
+    */
+
+    posicionarBotaoComprovante();
+
 
   } catch (erro) {
 
@@ -864,10 +933,6 @@ async function verDetalhesVenda(id) {
       erro
     );
 
-
-    // =====================================================
-    // MOSTRA ERRO DENTRO DA JANELINHA
-    // =====================================================
 
     conteudo.innerHTML = `
 
@@ -901,8 +966,8 @@ async function verDetalhesVenda(id) {
           "
         >
           ${escapeHtml(
-      erro.message
-    )}
+            erro.message
+          )}
         </p>
 
 
@@ -931,9 +996,135 @@ async function verDetalhesVenda(id) {
 }
 
 
-// =========================================================
-// FECHAR MODAL
-// =========================================================
+/* =========================================================
+   BAIXAR COMPROVANTE COMO IMAGEM
+========================================================= */
+
+async function baixarComprovante() {
+
+  if (!vendaAtualCarregada) {
+
+    return;
+
+  }
+
+
+  const elemento =
+    document.querySelector(
+      '#conteudoDetalhe .comprovante'
+    );
+
+
+  const btn =
+    botaoBaixarComprovante ||
+    document.getElementById(
+      'btnBaixarComprovante'
+    );
+
+
+  if (!elemento || !btn) {
+
+    return;
+
+  }
+
+
+  const conteudoOriginal =
+    btn.innerHTML;
+
+
+  btn.disabled = true;
+
+  btn.innerHTML =
+    'Gerando...';
+
+
+  try {
+
+    /*
+      Esconde temporariamente o botão para ele
+      não aparecer dentro da imagem baixada.
+    */
+
+    const displayOriginal =
+      btn.style.display;
+
+    btn.style.display = 'none';
+
+
+    const canvas =
+      await html2canvas(elemento, {
+
+        scale: 2,
+
+        backgroundColor: '#ffffff',
+
+        useCORS: true
+
+      });
+
+
+    btn.style.display =
+      displayOriginal;
+
+
+    const link =
+      document.createElement('a');
+
+
+    link.download =
+      `comprovante-venda-${vendaAtualId}.png`;
+
+
+    link.href =
+      canvas.toDataURL(
+        'image/png',
+        1.0
+      );
+
+
+    document.body.appendChild(link);
+
+    link.click();
+
+    link.remove();
+
+
+  } catch (erro) {
+
+    console.error(
+      'Erro ao gerar comprovante:',
+      erro
+    );
+
+
+    exibirToast(
+      'Não foi possível baixar o comprovante.',
+      false
+    );
+
+  } finally {
+
+    btn.disabled = false;
+
+    btn.innerHTML =
+      conteudoOriginal;
+
+    /*
+      Garante que o botão volte a aparecer
+      caso ocorra algum erro durante a geração.
+    */
+
+    btn.style.display = '';
+
+  }
+
+}
+
+
+/* =========================================================
+   FECHAR MODAL
+========================================================= */
 
 function fecharModal(id) {
 
@@ -945,12 +1136,13 @@ function fecharModal(id) {
     modal.classList.remove('aberto');
 
   }
+
 }
 
 
-// =========================================================
-// FECHAR MODAL CLICANDO FORA
-// =========================================================
+/* =========================================================
+   FECHAR MODAL CLICANDO FORA
+========================================================= */
 
 function fecharModalFora(event, id) {
 
@@ -970,9 +1162,9 @@ function fecharModalFora(event, id) {
 }
 
 
-// =========================================================
-// TOAST
-// =========================================================
+/* =========================================================
+   TOAST
+========================================================= */
 
 function exibirToast(
   mensagem,
@@ -987,7 +1179,9 @@ function exibirToast(
 
 
   if (!toast || !mensagemElemento) {
+
     return;
+
   }
 
 
@@ -1017,16 +1211,27 @@ function exibirToast(
     toast.classList.remove('visivel');
 
   }, 3000);
+
 }
 
 
-// =========================================================
-// INICIALIZAÇÃO
-// =========================================================
+/* =========================================================
+   INICIALIZAÇÃO
+========================================================= */
 
 document.addEventListener(
   'DOMContentLoaded',
   () => {
+
+
+    /*
+      Guarda a referência original do botão.
+    */
+
+    botaoBaixarComprovante =
+      document.getElementById(
+        'btnBaixarComprovante'
+      );
 
 
     // Botão Nova Venda
@@ -1069,9 +1274,9 @@ document.addEventListener(
 );
 
 
-// =========================================================
-// DISPONIBILIZA FUNÇÕES PARA O HTML
-// =========================================================
+/* =========================================================
+   DISPONIBILIZA FUNÇÕES PARA O HTML
+========================================================= */
 
 window.abrirModalVenda =
   abrirModalVenda;
