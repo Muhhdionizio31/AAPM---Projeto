@@ -149,6 +149,27 @@ body {
     gap: 10px;
 }
 
+.avatar-usuario {
+    width: 34px;
+    height: 34px;
+    min-width: 34px;
+
+    border-radius: 50%;
+
+    background: var(--vermelho);
+    color: var(--branco);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.72rem;
+    font-weight: 800;
+
+    text-transform: uppercase;
+}
+
 .info-usuario {
     display: flex;
     flex-direction: column;

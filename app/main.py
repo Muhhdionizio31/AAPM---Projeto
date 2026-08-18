@@ -15,8 +15,9 @@ from app.controllers import variacao_controller
 from app.controllers import movimentacao_controller
 from app.controllers import cliente_controller
 from app.controllers import pdv_controllers
+from app.controllers import armario_controller
 
-
+from app.database import engine, Base
 from dotenv import load_dotenv
 import os
 from app.database import get_db
@@ -25,8 +26,9 @@ from sqlalchemy.orm import Session, joinedload
 from app.models.categoria import Categoria
 from app.models.produto import Produto
 from app.models.venda import Venda, ItemVenda
+from app.models.armario import Armario, StatusArmario
 
-
+Base.metadata.create_all(bind=engine)
 
 load_dotenv()
 
@@ -44,6 +46,7 @@ app.include_router(variacao_controller.router)
 app.include_router(movimentacao_controller.router)
 app.include_router(cliente_controller.router)
 app.include_router(pdv_controllers.router)
+app.include_router(armario_controller.router)
 
 
 
@@ -165,6 +168,20 @@ def visualizar_painel(
     usuario = Depends(get_usuario_opcional)
 ):
 
+    todos_armarios = db.query(Armario).filter(
+        Armario.ativo == True
+    ).all()
+
+    armarios_disponiveis = sum(
+        1 for a in todos_armarios
+        if a.status == StatusArmario.DISPONIVEL
+    )
+
+    armarios_alugados = sum(
+        1 for a in todos_armarios
+        if a.status == StatusArmario.ALUGADO
+    )
+
     # ── 2. CARDS DE MÉTRICAS EM TEMPO REAL ──
     total_produtos = db.query(func.count(Produto.id)).scalar() or 0
     estoque_critico = db.query(Produto).filter(Produto.estoque_atual <= 7).count()
@@ -277,7 +294,9 @@ def visualizar_painel(
             "categorias_labels": categorias_labels,
             "categorias_valores": categorias_valores,
             "receita_mensal_lista": receita_mensal_lista,
-            "meses_labels": meses_labels
+            "meses_labels": meses_labels,
+            "armarios_disponiveis": armarios_disponiveis,
+            "armarios_alugados": armarios_alugados
         }       
     )
 
@@ -296,3 +315,4 @@ def api_vendas_mensais(db: Session = Depends(get_db)):
         if d.mes:
             lista[int(float(d.mes)) - 1] = d.total
     return {"vendas": lista}
+
