@@ -7,7 +7,7 @@
 
 from datetime import datetime, timezone
 from fastapi import APIRouter, Depends, Request, Form
-from fastapi.responses import HTMLResponse, RedirectResponse
+from fastapi.responses import RedirectResponse
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
 
@@ -21,21 +21,12 @@ templates = Jinja2Templates(directory="app/templates")
 
 
 # ============================================================
-# MAPA DE ARMÁRIOS — visível para todos os logados
+# HELPER — monta o contexto da página index (reaproveitado
+# tanto pelo GET / quanto pelos POSTs que precisam reabrir
+# um modal com erro, já que agora tudo vive no index.html)
 # ============================================================
 
-@router.get("/")
-def listar_armarios(
-    request: Request,
-    status: str = "",           # filtra por status
-    localizacao: str = "",      # filtra por localização
-    db: Session = Depends(get_db),
-    usuario = Depends(get_usuario_logado)
-):
-    """
-    Exibe o mapa de armários agrupado por status.
-    Qualquer usuário logado pode ver a disponibilidade.
-    """
+def _contexto_index(db: Session, usuario, status: str = "", localizacao: str = ""):
     query = db.query(Armario).filter(Armario.ativo == True)
 
     if status in ("disponivel", "alugado", "inativo"):
@@ -46,53 +37,44 @@ def listar_armarios(
 
     armarios = query.order_by(Armario.numero).all()
 
-    # Contadores para o resumo no topo da página
-    todos     = db.query(Armario).filter(Armario.ativo == True).all()
+    todos = db.query(Armario).filter(Armario.ativo == True).all()
     disponiveis = sum(1 for a in todos if a.status == StatusArmario.DISPONIVEL)
-    alugados    = sum(1 for a in todos if a.status == StatusArmario.ALUGADO)
+    alugados = sum(1 for a in todos if a.status == StatusArmario.ALUGADO)
 
-    # Lista de localizações únicas para o filtro
-    localizacoes = sorted(set(
-        a.localizacao for a in todos if a.localizacao
-    ))
+    localizacoes = sorted(set(a.localizacao for a in todos if a.localizacao))
 
-    return templates.TemplateResponse(
-        request,
-        "armarios/index.html",
-        {
-            "request":      request,
-            "usuario":      usuario,
-            "armarios":     armarios,
-            "disponiveis":  disponiveis,
-            "alugados":     alugados,
-            "total":        len(todos),
-            "status":       status,
-            "localizacao":  localizacao,
-            "localizacoes": localizacoes,
-            "StatusArmario": StatusArmario,
-        }
-    )
+    return {
+        "usuario": usuario,
+        "armarios": armarios,
+        "disponiveis": disponiveis,
+        "alugados": alugados,
+        "total": len(todos),
+        "status": status,
+        "localizacao": localizacao,
+        "localizacoes": localizacoes,
+        "StatusArmario": StatusArmario,
+    }
 
 
 # ============================================================
-# CADASTRO DE ARMÁRIO — somente admin
+# MAPA DE ARMÁRIOS — visível para todos os logados
 # ============================================================
 
-@router.get("/novo")
-def form_novo_armario(
+@router.get("/")
+def listar_armarios(
     request: Request,
-    admin = Depends(get_admin)
+    status: str = "",
+    localizacao: str = "",
+    db: Session = Depends(get_db),
+    usuario = Depends(get_usuario_logado)
 ):
-    return templates.TemplateResponse(
-        request,
-        "armarios/form.html",
-        {
-            "request":  request,
-            "usuario":  admin,
-            "editando": None,
-        }
-    )
+    contexto = _contexto_index(db, usuario, status, localizacao)
+    return templates.TemplateResponse(request, "armarios/index.html", contexto)
 
+
+# ============================================================
+# CADASTRO DE ARMÁRIO — somente admin (agora via modal no index)
+# ============================================================
 
 @router.post("/novo")
 def criar_armario(
@@ -103,27 +85,23 @@ def criar_armario(
     db: Session      = Depends(get_db),
     admin            = Depends(get_admin)
 ):
-    # Número do armário deve ser único
     existente = db.query(Armario).filter(
         Armario.numero == numero.strip().upper()
     ).first()
 
     if existente:
-        return templates.TemplateResponse(
-            request,
-            "armarios/form.html",
-            {
-                "request":  request,
-                "usuario":  admin,
-                "editando": None,
-                "erro":     f"Armário {numero.upper()} já está cadastrado.",
-                "valores":  {
-                    "numero": numero,
-                    "localizacao": localizacao,
-                    "observacao": observacao,
-                },
+        contexto = _contexto_index(db, admin)
+        contexto.update({
+            "abrir_novo": True,
+            "erro_novo": f"Armário {numero.strip().upper()} já está cadastrado.",
+            "valores_novo": {
+                "numero": numero,
+                "localizacao": localizacao,
+                "observacao": observacao,
             },
-            status_code=400
+        })
+        return templates.TemplateResponse(
+            request, "armarios/index.html", contexto, status_code=400
         )
 
     db.add(Armario(
@@ -156,7 +134,6 @@ def detalhe_armario(
         request,
         "armarios/detalhe.html",
         {
-            "request": request,
             "usuario": usuario,
             "armario": armario,
         }
@@ -165,6 +142,7 @@ def detalhe_armario(
 
 # ============================================================
 # EDITAR DADOS DO ARMÁRIO (número, localização) — admin
+# (continua em página própria, não foi pedido pra virar modal)
 # ============================================================
 
 @router.get("/{armario_id}/editar")
@@ -183,7 +161,6 @@ def form_editar_armario(
         request,
         "armarios/form.html",
         {
-            "request":  request,
             "usuario":  admin,
             "editando": editando,
         }
@@ -193,6 +170,7 @@ def form_editar_armario(
 @router.post("/{armario_id}/editar")
 def editar_armario(
     armario_id: int,
+    request: Request,
     numero: str      = Form(...),
     localizacao: str = Form(""),
     observacao: str  = Form(""),
@@ -204,7 +182,6 @@ def editar_armario(
     if not editando:
         return RedirectResponse(url="/armarios", status_code=302)
 
-    # Verifica conflito de número com outro armário
     conflito = db.query(Armario).filter(
         Armario.numero == numero.strip().upper(),
         Armario.id != armario_id
@@ -215,7 +192,6 @@ def editar_armario(
             request,
             "armarios/form.html",
             {
-                "request":  None,
                 "usuario":  admin,
                 "editando": editando,
                 "erro":     f"Armário {numero.upper()} já existe.",
@@ -232,68 +208,112 @@ def editar_armario(
 
 
 # ============================================================
-# ALUGAR ARMÁRIO — admin preenche o nome do locatário
+# ALUGAR ARMÁRIO — agora via modal no index (admin)
 # ============================================================
-
-@router.get("/{armario_id}/alugar")
-def form_alugar(
-    armario_id: int,
-    request: Request,
-    db: Session = Depends(get_db),
-    admin = Depends(get_admin)
-):
-    """Exibe o formulário para vincular um locatário ao armário."""
-    armario = db.query(Armario).filter(Armario.id == armario_id).first()
-
-    if not armario or armario.status != StatusArmario.DISPONIVEL:
-        return RedirectResponse(url="/armarios", status_code=302)
-
-    return templates.TemplateResponse(
-        request,
-        "armarios/form_alugar.html",
-        {
-            "request": request,
-            "usuario": admin,
-            "armario": armario,
-        }
-    )
-
 
 @router.post("/{armario_id}/alugar")
 def alugar(
+    request: Request,
     armario_id: int,
-    locatario_nome: str = Form(...),
-    semestre: str       = Form(...),
-    observacao: str     = Form(""),
-    db: Session         = Depends(get_db),
-    admin               = Depends(get_admin)
+    # Aceita os nomes usados pelo modal atual e também nomes curtos,
+    # evitando erro 422 quando o HTML estiver usando nome/periodo.
+    locatario_nome: str = Form(""),
+    nome: str            = Form(""),
+    semestre: str        = Form(""),
+    periodo: str         = Form(""),
+    observacao: str      = Form(""),
+    db: Session          = Depends(get_db),
+    admin                = Depends(get_admin)
 ):
-    """
-    Vincula o locatário ao armário e muda o status para ALUGADO.
-    O semestre é fixo durante toda a vigência do contrato.
-    """
-    armario = db.query(Armario).filter(
-        Armario.id == armario_id
-    ).with_for_update().first()
+    """Aluga um armário disponível para o locatário informado."""
 
-    # Dupla verificação: garante que não foi alugado entre o GET e o POST
-    if not armario or armario.status != StatusArmario.DISPONIVEL:
-        return RedirectResponse(
-            url="/armarios?erro=ja_alugado",
-            status_code=302
+    nome_final = (locatario_nome or nome).strip()
+    semestre_final = (semestre or periodo).strip()
+    observacao = observacao.strip()
+
+    # Valida antes de alterar o registro para retornar o modal com a mensagem.
+    if not nome_final or not semestre_final:
+        contexto = _contexto_index(db, admin)
+        armario = db.query(Armario).filter(Armario.id == armario_id).first()
+        contexto.update({
+            "abrir_alugar_id": armario_id,
+            "abrir_alugar_numero": armario.numero if armario else "",
+            "abrir_alugar_localizacao": (armario.localizacao if armario else "") or "Localização não informada",
+            "erro_alugar": "Informe o nome do locatário e o semestre.",
+            "valores_alugar": {
+                "locatario_nome": nome_final,
+                "semestre": semestre_final,
+                "observacao": observacao,
+            },
+        })
+        return templates.TemplateResponse(
+            request, "armarios/index.html", contexto, status_code=400
         )
 
-    armario.status         = StatusArmario.ALUGADO
-    armario.locatario_nome = locatario_nome.strip()
-    armario.semestre       = semestre.strip()
-    armario.observacao     = observacao.strip() or armario.observacao
-    armario.alugado_em     = datetime.now(timezone.utc)
+    # Não usa with_for_update(): ele não é suportado de forma consistente
+    # em SQLite e pode fazer o aluguel falhar mesmo com o armário disponível.
+    armario = db.query(Armario).filter(Armario.id == armario_id).first()
 
-    db.commit()
+    if not armario:
+        contexto = _contexto_index(db, admin)
+        contexto.update({
+            "abrir_alugar_id": armario_id,
+            "erro_alugar": "Armário não encontrado.",
+            "valores_alugar": {
+                "locatario_nome": nome_final,
+                "semestre": semestre_final,
+                "observacao": observacao,
+            },
+        })
+        return templates.TemplateResponse(
+            request, "armarios/index.html", contexto, status_code=404
+        )
+
+    if armario.status != StatusArmario.DISPONIVEL:
+        contexto = _contexto_index(db, admin)
+        contexto.update({
+            "abrir_alugar_id": armario_id,
+            "abrir_alugar_numero": armario.numero,
+            "abrir_alugar_localizacao": armario.localizacao or "Localização não informada",
+            "erro_alugar": "Este armário não está disponível. Escolha outro armário disponível.",
+            "valores_alugar": {
+                "locatario_nome": nome_final,
+                "semestre": semestre_final,
+                "observacao": observacao,
+            },
+        })
+        return templates.TemplateResponse(
+            request, "armarios/index.html", contexto, status_code=400
+        )
+
+    try:
+        armario.status = StatusArmario.ALUGADO
+        armario.locatario_nome = nome_final
+        armario.semestre = semestre_final
+        armario.observacao = observacao or armario.observacao
+        armario.alugado_em = datetime.now(timezone.utc)
+        db.commit()
+    except Exception:
+        db.rollback()
+        contexto = _contexto_index(db, admin)
+        contexto.update({
+            "abrir_alugar_id": armario_id,
+            "abrir_alugar_numero": armario.numero,
+            "abrir_alugar_localizacao": armario.localizacao or "Localização não informada",
+            "erro_alugar": "Não foi possível concluir o aluguel. Verifique os dados e tente novamente.",
+            "valores_alugar": {
+                "locatario_nome": nome_final,
+                "semestre": semestre_final,
+                "observacao": observacao,
+            },
+        })
+        return templates.TemplateResponse(
+            request, "armarios/index.html", contexto, status_code=500
+        )
 
     return RedirectResponse(
         url=f"/armarios/{armario_id}?alugado=ok",
-        status_code=302
+        status_code=303
     )
 
 
@@ -307,11 +327,6 @@ def liberar(
     db: Session = Depends(get_db),
     admin = Depends(get_admin)
 ):
-    """
-    Remove o locatário e deixa o armário disponível novamente.
-    Os dados do locatário anterior são apagados — não há histórico
-    de locações nesta versão (pode ser adicionado futuramente).
-    """
     armario = db.query(Armario).filter(Armario.id == armario_id).first()
 
     if not armario:
@@ -340,10 +355,6 @@ def toggle_ativo(
     db: Session = Depends(get_db),
     admin = Depends(get_admin)
 ):
-    """
-    Desativa o armário removendo-o do mapa.
-    Bloqueia se estiver alugado — libere antes de desativar.
-    """
     armario = db.query(Armario).filter(Armario.id == armario_id).first()
 
     if not armario:
@@ -356,7 +367,6 @@ def toggle_ativo(
         )
 
     armario.ativo = not armario.ativo
-    # Se estava inativo e está reativando, volta como disponível
     if armario.ativo:
         armario.status = StatusArmario.DISPONIVEL
 
