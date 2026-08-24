@@ -406,27 +406,38 @@
       <!-- MÉTRICAS -->
       <div class="grade-metricas">
 
-        <div class="card-metrica">
+        <div class="card-metrica card-total">
           <div class="cm-topo">
-            <span class="cm-label">Armários Cadastrados</span>
+            <span class="cm-label">Total Cadastrado</span>
             <div class="cm-icone azul">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                stroke-linecap="round" stroke-linejoin="round">
+              <svg viewBox="0 0 24 24">
                 <rect x="3" y="3" width="7" height="18" rx="1" />
                 <rect x="14" y="3" width="7" height="18" rx="1" />
               </svg>
             </div>
           </div>
           <div class="cm-valor">{{ total }}</div>
-          <div class="cm-variacao neutro">Capacidade total</div>
+          <div class="cm-variacao neutro">Capacidade instalada</div>
         </div>
 
-        <div class="card-metrica">
+        <div class="card-metrica card-disponivel">
           <div class="cm-topo">
-            <span class="cm-label">Armários Alugados</span>
+            <span class="cm-label">Disponíveis</span>
+            <div class="cm-icone verde">
+              <svg viewBox="0 0 24 24">
+                <polyline points="20 6 9 17 4 12" />
+              </svg>
+            </div>
+          </div>
+          <div class="cm-valor">{{ disponiveis }}</div>
+          <div class="cm-variacao disponivel">Prontos para locação</div>
+        </div>
+
+        <div class="card-metrica card-alugado">
+          <div class="cm-topo">
+            <span class="cm-label">Alugados</span>
             <div class="cm-icone vermelho">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                stroke-linecap="round" stroke-linejoin="round">
+              <svg viewBox="0 0 24 24">
                 <rect x="3" y="11" width="18" height="10" rx="2" />
                 <path d="M7 11V7a5 5 0 0 1 10 0v4" />
               </svg>
@@ -438,18 +449,19 @@
           </div>
         </div>
 
-        <div class="card-metrica">
+        <div class="card-metrica card-inativo">
           <div class="cm-topo">
-            <span class="cm-label">Armários Disponíveis</span>
-            <div class="cm-icone verde">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                stroke-linecap="round" stroke-linejoin="round">
-                <polyline points="20 6 9 17 4 12" />
+            <span class="cm-label">Inativos / Manutenção</span>
+            <div class="cm-icone cinza">
+              <svg viewBox="0 0 24 24">
+                <circle cx="12" cy="12" r="10" />
+                <line x1="10" y1="15" x2="10" y2="9" />
+                <line x1="14" y1="15" x2="14" y2="9" />
               </svg>
             </div>
           </div>
-          <div class="cm-valor">{{ disponiveis }}</div>
-          <div class="cm-variacao neutro">Prontos para nova locação</div>
+          <div class="cm-valor">{{ inativos }}</div>
+          <div class="cm-variacao neutro">Fora de circulação</div>
         </div>
 
       </div>
@@ -460,12 +472,13 @@
 
         <div class="card-cabecalho">
           <div>
-            <h3>Locações</h3>
-            <span>Controle de aluguel e liberação</span>
+            <h3>Controle de Armários</h3>
+            <span>Gerenciamento de ocupação, locação e manutenção</span>
           </div>
 
           <button type="button" class="btn-principal" onclick="abrirModalNovo()">
-            + Novo Armário
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Novo Armário
           </button>
         </div>
 
@@ -480,16 +493,24 @@
             <input
               type="text"
               id="buscaArmario"
-              placeholder="Buscar por armário, locatário ou localização..."
+              placeholder="Buscar por número, locatário ou bloco..."
               autocomplete="off"
               aria-label="Buscar aluguel" />
           </label>
 
           <div class="grupo-chips" id="grupoFiltroStatus" role="group" aria-label="Filtrar por status">
-            <button type="button" class="btn-filtro ativo" data-status="">Todos</button>
-            <button type="button" class="btn-filtro" data-status="disponivel">Disponível</button>
-            <button type="button" class="btn-filtro" data-status="alugado">Alugado</button>
-            <button type="button" class="btn-filtro" data-status="inativo">Inativo</button>
+            <button type="button" class="btn-filtro ativo" data-status="">
+              Todos <span class="chip-contador">{{ total }}</span>
+            </button>
+            <button type="button" class="btn-filtro" data-status="disponivel">
+              Disponível <span class="chip-contador">{{ disponiveis }}</span>
+            </button>
+            <button type="button" class="btn-filtro" data-status="alugado">
+              Alugado <span class="chip-contador">{{ alugados }}</span>
+            </button>
+            <button type="button" class="btn-filtro" data-status="inativo">
+              Inativo <span class="chip-contador">{{ inativos }}</span>
+            </button>
           </div>
 
         </div>
@@ -507,7 +528,7 @@
                 <th>Semestre</th>
                 <th>Alugado em</th>
                 <th>Status</th>
-                <th>Ações</th>
+                <th style="text-align: right;">Ações</th>
               </tr>
             </thead>
 
@@ -517,24 +538,38 @@
 
               <tr data-status="{{ armario.status.value }}">
 
-                <td>{{ armario.numero }}</td>
+                <td>
+                  <span class="armario-numero-badge">#{{ armario.numero }}</span>
+                </td>
                 <td>{{ armario.localizacao or '-' }}</td>
-                <td>{{ armario.locatario_nome or '-' }}</td>
+                <td>
+                  {% if armario.locatario_nome %}
+                  <strong style="color: #111827;">{{ armario.locatario_nome }}</strong>
+                  {% else %}
+                  <span style="color: #9ca3af;">—</span>
+                  {% endif %}
+                </td>
                 <td>{{ armario.semestre or '-' }}</td>
                 <td>{{ armario.alugado_em.strftime('%d/%m/%Y') if armario.alugado_em else '-' }}</td>
 
                 <td>
                   {% if armario.status.value == 'alugado' %}
-                  <span class="tag-tipo azul">Alugado</span>
+                  <span class="tag-tipo azul">
+                    <span class="ponto-status"></span> Alugado
+                  </span>
                   {% elif armario.status.value == 'inativo' %}
-                  <span class="tag-tipo cinza">Inativo</span>
+                  <span class="tag-tipo cinza">
+                    <span class="ponto-status"></span> Inativo
+                  </span>
                   {% else %}
-                  <span class="tag-tipo verde">Disponível</span>
+                  <span class="tag-tipo verde">
+                    <span class="ponto-status"></span> Disponível
+                  </span>
                   {% endif %}
                 </td>
 
                 <td>
-                  <div class="acoes-armario">
+                  <div class="acoes-armario" style="justify-content: flex-end;">
 
                     <button
                       type="button"
@@ -547,7 +582,9 @@
                       data-alugado-em="{{ armario.alugado_em.strftime('%d/%m/%Y') if armario.alugado_em else '-' }}"
                       data-observacao="{{ armario.observacao or '' }}"
                       data-status="{{ armario.status.value }}"
-                      onclick="abrirModalVerBtn(this)">
+                      onclick="abrirModalVerBtn(this)"
+                      title="Ver detalhes completos">
+                      <svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
                       Ver
                     </button>
 
@@ -559,17 +596,21 @@
                       data-id="{{ armario.id }}"
                       data-numero="{{ armario.numero }}"
                       data-localizacao="{{ armario.localizacao or '' }}"
-                      onclick="abrirModalAlugarBtn(this)">
+                      onclick="abrirModalAlugarBtn(this)"
+                      title="Alugar para um associado">
+                      <svg viewBox="0 0 24 24"><path d="M21 2l-2 2m-1.5 1.5L10 13l-4 4-4-4 4-4 7.5-7.5M15.5 7.5l3 3M13 10l3 3"/></svg>
                       Alugar
                     </button>
 
                     <button
                       type="button"
-                      class="btn-acao btn-excluir btn-abrir-toggle"
+                      class="btn-acao btn-abrir-toggle"
                       data-id="{{ armario.id }}"
                       data-numero="{{ armario.numero }}"
                       data-acao="desativar"
-                      onclick="abrirModalToggleBtn(this)">
+                      onclick="abrirModalToggleBtn(this)"
+                      title="Desativar armário">
+                      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="10" y1="15" x2="10" y2="9"/><line x1="14" y1="15" x2="14" y2="9"/></svg>
                       Desativar
                     </button>
 
@@ -580,7 +621,10 @@
                       action="/armarios/{{ armario.id }}/liberar"
                       class="form-acao-inline"
                       data-confirm-msg="Confirmar a liberação do armário #{{ armario.numero }}? Ele ficará disponível para novo aluguel.">
-                      <button type="submit" class="btn-acao btn-devolver">Liberar</button>
+                      <button type="submit" class="btn-acao btn-devolver" title="Registrar devolução e liberar">
+                        <svg viewBox="0 0 24 24"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
+                        Liberar
+                      </button>
                     </form>
 
                     {% else %}
@@ -591,7 +635,9 @@
                       data-id="{{ armario.id }}"
                       data-numero="{{ armario.numero }}"
                       data-acao="reativar"
-                      onclick="abrirModalToggleBtn(this)">
+                      onclick="abrirModalToggleBtn(this)"
+                      title="Reativar armário">
+                      <svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
                       Reativar
                     </button>
 
@@ -600,7 +646,9 @@
                       class="btn-acao btn-excluir"
                       data-id="{{ armario.id }}"
                       data-numero="{{ armario.numero }}"
-                      onclick="abrirModalExcluirBtn(this)">
+                      onclick="abrirModalExcluirBtn(this)"
+                      title="Excluir armário definitivamente">
+                      <svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
                       Excluir
                     </button>
 
@@ -613,7 +661,9 @@
                       data-numero="{{ armario.numero }}"
                       data-localizacao="{{ armario.localizacao or '' }}"
                       data-observacao="{{ armario.observacao or '' }}"
-                      onclick="abrirModalEditarBtn(this)">
+                      onclick="abrirModalEditarBtn(this)"
+                      title="Editar informações">
+                      <svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
                       Editar
                     </button>
 
@@ -680,9 +730,14 @@
     <div class="modal-caixa modal-conteudo" id="modalNovoCaixa">
 
       <div class="modal-cabecalho">
-        <div>
-          <h3>Cadastrar novo armário</h3>
-          <span>Preencha os dados do armário</span>
+        <div class="modal-cabecalho-esquerda">
+          <div class="modal-cabecalho-icone">
+            <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="18" rx="1"/><rect x="14" y="3" width="7" height="18" rx="1"/><line x1="7" y1="8" x2="7" y2="8.01"/><line x1="18" y1="8" x2="18" y2="8.01"/></svg>
+          </div>
+          <div>
+            <h3>Novo Armário</h3>
+            <span>Cadastre um novo armário no sistema</span>
+          </div>
         </div>
         <button type="button" class="modal-fechar" aria-label="Fechar" onclick="fecharModalNovo()">
           <svg viewBox="0 0 24 24">
@@ -698,7 +753,7 @@
           <div class="campo-form-grade">
 
             <div class="campo-form" id="campoNumeroNovo">
-              <label for="numeroNovo">Número do Armário</label>
+              <label for="numeroNovo">Número / Código</label>
               <input
                 type="text"
                 id="numeroNovo"
@@ -709,23 +764,23 @@
             </div>
 
             <div class="campo-form">
-              <label for="localizacaoNovo">Localização</label>
+              <label for="localizacaoNovo">Localização / Bloco</label>
               <input
                 type="text"
                 id="localizacaoNovo"
                 name="localizacao"
-                placeholder="Ex: Bloco A" />
+                placeholder="Ex: Bloco A - Corredor 1" />
             </div>
 
           </div>
 
           <div class="campo-form">
-            <label for="observacaoNovo">Observação</label>
+            <label for="observacaoNovo">Observações Adicionais</label>
             <textarea
               id="observacaoNovo"
               name="observacao"
               rows="3"
-              placeholder="Anotações internas sobre este armário (opcional)"></textarea>
+              placeholder="Anotações internas sobre o estado físico ou chave deste armário (opcional)"></textarea>
           </div>
 
           <div class="modal-acoes">
@@ -747,9 +802,14 @@
     <div class="modal-caixa modal-conteudo" id="modalAlugarCaixa">
 
       <div class="modal-cabecalho">
-        <div>
-          <h3 id="modalAlugarTitulo">Alugar Armário</h3>
-          <span id="modalAlugarSub"></span>
+        <div class="modal-cabecalho-esquerda">
+          <div class="modal-cabecalho-icone verde">
+            <svg viewBox="0 0 24 24"><path d="M21 2l-2 2m-1.5 1.5L10 13l-4 4-4-4 4-4 7.5-7.5M15.5 7.5l3 3M13 10l3 3"/></svg>
+          </div>
+          <div>
+            <h3 id="modalAlugarTitulo">Alugar Armário</h3>
+            <span id="modalAlugarSub"></span>
+          </div>
         </div>
         <button type="button" class="modal-fechar" aria-label="Fechar" onclick="fecharModalAlugar()">
           <svg viewBox="0 0 24 24">
@@ -763,18 +823,18 @@
         <form id="formAlugarArmario" method="post">
 
           <div class="campo-form" id="campoLocatarioModal">
-            <label for="locatario_nome_modal">Locatário (selecione)</label>
+            <label for="locatario_nome_modal">Associado / Aluno (Locatário)</label>
             <select id="locatario_nome_modal" name="locatario_nome" required>
-              <option value="">-- Selecionar locatário --</option>
+              <option value="">-- Selecionar associado --</option>
               {% for c in clientes %}
               <option value="{{ c.nome }}">{{ c.nome }}{% if c.matricula %} — {{ c.matricula }}{% endif %}</option>
               {% endfor %}
             </select>
-            <span class="campo-erro">Informe o nome do locatário.</span>
+            <span class="campo-erro">Selecione o locatário.</span>
           </div>
 
           <div class="campo-form" id="campoSemestreModal">
-            <label for="semestre_modal">Semestre</label>
+            <label for="semestre_modal">Semestre Letivo</label>
             <input
               type="text"
               id="semestre_modal"
@@ -785,12 +845,12 @@
           </div>
 
           <div class="campo-form">
-            <label for="observacao_modal">Observação</label>
+            <label for="observacao_modal">Observações da Locação</label>
             <textarea
               id="observacao_modal"
               name="observacao"
               rows="3"
-              placeholder="Anotações sobre este aluguel (opcional)"></textarea>
+              placeholder="Anotações sobre a entrega da chave ou comprovante (opcional)"></textarea>
           </div>
 
           <div class="modal-acoes">
@@ -812,9 +872,14 @@
     <div class="modal-caixa modal-conteudo" id="modalDetalheCaixa">
 
       <div class="modal-cabecalho">
-        <div>
-          <h3 id="detalheArmarioTitulo">Armário</h3>
-          <span id="detalheArmarioSub"></span>
+        <div class="modal-cabecalho-esquerda">
+          <div class="modal-cabecalho-icone azul">
+            <svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          </div>
+          <div>
+            <h3 id="detalheArmarioTitulo">Armário</h3>
+            <span id="detalheArmarioSub"></span>
+          </div>
         </div>
         <button type="button" class="modal-fechar" aria-label="Fechar" onclick="fecharModalDetalhe()">
           <svg viewBox="0 0 24 24">
@@ -847,9 +912,14 @@
     <div class="modal-caixa modal-conteudo" id="modalEditarCaixa">
 
       <div class="modal-cabecalho">
-        <div>
-          <h3>Editar armário</h3>
-          <span>Altere número, localização e observação</span>
+        <div class="modal-cabecalho-esquerda">
+          <div class="modal-cabecalho-icone cinza">
+            <svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+          </div>
+          <div>
+            <h3>Editar Armário</h3>
+            <span>Atualize as informações do armário</span>
+          </div>
         </div>
         <button type="button" class="modal-fechar" aria-label="Fechar" onclick="fecharModalEditar()">
           <svg viewBox="0 0 24 24">
@@ -864,24 +934,24 @@
           <input type="hidden" id="editarArmarioId" name="armario_id" />
 
           <div class="campo-form">
-            <label for="editarNumero">Número do Armário</label>
+            <label for="editarNumero">Número / Código</label>
             <input type="text" id="editarNumero" name="numero" required />
             <span class="campo-erro">Informe o número do armário.</span>
           </div>
 
           <div class="campo-form">
-            <label for="editarLocalizacao">Localização</label>
+            <label for="editarLocalizacao">Localização / Bloco</label>
             <input type="text" id="editarLocalizacao" name="localizacao" />
           </div>
 
           <div class="campo-form">
-            <label for="editarObservacao">Observação</label>
+            <label for="editarObservacao">Observações</label>
             <textarea id="editarObservacao" name="observacao" rows="3"></textarea>
           </div>
 
           <div class="modal-acoes">
             <button type="button" class="btn-cancelar" onclick="fecharModalEditar()">Cancelar</button>
-            <button type="submit" class="btn-principal">Salvar alterações</button>
+            <button type="submit" class="btn-principal">Salvar Alterações</button>
           </div>
 
         </form>
@@ -898,9 +968,14 @@
     <div class="modal-caixa modal-conteudo" id="modalToggleCaixa">
 
       <div class="modal-cabecalho">
-        <div>
-          <h3 id="modalToggleTitulo">Confirmar ação</h3>
-          <span id="modalToggleSub">Tem certeza?</span>
+        <div class="modal-cabecalho-esquerda">
+          <div class="modal-cabecalho-icone amarelo">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          </div>
+          <div>
+            <h3 id="modalToggleTitulo">Confirmar Ação</h3>
+            <span id="modalToggleSub">Ajuste de disponibilidade</span>
+          </div>
         </div>
         <button type="button" class="modal-fechar" aria-label="Fechar" onclick="fecharModalToggle()">
           <svg viewBox="0 0 24 24">
@@ -911,7 +986,7 @@
       </div>
 
       <div class="modal-corpo">
-        <p id="modalToggleMensagem">Deseja realmente alterar o estado deste armário?</p>
+        <p id="modalToggleMensagem" style="font-size: 0.95rem; color: #4b5563; line-height: 1.5; margin-bottom: 20px;">Deseja realmente alterar o estado deste armário?</p>
 
         <form id="formToggleArmario" method="post">
           <input type="hidden" id="toggleArmarioId" name="armario_id" />
@@ -933,8 +1008,13 @@
     <div class="modal-caixa modal-conteudo" id="modalExcluirCaixa" style="max-width: 440px;">
 
       <div class="modal-cabecalho" style="border-bottom: none; padding-bottom: 0;">
-        <div>
-          <h3 style="color: #b91c1c;">Excluir Armário</h3>
+        <div class="modal-cabecalho-esquerda">
+          <div class="modal-cabecalho-icone" style="background: #fef2f2; color: #dc2626;">
+            <svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+          </div>
+          <div>
+            <h3 style="color: #b91c1c;">Excluir Armário</h3>
+          </div>
         </div>
         <button type="button" class="modal-fechar" aria-label="Fechar" onclick="fecharModalExcluir()">
           <svg viewBox="0 0 24 24">
@@ -944,8 +1024,8 @@
         </button>
       </div>
 
-      <div class="modal-corpo" style="text-align: center; padding-top: 10px;">
-        <div style="width: 56px; height: 56px; border-radius: 50%; background: #fef2f2; border: 2px solid #fee2e2; color: #dc2626; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px;">
+      <div class="modal-corpo" style="text-align: center; padding-top: 14px;">
+        <div style="width: 60px; height: 60px; border-radius: 50%; background: #fef2f2; border: 2px solid #fee2e2; color: #dc2626; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px;">
           <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <polyline points="3 6 5 6 21 6"></polyline>
             <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
@@ -954,18 +1034,18 @@
           </svg>
         </div>
 
-        <h4 id="modalExcluirTitulo" style="font-size: 1.1rem; font-weight: 800; color: #111827; margin-bottom: 8px;">
+        <h4 id="modalExcluirTitulo" style="font-size: 1.15rem; font-weight: 800; color: #111827; margin-bottom: 8px;">
           Tem certeza que deseja excluir?
         </h4>
-        <p id="modalExcluirMensagem" style="font-size: 0.9rem; color: #6b7280; line-height: 1.5; margin-bottom: 20px;">
+        <p id="modalExcluirMensagem" style="font-size: 0.9rem; color: #6b7280; line-height: 1.5; margin-bottom: 22px;">
           O armário será removido permanentemente do sistema. Esta ação não poderá ser desfeita.
         </p>
 
         <form id="formExcluirArmario" method="post">
           <input type="hidden" id="excluirArmarioId" name="armario_id" />
-          <div class="modal-acoes" style="justify-content: center; gap: 12px;">
+          <div class="modal-acoes" style="justify-content: center; gap: 12px; border-top: none; padding-top: 0;">
             <button type="button" class="btn-cancelar" onclick="fecharModalExcluir()" style="flex: 1;">Cancelar</button>
-            <button type="submit" class="btn-principal" style="background: #dc2626; flex: 1; box-shadow: 0 4px 14px rgba(220, 38, 38, 0.3);">
+            <button type="submit" class="btn-principal" style="background: #dc2626; flex: 1; box-shadow: 0 4px 14px rgba(220, 38, 38, 0.35);">
               Sim, Excluir
             </button>
           </div>
@@ -986,7 +1066,7 @@
   </div>
 
 
-  <script src="/static/js/armarios.js?v=20260824_05"></script>
+  <script src="/static/js/armarios.js?v=20260824_06"></script>
 
 </body>
 
