@@ -13,9 +13,9 @@
     <!-- ── BARRA LATERAL ── -->
     <aside class="barra-lateral">
         <div class="barra-logo">
-            <span class="barra-logo-texto">SENAI <span>///</span></span>
+            <img class="barra-logo-senai" src="/static/uploads/foto-senai.png" alt="SENAI">
             <div class="barra-logo-separador"></div>
-            <span class="barra-logo-sub">AAPM</span>
+            <img class="barra-logo-aapm" src="/static/uploads/logo-aapm.png" alt="AAPM">
         </div>
 
         <span class="barra-menu-titulo">Menu</span>
@@ -59,14 +59,14 @@
                 </a>
             </li>
             <li>
-                <a href="/armarios/"aria-current="page">
-                <svg viewBox="0 0 24 24">
-                    <rect x="3" y="3" width="7" height="18" rx="1" />
-                    <rect x="14" y="3" width="7" height="18" rx="1" />
-                    <line x1="7" y1="8" x2="7" y2="8.01" />
-                    <line x1="18" y1="8" x2="18" y2="8.01" />
-                </svg>
-                Armários
+                <a href="/armarios/" aria-current="page">
+                    <svg viewBox="0 0 24 24">
+                        <rect x="3" y="3" width="7" height="18" rx="1" />
+                        <rect x="14" y="3" width="7" height="18" rx="1" />
+                        <line x1="7" y1="8" x2="7" y2="8.01" />
+                        <line x1="18" y1="8" x2="18" y2="8.01" />
+                    </svg>
+                    Armários
                 </a>
             </li>
             <li>
@@ -97,14 +97,14 @@
 
         <div class="barra-rodape">
             <div class="barra-usuario">
-
                 <div class="avatar-usuario">
                     {{ usuario.nome[:2] | upper if usuario else 'A' }}
                 </div>
-
                 <div class="info-usuario">
                     <strong>{{ usuario.nome if usuario else 'Admin' }}</strong>
-                    <small>{{ usuario.role | capitalize if usuario else 'Administrador' }}</small>
+                    <small>
+                        {{ usuario.role|capitalize if usuario and usuario.role else 'Usuário' }}
+                    </small>
                 </div>
 
             </div>
@@ -269,13 +269,11 @@
 
         </main>
 
-        <footer class="rodape-admin">
-            Painel de Controle &nbsp;·&nbsp; © 2026 Todos os direitos reservados
-        </footer>
+        <footer class="rodape-admin"> Gerenciamento de Usuários &nbsp;·&nbsp;© 2026 Todos os direitos reservados</footer>
     </div>
 
-    <!-- ══════════════════════════════════
-MODAL — NOVO / EDITAR USUÁRIO
+<!-- ═════════════════════════════════=
+        MODAL — NOVO / EDITAR USUÁRIO
 ══════════════════════════════════ -->
     <div class="modal-overlay" id="modalOverlay" onclick="fecharModalFora(event)">
         <div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitulo">

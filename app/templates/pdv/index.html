@@ -11,8 +11,7 @@
 
   <link
     href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Lato:wght@300;400;600;700;900&display=swap"
-    rel="stylesheet"
-  />
+    rel="stylesheet" />
 
   <link rel="stylesheet" href="/static/css/vendas.css" />
 </head>
@@ -26,15 +25,11 @@
   <aside class="barra-lateral">
 
     <div class="barra-logo">
-      <span class="barra-logo-texto">
-        SENAI <span>///</span>
-      </span>
+      <img class="barra-logo-senai" src="/static/uploads/foto-senai.png" alt="SENAI">
 
       <div class="barra-logo-separador"></div>
 
-      <span class="barra-logo-sub">
-        AAPM
-      </span>
+      <img class="barra-logo-aapm" src="/static/uploads/logo-aapm.png" alt="AAPM">
     </div>
 
     <span class="barra-menu-titulo">
@@ -43,7 +38,6 @@
 
     <ul class="barra-nav">
 
-      <!-- Painel -->
       <li>
         <a href="/painel">
 
@@ -58,14 +52,12 @@
         </a>
       </li>
 
-      <!-- Estoque -->
       <li>
         <a href="/produtos">
 
           <svg viewBox="0 0 24 24">
             <path
-              d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"
-            />
+              d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
           </svg>
 
           Estoque
@@ -73,7 +65,6 @@
         </a>
       </li>
 
-      <!-- Categorias -->
       <li>
         <a href="/categorias/">
 
@@ -86,7 +77,6 @@
         </a>
       </li>
 
-      <!-- Vendas -->
       <li>
         <a href="/pdv" class="ativo">
 
@@ -101,7 +91,6 @@
         </a>
       </li>
 
-      <!-- Armários -->
       <li>
         <a href="/armarios/" aria-current="page">
 
@@ -117,7 +106,6 @@
         </a>
       </li>
 
-      <!-- Clientes -->
       {% if usuario and usuario.role == 'admin' %}
 
       <li>
@@ -135,23 +123,19 @@
         </a>
       </li>
 
-      <!-- Usuários -->
       <li>
         <a href="/usuarios/">
 
-          <svg
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          >
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="2" stroke-linecap="round"
+            stroke-linejoin="round">
+
             <rect x="2" y="5" width="20" height="14" rx="2"></rect>
             <circle cx="8" cy="11" r="2"></circle>
             <path d="M5.5 16c0-1.4 1.1-2.5 2.5-2.5s2.5 1.1 2.5 2.5"></path>
             <line x1="14" y1="10" x2="19" y2="10"></line>
             <line x1="14" y1="14" x2="17" y2="14"></line>
+
           </svg>
 
           Usuários
@@ -162,10 +146,6 @@
       {% endif %}
 
     </ul>
-
-    <!-- =======================================================
-         USUÁRIO LOGADO
-    ======================================================== -->
 
     <div class="barra-rodape">
 
@@ -189,7 +169,7 @@
 
       </div>
 
-      <a href="/sair">
+      <a href="/auth/logout">
         <button class="btn-sair" type="button">
           Sair
         </button>
@@ -206,24 +186,15 @@
 
   <div class="conteudo-principal">
 
-    <!-- CABEÇALHO -->
-
     <header class="cabecalho-pagina">
 
-      <h1>
-        Vendas
-      </h1>
+      <h1>Vendas</h1>
 
       <div class="acoes-cabecalho">
 
-        <!-- FILTRO DE DATA -->
-
-        <form
-          method="get"
-          action="/pdv/"
+        <form method="get" action="/pdv/"
           class="filtro-data-form"
-          style="display:flex;gap:10px;"
-        >
+          style="display:flex;gap:10px;">
 
           <div class="filtro-data">
 
@@ -239,23 +210,15 @@
               id="filtroMes"
               name="mes"
               value="{{ mes_selecionado }}"
-              onchange="this.form.submit()"
-            />
+              onchange="this.form.submit()" />
 
           </div>
 
         </form>
 
-
-        <!-- NOVA VENDA -->
-
         {% if not usuario or usuario.role == 'admin' or usuario.role == 'operador' %}
 
-        <button
-          class="btn-novo"
-          id="btnNovaVenda"
-          type="button"
-        >
+        <button class="btn-novo" id="btnNovaVenda" type="button">
 
           <svg viewBox="0 0 24 24">
             <line x1="12" y1="5" x2="12" y2="19" />
@@ -273,14 +236,7 @@
     </header>
 
 
-    <!-- =======================================================
-         ÁREA DE CONTEÚDO
-    ======================================================== -->
-
     <main class="area-conteudo">
-
-
-      <!-- ALERTAS -->
 
       {% if request and request.query_params.get('criado') == 'ok' %}
 
@@ -290,7 +246,6 @@
 
       {% endif %}
 
-
       {% if request and request.query_params.get('cancelado') == 'ok' %}
 
       <div class="alerta-sucesso">
@@ -299,32 +254,22 @@
 
       {% endif %}
 
-
       {% if request and request.query_params.get('erro') %}
 
-      <div
-        class="alerta-sucesso"
-        style="background:#fee2e2;color:#991b1b;border-color:#fecaca;"
-      >
+      <div class="alerta-sucesso"
+        style="background:#fee2e2;color:#991b1b;border-color:#fecaca;">
+
         Não foi possível registrar a venda.
         Erro: {{ request.query_params.get('erro') }}.
+
       </div>
 
       {% endif %}
 
 
-      <!-- =====================================================
-           CARDS DE RESUMO
-      ====================================================== -->
-
       <div class="grade-resumo">
 
-        <!-- FATURAMENTO -->
-
-        <div
-          class="cartao-resumo vermelho"
-          style="animation-delay:0s"
-        >
+        <div class="cartao-resumo vermelho">
 
           <div class="resumo-icone">
 
@@ -353,12 +298,7 @@
         </div>
 
 
-        <!-- VENDAS -->
-
-        <div
-          class="cartao-resumo verde"
-          style="animation-delay:0.08s"
-        >
+        <div class="cartao-resumo verde">
 
           <div class="resumo-icone">
 
@@ -385,12 +325,7 @@
         </div>
 
 
-        <!-- CLIENTES -->
-
-        <div
-          class="cartao-resumo azul"
-          style="animation-delay:0.16s"
-        >
+        <div class="cartao-resumo azul">
 
           <div class="resumo-icone">
 
@@ -420,13 +355,7 @@
       </div>
 
 
-      <!-- =====================================================
-           TABELA + LATERAL
-      ====================================================== -->
-
       <div class="layout-inferior">
-
-        <!-- TABELA -->
 
         <div class="painel">
 
@@ -436,27 +365,25 @@
               Histórico de Vendas
             </span>
 
-            <form
-              method="get"
+            <form method="get"
               action="/pdv/"
-              class="barra-busca-tabela"
-            >
+              class="barra-busca-tabela">
+
+              <input type="hidden" name="mes" value="{{ mes_selecionado }}" />
 
               <input
                 type="text"
                 name="busca"
                 placeholder="Buscar por cliente..."
-                value="{{ busca or '' }}"
-              />
+                value="{{ busca or '' }}" />
 
-              <button
-                type="submit"
-                class="btn-buscar-tabela"
-              >
+              <button type="submit" class="btn-buscar-tabela">
 
                 <svg viewBox="0 0 24 24">
                   <circle cx="11" cy="11" r="8" />
-                  <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                  <line x1="21" y1="21"
+                    x2="16.65"
+                    y2="16.65" />
                 </svg>
 
               </button>
@@ -465,8 +392,6 @@
 
           </div>
 
-
-          <!-- TABELA DE VENDAS -->
 
           <table class="tabela-vendas">
 
@@ -479,11 +404,10 @@
                 <th>Valor Bruto</th>
                 <th>Valor Líquido</th>
                 <th>Desconto</th>
-                <th>Ações</th>
+                <th>Comprovante</th>
               </tr>
 
             </thead>
-
 
             <tbody id="corpoTabela">
 
@@ -492,9 +416,7 @@
               <tr>
 
                 <td>
-                  <strong>
-                    #{{ v.id }}
-                  </strong>
+                  <strong>#{{ v.id }}</strong>
                 </td>
 
                 <td>
@@ -519,16 +441,15 @@
 
                 <td>
 
-                  <!-- ABRE O COMPROVANTE -->
-
                   <button
                     class="btn-ver"
                     type="button"
                     onclick="verDetalhesVenda('{{ v.id }}')"
                     title="Ver comprovante"
-                    style="background:none;border:none;cursor:pointer;"
-                  >
-                    👁️
+                    style="background:none;border:none;cursor:pointer;">
+
+                    🧾
+
                   </button>
 
                 </td>
@@ -537,16 +458,13 @@
 
               {% endfor %}
 
-
               {% if not vendas %}
 
               <tr>
 
                 <td colspan="7">
 
-                  <div
-                    style="text-align:center;padding:30px;color:#999;"
-                  >
+                  <div style="text-align:center;padding:30px;color:#999;">
                     Nenhuma venda encontrada para este período.
                   </div>
 
@@ -561,15 +479,13 @@
           </table>
 
 
-          <!-- RODAPÉ -->
-
           <div class="rodape-tabela">
 
             <span id="infoTabela">
 
-              {{ vendas|length if vendas else 0 }}
+              {{ total_vendas }}
 
-              venda{{ 's' if (vendas and vendas|length != 1) else '' }}
+              venda{{ 's' if total_vendas != 1 else '' }}
 
               encontrada(s)
 
@@ -577,12 +493,32 @@
 
           </div>
 
+          {% if total_pages > 1 %}
+          <nav class="paginacao" aria-label="Paginação do histórico de vendas">
+            {% if page > 1 %}
+            <a class="paginacao-btn"
+              href="/pdv/?page={{ page - 1 }}&per_page={{ per_page }}&mes={{ mes_selecionado }}&busca={{ busca }}">
+              Anterior
+            </a>
+            {% else %}
+            <span class="paginacao-btn desabilitado">Anterior</span>
+            {% endif %}
+
+            <span class="paginacao-info">Página {{ page }} de {{ total_pages }}</span>
+
+            {% if page < total_pages %}
+            <a class="paginacao-btn"
+              href="/pdv/?page={{ page + 1 }}&per_page={{ per_page }}&mes={{ mes_selecionado }}&busca={{ busca }}">
+              Próxima
+            </a>
+            {% else %}
+            <span class="paginacao-btn desabilitado">Próxima</span>
+            {% endif %}
+          </nav>
+          {% endif %}
+
         </div>
 
-
-        <!-- ===================================================
-             LATERAL
-        ==================================================== -->
 
         <div class="painel-lateral">
 
@@ -596,19 +532,11 @@
 
             </div>
 
-
             <div id="listaMaisVendidos">
 
               {% for item in top_produtos %}
 
-              <div
-                style="
-                  display:flex;
-                  justify-content:space-between;
-                  margin-bottom:10px;
-                  font-size:0.9rem;
-                "
-              >
+              <div class="item-top-simples">
 
                 <span>
                   {{ item.produto_nome }}
@@ -622,17 +550,9 @@
 
               {% endfor %}
 
-
               {% if not top_produtos %}
 
-              <div
-                style="
-                  color:#999;
-                  font-size:0.85rem;
-                  text-align:center;
-                  padding:10px;
-                "
-              >
+              <div class="sem-dados">
                 Sem dados no período.
               </div>
 
@@ -649,11 +569,8 @@
     </main>
 
 
-    <!-- RODAPÉ -->
-
     <footer class="rodape-admin">
-      Controle de Vendas &nbsp;·&nbsp;
-      © 2026 AAPM SENAI Francisco Matarazzo
+      Gerenciamento de Vendas &nbsp;·&nbsp;© 2026 Todos os direitos reservados
     </footer>
 
   </div>
@@ -663,11 +580,9 @@
        MODAL NOVA VENDA
   ========================================================== -->
 
-  <div
-    class="sobreposicao-modal"
+  <div class="sobreposicao-modal"
     id="modalVenda"
-    onclick="fecharModalFora(event,'modalVenda')"
-  >
+    onclick="fecharModalFora(event,'modalVenda')">
 
     <div class="modal">
 
@@ -680,9 +595,10 @@
         <button
           class="btn-fechar-modal"
           type="button"
-          onclick="fecharModal('modalVenda')"
-        >
+          onclick="fecharModal('modalVenda')">
+
           ✕
+
         </button>
 
       </div>
@@ -691,33 +607,23 @@
       <form
         id="formNovaVenda"
         method="POST"
-        action="/pdv/finalizar"
-      >
+        action="/pdv/finalizar">
 
         <input
           type="hidden"
           name="carrinho_json"
-          id="carrinhoJson"
-        />
+          id="carrinhoJson" />
 
 
         <div class="form-linha">
 
           <div class="form-group">
 
-            <label>
-              Cliente
-            </label>
+            <label>Cliente</label>
 
-            <select
-              name="cliente_id"
-              id="modalCliente"
-            >
+            <select name="cliente_id" id="modalCliente">
 
-              <option
-                value="0"
-                data-desconto="0"
-              >
+              <option value="0" data-desconto="0">
                 Cliente não cadastrado
               </option>
 
@@ -725,13 +631,12 @@
 
               <option
                 value="{{ cliente.id }}"
-                data-desconto="{{ desconto_associado if cliente.is_associado else 0 }}"
-              >
+                data-desconto="{{ desconto_associado if cliente.is_associado else 0 }}">
 
                 {{ cliente.nome }}
 
                 {% if cliente.is_associado %}
-                  - Associado
+                - Associado
                 {% endif %}
 
               </option>
@@ -756,8 +661,7 @@
               value="0.0"
               min="0"
               max="100"
-              readonly
-            />
+              readonly />
 
           </div>
 
@@ -768,23 +672,18 @@
 
           <div class="form-group">
 
-            <label>
-              Observação
-            </label>
+            <label>Observação</label>
 
             <input
               type="text"
               name="observacao"
               id="modalObservacao"
-              placeholder="Ex: Venda balcão rápida"
-            />
+              placeholder="Ex: Venda balcão rápida" />
 
           </div>
 
         </div>
 
-
-        <!-- ITENS -->
 
         <div class="secao-itens">
 
@@ -797,8 +696,7 @@
             <button
               type="button"
               class="btn-add-item"
-              onclick="adicionarLinhaItem()"
-            >
+              onclick="adicionarLinhaItem()">
 
               <svg viewBox="0 0 24 24">
                 <line x1="12" y1="5" x2="12" y2="19" />
@@ -811,16 +709,14 @@
 
           </div>
 
-
           <div
             class="lista-itens-modal"
-            id="listaItensModal"
-          ></div>
+            id="listaItensModal">
+
+          </div>
 
         </div>
 
-
-        <!-- TOTAL -->
 
         <div class="total-modal">
 
@@ -835,23 +731,23 @@
         </div>
 
 
-        <!-- AÇÕES -->
-
         <div class="acoes-modal">
 
           <button
             type="button"
             class="btn-cancelar"
-            onclick="fecharModal('modalVenda')"
-          >
+            onclick="fecharModal('modalVenda')">
+
             Cancelar
+
           </button>
 
           <button
             type="submit"
-            class="btn-salvar"
-          >
+            class="btn-salvar">
+
             Registrar Venda
+
           </button>
 
         </div>
@@ -870,12 +766,12 @@
   <div
     class="sobreposicao-modal"
     id="modalDetalhe"
-    onclick="fecharModalFora(event,'modalDetalhe')"
-  >
+    onclick="fecharModalFora(event,'modalDetalhe')">
 
     <div class="modal modal-comprovante">
 
-      <!-- CABEÇALHO DO MODAL -->
+
+      <!-- CABEÇALHO -->
 
       <div class="modal-cabecalho">
 
@@ -886,17 +782,16 @@
         <button
           class="btn-fechar-modal"
           type="button"
-          onclick="fecharModal('modalDetalhe')"
-        >
+          onclick="fecharModal('modalDetalhe')">
+
           ✕
+
         </button>
 
       </div>
 
 
-      <!-- =====================================================
-           AQUI O JAVASCRIPT VAI INSERIR O COMPROVANTE
-      ====================================================== -->
+      <!-- CONTEÚDO -->
 
       <div id="conteudoDetalhe">
 
@@ -910,38 +805,58 @@
 
       </div>
 
+
+      <!-- =====================================================
+           BOTÃO DO COMPROVANTE
+           SERÁ MOVIDO AUTOMATICAMENTE PARA O TOTAL CORRETO
+      ====================================================== -->
+
+      <div id="areaBotaoComprovante">
+
+        <button
+          class="btn-baixar-comprovante"
+          id="btnBaixarComprovante"
+          type="button"
+          onclick="baixarComprovante()"
+          disabled>
+
+          <svg viewBox="0 0 24 24">
+            <path d="M12 3v12" />
+            <path d="M7 10l5 5 5-5" />
+            <path d="M5 21h14" />
+          </svg>
+
+          Baixar comprovante
+
+        </button>
+
+      </div>
+
+
+      <!-- TOAST -->
+
+      <div class="toast" id="toast">
+
+        <div class="toast-icone">
+
+          <svg viewBox="0 0 24 24">
+            <polyline points="20 6 9 17 4 12" />
+          </svg>
+
+        </div>
+
+        <span id="toastMensagem">
+          Operação realizada com sucesso!
+        </span>
+
+      </div>
+
     </div>
 
   </div>
 
 
-  <!-- =========================================================
-       TOAST
-  ========================================================== -->
-
-  <div
-    class="toast"
-    id="toast"
-  >
-
-    <div class="toast-icone">
-
-      <svg viewBox="0 0 24 24">
-        <polyline points="20 6 9 17 4 12" />
-      </svg>
-
-    </div>
-
-    <span id="toastMensagem">
-      Operação realizada com sucesso!
-    </span>
-
-  </div>
-
-
-  <!-- =========================================================
-       DADOS PARA O JAVASCRIPT
-  ========================================================== -->
+  <!-- DADOS PARA O JAVASCRIPT -->
 
   <script>
     window.PRODUTOS_PDV = {{ produtos_pdv | tojson }};
@@ -950,7 +865,85 @@
 
   <!-- JAVASCRIPT -->
 
+  <script
+    src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js">
+  </script>
+
   <script src="/static/js/vendas.js"></script>
+
+
+  <!-- =========================================================
+       MOVE O BOTÃO PARA O LADO DO TOTAL LÍQUIDO CORRETO
+  ========================================================== -->
+
+  <script>
+
+    function posicionarBotaoComprovante() {
+
+      const conteudo = document.getElementById('conteudoDetalhe');
+
+      const botao = document.getElementById('btnBaixarComprovante');
+
+      if (!conteudo || !botao) return;
+
+      const totalCorreto =
+        conteudo.querySelector('.comprovante-total');
+
+      if (!totalCorreto) return;
+
+      const strongTotal =
+        totalCorreto.querySelector('strong');
+
+      if (!strongTotal) return;
+
+
+      if (!totalCorreto.querySelector('#btnBaixarComprovante')) {
+
+        totalCorreto.appendChild(botao);
+
+      }
+
+
+      botao.disabled = false;
+
+    }
+
+
+    const conteudoComprovante =
+      document.getElementById('conteudoDetalhe');
+
+
+    if (conteudoComprovante) {
+
+      const observadorComprovante =
+        new MutationObserver(function () {
+
+          posicionarBotaoComprovante();
+
+        });
+
+
+      observadorComprovante.observe(
+        conteudoComprovante,
+        {
+          childList: true,
+          subtree: true
+        }
+      );
+
+    }
+
+
+    document.addEventListener(
+      'DOMContentLoaded',
+      function () {
+
+        posicionarBotaoComprovante();
+
+      }
+    );
+
+  </script>
 
 </body>
 

@@ -106,11 +106,14 @@ body {
    ========================================================== */
 
 .barra-logo {
+    --largura-logo: 62px;
+    --altura-logo: 16px;
+
     display: flex;
 
     align-items: center;
 
-    gap: 10px;
+    gap: 8px;
 
     padding: 22px 24px 18px;
 
@@ -118,21 +121,13 @@ body {
 }
 
 
-.barra-logo-texto {
-    font-family: 'Montserrat', sans-serif;
-
-    font-weight: 800;
-
-    font-size: 1.15rem;
-
-    color: var(--branco);
-
-    letter-spacing: 1px;
-}
-
-
-.barra-logo-texto span {
-    color: var(--vermelho);
+.barra-logo-senai,
+.barra-logo-aapm {
+    display: block;
+    width: var(--largura-logo);
+    height: var(--altura-logo);
+    object-fit: contain;
+    flex-shrink: 0;
 }
 
 
@@ -144,19 +139,6 @@ body {
     background: var(--vermelho);
 
     border-radius: 2px;
-}
-
-
-.barra-logo-sub {
-    font-family: 'Montserrat', sans-serif;
-
-    font-weight: 700;
-
-    font-size: 0.8rem;
-
-    color: rgba(255, 255, 255, 0.5);
-
-    letter-spacing: 2px;
 }
 
 
@@ -443,6 +425,72 @@ body {
     color: var(--preto);
 }
 
+
+
+/* ==========================================================
+        PAGINAÇÃO
+   ========================================================== */
+.paginacao {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 40px;
+    font-family: 'Montserrat', sans-serif;
+}
+
+.paginacao-info {
+    color: #e40808;
+    font-size: 0.82rem;
+    font-weight: 600;
+    margin-right: 8px;
+}
+
+.paginacao a,
+.paginacao span {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    min-width: 40px;
+    height: 40px;
+    padding: 0 14px;
+
+    border: 1.5px solid var(--cinza-medio);
+    border-radius: 6px;
+
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-decoration: none;
+
+    transition:
+        background var(--transicao),
+        color var(--transicao),
+        border-color var(--transicao),
+        transform var(--transicao),
+        box-shadow var(--transicao);
+}
+
+.paginacao a {
+    background: var(--branco);
+    color: var(--preto);
+}
+
+.paginacao a:hover {
+    background: var(--vermelho);
+    border-color: var(--vermelho);
+    color: var(--branco);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+}
+
+.paginacao .desabilitado {
+    background: var(--cinza-claro);
+    color: #bbb;
+    border-color: var(--cinza-medio);
+    cursor: not-allowed;
+    pointer-events: none;
+}
 
 /* ==========================================================
    BOTÃO NOVA CATEGORIA
@@ -1198,16 +1246,14 @@ body {
         opacity: 0;
 
         transform:
-            translateY(16px)
-            scale(0.97);
+            translateY(16px) scale(0.97);
     }
 
     to {
         opacity: 1;
 
         transform:
-            translateY(0)
-            scale(1);
+            translateY(0) scale(1);
     }
 }
 
@@ -1515,16 +1561,14 @@ body {
         opacity: 0;
 
         transform:
-            translateY(15px)
-            scale(0.97);
+            translateY(15px) scale(0.97);
     }
 
     to {
         opacity: 1;
 
         transform:
-            translateY(0)
-            scale(1);
+            translateY(0) scale(1);
     }
 }
 
@@ -1810,12 +1854,12 @@ body {
 }
 
 
-.cat-toggle-input:checked + .cat-toggle-visual {
+.cat-toggle-input:checked+.cat-toggle-visual {
     background: var(--cat-vermelho);
 }
 
 
-.cat-toggle-input:checked + .cat-toggle-visual::after {
+.cat-toggle-input:checked+.cat-toggle-visual::after {
     transform: translateX(18px);
 }
 

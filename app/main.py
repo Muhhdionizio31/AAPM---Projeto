@@ -16,6 +16,7 @@ from app.controllers import movimentacao_controller
 from app.controllers import cliente_controller
 from app.controllers import pdv_controllers
 from app.controllers import armario_controller
+from app.controllers import catalogo_controller
 
 from app.database import engine, Base
 from dotenv import load_dotenv
@@ -47,7 +48,7 @@ app.include_router(movimentacao_controller.router)
 app.include_router(cliente_controller.router)
 app.include_router(pdv_controllers.router)
 app.include_router(armario_controller.router)
-
+app.include_router(catalogo_controller.router)
 
 
 #Rota para a página inicial
@@ -96,26 +97,6 @@ def horario(
 
 
 # Rota para o catálogo de produtos
-@app.get("/catalogo")
-def catalogo(
-    request: Request,
-    usuario = Depends(get_usuario_opcional),
-    db: Session = Depends(get_db) 
-):
-    categorias = db.query(Categoria).all()
-    produtos = (db.query(Produto).filter(Produto.ativa == True).options(joinedload(Produto.categoria)).all())
-
-    return templates.TemplateResponse(
-        request,
-        "site/catalogo.html",
-        {
-            "request": request, 
-            "usuario": usuario,
-            "produtos": produtos,
-            "categorias": categorias
-        }
-    )
-
 @app.get("/login")
 def login(
     request: Request,
@@ -140,8 +121,7 @@ def politica(
     )
 
 # Rota para acesso não autenticado
-ROTAS_PUBLICAS = ["/auth/login", "/inicio", "/static", "/catalogo", "/horario", "/politica"]
-
+ROTAS_PUBLICAS = ["/auth/login", "/inicio", "/static", "/catalogo", "/horario", "/politica", "/auth/esqueci-senha", "/auth/recuperar-senha"] 
 @app.middleware("http")
 async def verificar_login_middleware(request: Request, call_next):
     # 1. Se o usuário digitar só o IP/Domínio (ex: 127.0.0.1:49669), 
@@ -317,3 +297,21 @@ def api_vendas_mensais(db: Session = Depends(get_db)):
             lista[int(float(d.mes)) - 1] = d.total
     return {"vendas": lista}
 
+@app.get("/api/vendas-mensais")
+def api_vendas_mensais(db: Session = Depends(get_db)):
+    ano_atual = datetime.now().year
+
+    dados = db.query(
+        func.extract('month', Venda.criado_em).label('mes'),
+        func.count(Venda.id).label('total')
+    ).filter(
+        func.extract('year', Venda.criado_em) == ano_atual
+    ).group_by('mes').all()
+
+    lista = [0] * 12
+
+    for d in dados:
+        if d.mes:
+            lista[int(float(d.mes)) - 1] = d.total
+
+    return {"vendas": lista}

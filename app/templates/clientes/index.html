@@ -15,18 +15,16 @@
 <body>
   <aside class="barra-lateral" id="barraLateral">
     <div class="barra-logo">
-      <div>
-        <div class="barra-logo-texto">SENAI <span>///</span></div>
-      </div>
+      <img class="barra-logo-senai" src="/static/uploads/foto-senai.png" alt="SENAI">
       <div class="barra-logo-separador"></div>
-      <div class="barra-logo-sub">AAPM</div>
+      <img class="barra-logo-aapm" src="/static/uploads/logo-aapm.png" alt="AAPM">
     </div>
 
     <div class="barra-menu-titulo">Menu</div>
 
     <ul class="barra-nav">
       <li>
-        <a href="/">
+        <a href="/painel">
           <svg viewBox="0 0 24 24">
             <line x1="18" y1="20" x2="18" y2="10" />
             <line x1="12" y1="20" x2="12" y2="4" />
@@ -108,7 +106,9 @@
         <div class="avatar-usuario">{{ usuario.nome[0] | upper if usuario else 'AD' }}</div>
         <div class="info-usuario">
           <strong>{{ usuario.nome if usuario else 'Usuario' }}</strong>
-          <small>Administrador</small>
+          <small>
+            {{ usuario.role|capitalize if usuario and usuario.role else 'Usuário' }}
+          </small>
         </div>
       </div>
 
@@ -250,7 +250,7 @@
     </main>
 
     <footer class="rodape-admin">
-      Controle de Estoque &nbsp;·&nbsp; © 2026 Todos os direitos reservados
+      Gerenciamento Clientes &nbsp;·&nbsp; © 2026 Todos os direitos reservados
     </footer>
   </div>
 
