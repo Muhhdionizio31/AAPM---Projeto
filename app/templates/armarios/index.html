@@ -15,11 +15,7 @@
 
   <style>
     /* ==========================================================
-       ESTILOS DOS MODAIS (Novo Armário / Alugar Armário)
-       Isolados aqui para não depender de classes que talvez não
-       existam ainda em armarios.css. Se você já tiver um padrão
-       de modal no CSS global, pode apagar este bloco e trocar
-       as classes abaixo pelas suas.
+       ESTILOS DOS MODAIS E ALERTAS DE ARMÁRIOS
        ========================================================== */
     .modal-sobreposicao {
       display: none;
@@ -49,6 +45,7 @@
       border-radius: 12px;
       box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25);
       animation: modalEntrar 0.18s ease-out;
+      padding-bottom: 8px;
     }
 
     @keyframes modalEntrar {
@@ -68,6 +65,8 @@
     .modal-cabecalho h3 {
       margin: 0 0 2px 0;
       font-family: "Montserrat", sans-serif;
+      font-size: 1.1rem;
+      font-weight: 800;
     }
 
     .modal-cabecalho span {
@@ -101,6 +100,113 @@
 
     .modal-corpo {
       padding: 24px;
+    }
+
+    .modal-acoes {
+      display: flex;
+      gap: 10px;
+      justify-content: flex-end;
+      padding-top: 16px;
+    }
+
+    .modal-acoes .btn-principal {
+      background: var(--vermelho);
+      color: #fff;
+      border: none;
+      padding: 10px 18px;
+      border-radius: 8px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .modal-acoes .btn-principal:hover {
+      background: var(--vermelho-escuro);
+    }
+
+    .modal-acoes .btn-cancelar {
+      background: #f3f4f6;
+      color: #111827;
+      border: 1px solid #e5e7eb;
+      padding: 10px 16px;
+      border-radius: 8px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .modal-acoes .btn-cancelar:hover {
+      background: #e5e7eb;
+    }
+
+    /* Detalhes do armário no modal "Ver" */
+    .detalhe-grade {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 8px;
+    }
+
+    .detalhe-item {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      background: #f9fafb;
+      padding: 12px 14px;
+      border-radius: 8px;
+      border: 1px solid #f3f4f6;
+    }
+
+    .detalhe-item-completo {
+      grid-column: 1 / -1;
+    }
+
+    .detalhe-label {
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: #9ca3af;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .detalhe-valor {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: #111827;
+    }
+
+    .chip-status {
+      display: inline-block;
+      width: fit-content;
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 4px;
+    }
+
+    .chip-status.verde { background: #f0fdf4; color: #15803d; }
+    .chip-status.azul { background: #eff6ff; color: #2563eb; }
+    .chip-status.cinza { background: #f3f4f6; color: #6b7280; }
+
+    /* Alertas */
+    .alerta-sucesso {
+      background: #f0fdf4;
+      border: 1px solid #bbf7d0;
+      color: #15803d;
+      border-radius: 8px;
+      padding: 12px 16px;
+      font-size: 0.88rem;
+      font-weight: 700;
+      margin-bottom: 20px;
+    }
+
+    .alerta-erro {
+      background: #fef2f2;
+      border: 1px solid #fecaca;
+      color: #b91c1c;
+      border-radius: 8px;
+      padding: 12px 16px;
+      font-size: 0.88rem;
+      font-weight: 700;
+      margin-bottom: 20px;
     }
   </style>
 </head>
@@ -221,15 +327,8 @@
       <div class="barra-usuario">
         <div class="avatar-usuario">{{ usuario.nome[0] | upper if usuario else 'AD' }}</div>
         <div class="info-usuario">
-
-          <strong>
-            {{ usuario.nome if usuario else 'Usuário' }}
-          </strong>
-
-          <small>
-            {{ usuario.role|capitalize if usuario and usuario.role else 'Usuário' }}
-          </small>
-
+          <strong>{{ usuario.nome if usuario else 'Usuário' }}</strong>
+          <small>{{ usuario.role|capitalize if usuario and usuario.role else 'Usuário' }}</small>
         </div>
       </div>
       <button class="btn-sair" onclick="window.location.href='/auth/logout'">Sair</button>
@@ -247,7 +346,6 @@
     <header class="cabecalho-pagina">
 
       <div class="cabecalho-titulo">
-
         <button type="button" class="btn-menu-mobile" aria-label="Abrir menu" onclick="abrirMenuMobile()">
           <svg viewBox="0 0 24 24">
             <line x1="3" y1="6" x2="21" y2="6" />
@@ -257,7 +355,6 @@
         </button>
 
         <h1>Aluguel de Armários</h1>
-
       </div>
 
       <span class="cabecalho-data" id="dataAtual"></span>
@@ -268,14 +365,12 @@
     <main class="area-conteudo">
 
       <div class="bloco-boas-vindas">
-
         <div class="bv-texto">
           <h2>Controle de Aluguel de Armários</h2>
           <p>Gerencie locações e liberações dos armários da AAPM SENAI Francisco Matarazzo.</p>
         </div>
 
         <div class="bv-badge">AAPM · SENAI</div>
-
       </div>
 
 
@@ -283,10 +378,28 @@
 
       {% if qp.get('criado') == 'ok' %}
       <div class="alerta-sucesso">Armário cadastrado com sucesso.</div>
+      {% elif qp.get('alugado') == 'ok' %}
+      <div class="alerta-sucesso">Armário alugado com sucesso.</div>
+      {% elif qp.get('editado') == 'ok' %}
+      <div class="alerta-sucesso">Armário atualizado com sucesso.</div>
+      {% elif qp.get('liberado') == 'ok' %}
+      <div class="alerta-sucesso">Armário liberado com sucesso.</div>
+      {% elif qp.get('desativado') == 'ok' %}
+      <div class="alerta-sucesso">Armário desativado com sucesso.</div>
+      {% elif qp.get('reativado') == 'ok' %}
+      <div class="alerta-sucesso">Armário reativado com sucesso.</div>
+      {% elif qp.get('excluido') == 'ok' %}
+      <div class="alerta-sucesso">Armário excluído com sucesso.</div>
       {% elif qp.get('erro') == 'ja_alugado' %}
       <div class="alerta-erro">Este armário já foi alugado por outra pessoa.</div>
       {% elif qp.get('erro') == 'desativar_alugado' %}
       <div class="alerta-erro">Não é possível desativar um armário alugado. Libere-o primeiro.</div>
+      {% elif qp.get('erro') == 'excluir_alugado' %}
+      <div class="alerta-erro">Não é possível excluir um armário alugado. Libere-o primeiro.</div>
+      {% elif qp.get('erro') == 'ja_existe' or qp.get('erro') == 'numero_duplicado' %}
+      <div class="alerta-erro">Já existe um armário cadastrado com esse número.</div>
+      {% elif qp.get('erro') == 'nao_encontrado' %}
+      <div class="alerta-erro">Armário não encontrado.</div>
       {% endif %}
 
 
@@ -351,7 +464,6 @@
             <span>Controle de aluguel e liberação</span>
           </div>
 
-          <!-- ANTES: <a href="/armarios/novo" class="btn-principal">+ Novo Armário</a> -->
           <button type="button" class="btn-principal" onclick="abrirModalNovo()">
             + Novo Armário
           </button>
@@ -377,6 +489,7 @@
             <button type="button" class="btn-filtro ativo" data-status="">Todos</button>
             <button type="button" class="btn-filtro" data-status="disponivel">Disponível</button>
             <button type="button" class="btn-filtro" data-status="alugado">Alugado</button>
+            <button type="button" class="btn-filtro" data-status="inativo">Inativo</button>
           </div>
 
         </div>
@@ -423,27 +536,42 @@
                 <td>
                   <div class="acoes-armario">
 
-                    <a href="/armarios/{{ armario.id }}" class="btn-acao">Ver</a>
+                    <button
+                      type="button"
+                      class="btn-acao btn-abrir-ver"
+                      data-id="{{ armario.id }}"
+                      data-numero="{{ armario.numero }}"
+                      data-localizacao="{{ armario.localizacao or '-' }}"
+                      data-locatario="{{ armario.locatario_nome or '-' }}"
+                      data-semestre="{{ armario.semestre or '-' }}"
+                      data-alugado-em="{{ armario.alugado_em.strftime('%d/%m/%Y') if armario.alugado_em else '-' }}"
+                      data-observacao="{{ armario.observacao or '' }}"
+                      data-status="{{ armario.status.value }}"
+                      onclick="abrirModalVerBtn(this)">
+                      Ver
+                    </button>
 
                     {% if armario.status.value == 'disponivel' %}
 
-                    <!-- ANTES: <a href="/armarios/{{ armario.id }}/alugar" class="btn-acao btn-alugar">Alugar</a> -->
                     <button
                       type="button"
                       class="btn-acao btn-alugar btn-abrir-alugar"
-                      data-armario-id="{{ armario.id }}"
-                      data-armario-numero="{{ armario.numero | e }}"
-                      data-armario-localizacao="{{ (armario.localizacao or 'Localização não informada') | e }}">
+                      data-id="{{ armario.id }}"
+                      data-numero="{{ armario.numero }}"
+                      data-localizacao="{{ armario.localizacao or '' }}"
+                      onclick="abrirModalAlugarBtn(this)">
                       Alugar
                     </button>
 
-                    <form
-                      method="post"
-                      action="/armarios/{{ armario.id }}/toggle-ativo"
-                      class="form-acao-inline"
-                      onsubmit="return confirm('Desativar o armário #{{ armario.numero }}?');">
-                      <button type="submit" class="btn-acao btn-excluir">Desativar</button>
-                    </form>
+                    <button
+                      type="button"
+                      class="btn-acao btn-excluir btn-abrir-toggle"
+                      data-id="{{ armario.id }}"
+                      data-numero="{{ armario.numero }}"
+                      data-acao="desativar"
+                      onclick="abrirModalToggleBtn(this)">
+                      Desativar
+                    </button>
 
                     {% elif armario.status.value == 'alugado' %}
 
@@ -451,23 +579,43 @@
                       method="post"
                       action="/armarios/{{ armario.id }}/liberar"
                       class="form-acao-inline"
-                      onsubmit="return confirm('Confirmar a liberação do armário #{{ armario.numero }}? Ele ficará disponível para novo aluguel.');">
+                      data-confirm-msg="Confirmar a liberação do armário #{{ armario.numero }}? Ele ficará disponível para novo aluguel.">
                       <button type="submit" class="btn-acao btn-devolver">Liberar</button>
                     </form>
 
                     {% else %}
 
-                    <form
-                      method="post"
-                      action="/armarios/{{ armario.id }}/toggle-ativo"
-                      class="form-acao-inline"
-                      onsubmit="return confirm('Reativar o armário #{{ armario.numero }}?');">
-                      <button type="submit" class="btn-acao btn-alugar">Reativar</button>
-                    </form>
+                    <button
+                      type="button"
+                      class="btn-acao btn-alugar btn-abrir-toggle"
+                      data-id="{{ armario.id }}"
+                      data-numero="{{ armario.numero }}"
+                      data-acao="reativar"
+                      onclick="abrirModalToggleBtn(this)">
+                      Reativar
+                    </button>
+
+                    <button
+                      type="button"
+                      class="btn-acao btn-excluir"
+                      data-id="{{ armario.id }}"
+                      data-numero="{{ armario.numero }}"
+                      onclick="abrirModalExcluirBtn(this)">
+                      Excluir
+                    </button>
 
                     {% endif %}
 
-                    <a href="/armarios/{{ armario.id }}/editar" class="btn-acao">Editar</a>
+                    <button
+                      type="button"
+                      class="btn-acao btn-editar btn-abrir-editar"
+                      data-id="{{ armario.id }}"
+                      data-numero="{{ armario.numero }}"
+                      data-localizacao="{{ armario.localizacao or '' }}"
+                      data-observacao="{{ armario.observacao or '' }}"
+                      onclick="abrirModalEditarBtn(this)">
+                      Editar
+                    </button>
 
                   </div>
                 </td>
@@ -494,8 +642,6 @@
 
         </div>
 
-        <div id="paginacaoArmarios" class="paginacao oculta"></div>
-
         <nav class="paginacao-servidor" aria-label="Paginação de armários">
           {% if page > 1 %}
           <a class="btn-pagina"
@@ -520,11 +666,7 @@
 
 
     <footer class="rodape-admin">
-<<<<<<< HEAD
       Gerenciamento de Armários &nbsp;·&nbsp;© 2026 Todos os direitos reservados
-=======
-      Painel de Controle &nbsp;·&nbsp; © 2026 Todos os direitos reservados
->>>>>>> 0b13814e56a4c400dc8def2284acb26acee0ff06
     </footer>
 
   </div>
@@ -534,8 +676,8 @@
        MODAL: NOVO ARMÁRIO
        ========================================================= -->
 
-  <div class="modal-sobreposicao" id="modalNovoSobreposicao" onclick="fecharModalNovoClique(event)">
-    <div class="modal-caixa" id="modalNovoCaixa">
+  <div class="modal-sobreposicao modal-armario" id="modalNovoSobreposicao" onclick="fecharModalNovoClique(event)">
+    <div class="modal-caixa modal-conteudo" id="modalNovoCaixa">
 
       <div class="modal-cabecalho">
         <div>
@@ -551,12 +693,7 @@
       </div>
 
       <div class="modal-corpo">
-
-        {% if erro_novo %}
-        <div class="alerta-erro">{{ erro_novo }}</div>
-        {% endif %}
-
-        <form id="formNovoArmario" method="post" action="/armarios/novo" novalidate>
+        <form id="formNovoArmario" method="post" action="/armarios/novo">
 
           <div class="campo-form-grade">
 
@@ -566,7 +703,7 @@
                 type="text"
                 id="numeroNovo"
                 name="numero"
-                value="{{ valores_novo.numero if valores_novo else '' }}"
+                placeholder="Ex: A01"
                 required />
               <span class="campo-erro">Informe o número do armário.</span>
             </div>
@@ -577,8 +714,7 @@
                 type="text"
                 id="localizacaoNovo"
                 name="localizacao"
-                placeholder="Ex: Bloco A"
-                value="{{ valores_novo.localizacao if valores_novo else '' }}" />
+                placeholder="Ex: Bloco A" />
             </div>
 
           </div>
@@ -589,7 +725,7 @@
               id="observacaoNovo"
               name="observacao"
               rows="3"
-              placeholder="Anotações internas sobre este armário (opcional)">{{ valores_novo.observacao if valores_novo else '' }}</textarea>
+              placeholder="Anotações internas sobre este armário (opcional)"></textarea>
           </div>
 
           <div class="modal-acoes">
@@ -598,7 +734,6 @@
           </div>
 
         </form>
-
       </div>
     </div>
   </div>
@@ -608,8 +743,8 @@
        MODAL: ALUGAR ARMÁRIO
        ========================================================= -->
 
-  <div class="modal-sobreposicao" id="modalAlugarSobreposicao" onclick="fecharModalAlugarClique(event)">
-    <div class="modal-caixa" id="modalAlugarCaixa">
+  <div class="modal-sobreposicao modal-armario" id="modalAlugarSobreposicao" onclick="fecharModalAlugarClique(event)">
+    <div class="modal-caixa modal-conteudo" id="modalAlugarCaixa">
 
       <div class="modal-cabecalho">
         <div>
@@ -625,26 +760,16 @@
       </div>
 
       <div class="modal-corpo">
-
-        {% if erro_alugar %}
-        <div class="alerta-erro">{{ erro_alugar }}</div>
-        {% endif %}
-
-        <form
-          id="formAlugarArmario"
-          method="post"
-          action="{{ '/armarios/' ~ abrir_alugar_id ~ '/alugar' if abrir_alugar_id else '#' }}"
-          novalidate>
+        <form id="formAlugarArmario" method="post">
 
           <div class="campo-form" id="campoLocatarioModal">
-            <label for="locatario_nome_modal">Nome do Locatário (Aluno)</label>
-            <input
-              type="text"
-              id="locatario_nome_modal"
-              name="locatario_nome"
-              placeholder="Nome completo"
-              value="{{ valores_alugar.locatario_nome if valores_alugar else '' }}"
-              required />
+            <label for="locatario_nome_modal">Locatário (selecione)</label>
+            <select id="locatario_nome_modal" name="locatario_nome" required>
+              <option value="">-- Selecionar locatário --</option>
+              {% for c in clientes %}
+              <option value="{{ c.nome }}">{{ c.nome }}{% if c.matricula %} — {{ c.matricula }}{% endif %}</option>
+              {% endfor %}
+            </select>
             <span class="campo-erro">Informe o nome do locatário.</span>
           </div>
 
@@ -655,7 +780,6 @@
               id="semestre_modal"
               name="semestre"
               placeholder="Ex: 2026/2"
-              value="{{ valores_alugar.semestre if valores_alugar else '' }}"
               required />
             <span class="campo-erro">Informe o semestre.</span>
           </div>
@@ -666,7 +790,7 @@
               id="observacao_modal"
               name="observacao"
               rows="3"
-              placeholder="Anotações sobre este aluguel (opcional)">{{ valores_alugar.observacao if valores_alugar else '' }}</textarea>
+              placeholder="Anotações sobre este aluguel (opcional)"></textarea>
           </div>
 
           <div class="modal-acoes">
@@ -675,7 +799,177 @@
           </div>
 
         </form>
+      </div>
+    </div>
+  </div>
 
+
+  <!-- =========================================================
+       MODAL: DETALHE DO ARMÁRIO ("Ver")
+       ========================================================= -->
+
+  <div class="modal-sobreposicao modal-armario" id="modalDetalheArmario" onclick="fecharModalDetalheClique(event)">
+    <div class="modal-caixa modal-conteudo" id="modalDetalheCaixa">
+
+      <div class="modal-cabecalho">
+        <div>
+          <h3 id="detalheArmarioTitulo">Armário</h3>
+          <span id="detalheArmarioSub"></span>
+        </div>
+        <button type="button" class="modal-fechar" aria-label="Fechar" onclick="fecharModalDetalhe()">
+          <svg viewBox="0 0 24 24">
+            <line x1="18" y1="6" x2="6" y2="18" />
+            <line x1="6" y1="6" x2="18" y2="18" />
+          </svg>
+        </button>
+      </div>
+
+      <div class="modal-corpo">
+        <div id="conteudoDetalheArmario"></div>
+
+        <form id="formDevolucao" method="post" style="display:none;">
+          <input type="hidden" id="devolucaoArmarioId" name="armario_id" />
+          <div class="modal-acoes">
+            <button type="button" class="btn-cancelar" onclick="fecharModalDetalhe()">Fechar</button>
+            <button type="submit" class="btn-principal" id="btnConfirmarDevolucao">Liberar Armário</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- =========================================================
+       MODAL: EDITAR ARMÁRIO
+       ========================================================= -->
+
+  <div class="modal-sobreposicao modal-armario" id="modalEditarSobreposicao" onclick="fecharModalEditarClique(event)">
+    <div class="modal-caixa modal-conteudo" id="modalEditarCaixa">
+
+      <div class="modal-cabecalho">
+        <div>
+          <h3>Editar armário</h3>
+          <span>Altere número, localização e observação</span>
+        </div>
+        <button type="button" class="modal-fechar" aria-label="Fechar" onclick="fecharModalEditar()">
+          <svg viewBox="0 0 24 24">
+            <line x1="18" y1="6" x2="6" y2="18" />
+            <line x1="6" y1="6" x2="18" y2="18" />
+          </svg>
+        </button>
+      </div>
+
+      <div class="modal-corpo">
+        <form id="formEditarArmario" method="post">
+          <input type="hidden" id="editarArmarioId" name="armario_id" />
+
+          <div class="campo-form">
+            <label for="editarNumero">Número do Armário</label>
+            <input type="text" id="editarNumero" name="numero" required />
+            <span class="campo-erro">Informe o número do armário.</span>
+          </div>
+
+          <div class="campo-form">
+            <label for="editarLocalizacao">Localização</label>
+            <input type="text" id="editarLocalizacao" name="localizacao" />
+          </div>
+
+          <div class="campo-form">
+            <label for="editarObservacao">Observação</label>
+            <textarea id="editarObservacao" name="observacao" rows="3"></textarea>
+          </div>
+
+          <div class="modal-acoes">
+            <button type="button" class="btn-cancelar" onclick="fecharModalEditar()">Cancelar</button>
+            <button type="submit" class="btn-principal">Salvar alterações</button>
+          </div>
+
+        </form>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- =========================================================
+       MODAL: CONFIRMAR DESATIVAR / REATIVAR
+       ========================================================= -->
+
+  <div class="modal-sobreposicao modal-armario" id="modalToggleSobreposicao" onclick="fecharModalToggleClique(event)">
+    <div class="modal-caixa modal-conteudo" id="modalToggleCaixa">
+
+      <div class="modal-cabecalho">
+        <div>
+          <h3 id="modalToggleTitulo">Confirmar ação</h3>
+          <span id="modalToggleSub">Tem certeza?</span>
+        </div>
+        <button type="button" class="modal-fechar" aria-label="Fechar" onclick="fecharModalToggle()">
+          <svg viewBox="0 0 24 24">
+            <line x1="18" y1="6" x2="6" y2="18" />
+            <line x1="6" y1="6" x2="18" y2="18" />
+          </svg>
+        </button>
+      </div>
+
+      <div class="modal-corpo">
+        <p id="modalToggleMensagem">Deseja realmente alterar o estado deste armário?</p>
+
+        <form id="formToggleArmario" method="post">
+          <input type="hidden" id="toggleArmarioId" name="armario_id" />
+          <div class="modal-acoes">
+            <button type="button" class="btn-cancelar" onclick="fecharModalToggle()">Cancelar</button>
+            <button type="submit" class="btn-principal">Confirmar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- =========================================================
+       MODAL: EXCLUIR ARMÁRIO (CONFIRMAÇÃO BONITA)
+       ========================================================= -->
+
+  <div class="modal-sobreposicao modal-armario" id="modalExcluirSobreposicao" onclick="fecharModalExcluirClique(event)">
+    <div class="modal-caixa modal-conteudo" id="modalExcluirCaixa" style="max-width: 440px;">
+
+      <div class="modal-cabecalho" style="border-bottom: none; padding-bottom: 0;">
+        <div>
+          <h3 style="color: #b91c1c;">Excluir Armário</h3>
+        </div>
+        <button type="button" class="modal-fechar" aria-label="Fechar" onclick="fecharModalExcluir()">
+          <svg viewBox="0 0 24 24">
+            <line x1="18" y1="6" x2="6" y2="18" />
+            <line x1="6" y1="6" x2="18" y2="18" />
+          </svg>
+        </button>
+      </div>
+
+      <div class="modal-corpo" style="text-align: center; padding-top: 10px;">
+        <div style="width: 56px; height: 56px; border-radius: 50%; background: #fef2f2; border: 2px solid #fee2e2; color: #dc2626; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px;">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="3 6 5 6 21 6"></polyline>
+            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+            <line x1="10" y1="11" x2="10" y2="17"></line>
+            <line x1="14" y1="11" x2="14" y2="17"></line>
+          </svg>
+        </div>
+
+        <h4 id="modalExcluirTitulo" style="font-size: 1.1rem; font-weight: 800; color: #111827; margin-bottom: 8px;">
+          Tem certeza que deseja excluir?
+        </h4>
+        <p id="modalExcluirMensagem" style="font-size: 0.9rem; color: #6b7280; line-height: 1.5; margin-bottom: 20px;">
+          O armário será removido permanentemente do sistema. Esta ação não poderá ser desfeita.
+        </p>
+
+        <form id="formExcluirArmario" method="post">
+          <input type="hidden" id="excluirArmarioId" name="armario_id" />
+          <div class="modal-acoes" style="justify-content: center; gap: 12px;">
+            <button type="button" class="btn-cancelar" onclick="fecharModalExcluir()" style="flex: 1;">Cancelar</button>
+            <button type="submit" class="btn-principal" style="background: #dc2626; flex: 1; box-shadow: 0 4px 14px rgba(220, 38, 38, 0.3);">
+              Sim, Excluir
+            </button>
+          </div>
+        </form>
       </div>
     </div>
   </div>
@@ -692,323 +986,7 @@
   </div>
 
 
-  <script>
-
-    /* =============================================================
-     * DATA ATUAL
-     * ========================================================= */
-    const dataAtual = document.getElementById("dataAtual");
-    if (dataAtual) {
-      const agora = new Date();
-      dataAtual.textContent = agora.toLocaleDateString("pt-BR", {
-        weekday: "long", day: "2-digit", month: "long", year: "numeric"
-      });
-    }
-
-
-    /* =============================================================
-     * MENU MOBILE
-     * ========================================================= */
-    const barraLateral = document.getElementById("barraLateral");
-    const barraSobreposicao = document.getElementById("barraSobreposicao");
-
-    function abrirMenuMobile() {
-      barraLateral.classList.add("aberta");
-      barraSobreposicao.classList.add("visivel");
-    }
-    function fecharMenuMobile() {
-      barraLateral.classList.remove("aberta");
-      barraSobreposicao.classList.remove("visivel");
-    }
-
-
-    /* =============================================================
-     * MODAL: NOVO ARMÁRIO
-     * ========================================================= */
-    function abrirModalNovo() {
-      document.getElementById("modalNovoSobreposicao").classList.add("visivel");
-      document.body.classList.add("modal-aberto-body");
-      document.getElementById("numeroNovo").focus();
-    }
-    function fecharModalNovo() {
-      document.getElementById("modalNovoSobreposicao").classList.remove("visivel");
-      document.body.classList.remove("modal-aberto-body");
-    }
-    function fecharModalNovoClique(event) {
-      if (event.target.id === "modalNovoSobreposicao") fecharModalNovo();
-    }
-
-    document.getElementById("formNovoArmario").addEventListener("submit", function (event) {
-      const numero = document.getElementById("numeroNovo");
-      const campoNumero = document.getElementById("campoNumeroNovo");
-      if (!numero.value.trim()) {
-        event.preventDefault();
-        campoNumero.classList.add("invalido");
-        numero.focus();
-      } else {
-        campoNumero.classList.remove("invalido");
-      }
-    });
-
-
-    /* =============================================================
-     * MODAL: ALUGAR ARMÁRIO
-     * ========================================================= */
-    document.addEventListener("click", function (event) {
-      const botao = event.target.closest(".btn-abrir-alugar");
-      if (!botao) return;
-
-      abrirModalAlugar(
-        botao.dataset.armarioId,
-        botao.dataset.armarioNumero,
-        botao.dataset.armarioLocalizacao
-      );
-    });
-
-    function abrirModalAlugar(id, numero, localizacao) {
-      const form = document.getElementById("formAlugarArmario");
-      const modal = document.getElementById("modalAlugarSobreposicao");
-      const titulo = document.getElementById("modalAlugarTitulo");
-      const sub = document.getElementById("modalAlugarSub");
-      const nome = document.getElementById("locatario_nome_modal");
-
-      if (!form || !modal || !titulo || !sub || !nome) {
-        console.error("Modal de aluguel: elemento não encontrado.");
-        return;
-      }
-
-      form.action = "/armarios/" + encodeURIComponent(id) + "/alugar";
-      titulo.textContent = "Alugar Armário #" + numero;
-      sub.textContent = localizacao;
-      modal.classList.add("visivel");
-      document.body.classList.add("modal-aberto-body");
-      nome.focus();
-    }
-    function fecharModalAlugar() {
-      document.getElementById("modalAlugarSobreposicao").classList.remove("visivel");
-      document.body.classList.remove("modal-aberto-body");
-    }
-    function fecharModalAlugarClique(event) {
-      if (event.target.id === "modalAlugarSobreposicao") fecharModalAlugar();
-    }
-
-    document.getElementById("formAlugarArmario").addEventListener("submit", function (event) {
-      const nome = document.getElementById("locatario_nome_modal");
-      const semestre = document.getElementById("semestre_modal");
-      let valido = true;
-
-      if (!nome.value.trim()) {
-        document.getElementById("campoLocatarioModal").classList.add("invalido");
-        valido = false;
-      } else {
-        document.getElementById("campoLocatarioModal").classList.remove("invalido");
-      }
-
-      if (!semestre.value.trim()) {
-        document.getElementById("campoSemestreModal").classList.add("invalido");
-        valido = false;
-      } else {
-        document.getElementById("campoSemestreModal").classList.remove("invalido");
-      }
-
-      if (!valido) event.preventDefault();
-    });
-
-
-    /* Reabre o modal certo automaticamente se o backend
-       devolveu erro de validação (número duplicado / já alugado) */
-    {% if abrir_novo %}
-    document.addEventListener("DOMContentLoaded", function () {
-      abrirModalNovo();
-    });
-    {% endif %}
-
-    {% if abrir_alugar_id %}
-    document.addEventListener("DOMContentLoaded", function () {
-      abrirModalAlugar(
-        {{ abrir_alugar_id }},
-        {{ abrir_alugar_numero | tojson }},
-        {{ abrir_alugar_localizacao | tojson }}
-      );
-    });
-    {% endif %}
-
-
-    /* =============================================================
-     * TOAST
-     * ========================================================= */
-    let toastTimeout = null;
-    function mostrarToast(mensagem, tipo) {
-      const toast = document.getElementById("toast");
-      const texto = document.getElementById("toastTexto");
-      texto.textContent = mensagem;
-      toast.classList.toggle("erro", tipo === "erro");
-      toast.classList.add("visivel");
-      clearTimeout(toastTimeout);
-      toastTimeout = setTimeout(function () {
-        toast.classList.remove("visivel");
-      }, 2600);
-    }
-
-    (function () {
-      const alertaSucesso = document.querySelector(".alerta-sucesso");
-      const alertaErro = document.querySelector(".alerta-erro");
-      if (alertaSucesso) {
-        mostrarToast(alertaSucesso.textContent.trim(), "sucesso");
-      } else if (alertaErro) {
-        mostrarToast(alertaErro.textContent.trim(), "erro");
-      }
-    })();
-
-
-    /* =============================================================
-     * BUSCA + FILTRO POR CHIPS + PAGINAÇÃO
-     * ========================================================= */
-<<<<<<< HEAD
-
-    // A paginação é feita no servidor; o JavaScript só filtra os itens da página atual.
-    const TAMANHO_PAGINA = Number.MAX_SAFE_INTEGER;
-=======
-    const TAMANHO_PAGINA = 8;
->>>>>>> 0b13814e56a4c400dc8def2284acb26acee0ff06
-
-    const busca = document.getElementById("buscaArmario");
-    const grupoFiltroStatus = document.getElementById("grupoFiltroStatus");
-    const tabela = document.getElementById("tabelaArmarios");
-    const estadoVazio = document.getElementById("estadoVazio");
-    const estadoVazioTitulo = document.getElementById("estadoVazioTitulo");
-    const estadoVazioSub = document.getElementById("estadoVazioSub");
-    const paginacaoEl = document.getElementById("paginacaoArmarios");
-
-    const todasLinhas = Array.from(tabela.querySelectorAll("tr"));
-    let statusAtivo = "";
-    let paginaAtual = 1;
-
-    function linhasFiltradas() {
-      const texto = busca.value.toLowerCase().trim();
-      return todasLinhas.filter(function (linha) {
-        const status = linha.dataset.status || "";
-        const conteudo = linha.textContent.toLowerCase();
-        const correspondeStatus = !statusAtivo || status === statusAtivo;
-        const correspondeTexto = !texto || conteudo.includes(texto);
-        return correspondeStatus && correspondeTexto;
-      });
-    }
-
-    function filtroAtivo() {
-      return busca.value.trim() !== "" || statusAtivo !== "";
-    }
-
-    function renderizarTabela() {
-      const filtradas = linhasFiltradas();
-
-      if (todasLinhas.length === 0) {
-        estadoVazioTitulo.textContent = "Nenhum armário cadastrado";
-        estadoVazioSub.textContent = 'Clique em "+ Novo Armário" para começar.';
-        estadoVazio.style.display = "flex";
-        estadoVazio.style.flexDirection = "column";
-        estadoVazio.style.alignItems = "center";
-        paginacaoEl.classList.add("oculta");
-        return;
-      }
-
-      if (filtroAtivo()) {
-        todasLinhas.forEach(function (linha) {
-          linha.style.display = filtradas.includes(linha) ? "" : "none";
-        });
-        paginacaoEl.classList.add("oculta");
-
-        if (filtradas.length === 0) {
-          estadoVazioTitulo.textContent = "Nenhum resultado encontrado";
-          estadoVazioSub.textContent = "Tente ajustar a busca ou o filtro de status.";
-          estadoVazio.style.display = "flex";
-          estadoVazio.style.flexDirection = "column";
-          estadoVazio.style.alignItems = "center";
-        } else {
-          estadoVazio.style.display = "none";
-        }
-        return;
-      }
-
-      estadoVazio.style.display = "none";
-
-      const totalPaginas = Math.max(1, Math.ceil(todasLinhas.length / TAMANHO_PAGINA));
-      paginaAtual = Math.min(paginaAtual, totalPaginas);
-
-      const inicio = (paginaAtual - 1) * TAMANHO_PAGINA;
-      const fim = inicio + TAMANHO_PAGINA;
-
-      todasLinhas.forEach(function (linha, indice) {
-        linha.style.display = (indice >= inicio && indice < fim) ? "" : "none";
-      });
-
-      renderizarPaginacao(totalPaginas);
-    }
-
-    function renderizarPaginacao(totalPaginas) {
-      if (totalPaginas <= 1) {
-        paginacaoEl.classList.add("oculta");
-        paginacaoEl.innerHTML = "";
-        return;
-      }
-
-      paginacaoEl.classList.remove("oculta");
-      paginacaoEl.innerHTML = "";
-
-      const btnAnterior = document.createElement("button");
-      btnAnterior.className = "btn-pagina";
-      btnAnterior.type = "button";
-      btnAnterior.setAttribute("aria-label", "Página anterior");
-      btnAnterior.textContent = "‹";
-      btnAnterior.disabled = paginaAtual === 1;
-      btnAnterior.onclick = function () { paginaAtual--; renderizarTabela(); };
-      paginacaoEl.appendChild(btnAnterior);
-
-      for (let pagina = 1; pagina <= totalPaginas; pagina++) {
-        const btn = document.createElement("button");
-        btn.className = "btn-pagina" + (pagina === paginaAtual ? " ativo" : "");
-        btn.type = "button";
-        btn.textContent = pagina;
-        btn.onclick = (function (p) { return function () { paginaAtual = p; renderizarTabela(); }; })(pagina);
-        paginacaoEl.appendChild(btn);
-      }
-
-      const btnProximo = document.createElement("button");
-      btnProximo.className = "btn-pagina";
-      btnProximo.type = "button";
-      btnProximo.setAttribute("aria-label", "Próxima página");
-      btnProximo.textContent = "›";
-      btnProximo.disabled = paginaAtual === totalPaginas;
-      btnProximo.onclick = function () { paginaAtual++; renderizarTabela(); };
-      paginacaoEl.appendChild(btnProximo);
-    }
-
-    if (busca) {
-      busca.addEventListener("input", function () {
-        paginaAtual = 1;
-        renderizarTabela();
-      });
-    }
-
-    if (grupoFiltroStatus) {
-      grupoFiltroStatus.addEventListener("click", function (event) {
-        const botao = event.target.closest(".btn-filtro");
-        if (!botao) return;
-        grupoFiltroStatus.querySelectorAll(".btn-filtro").forEach(function (b) {
-          b.classList.remove("ativo");
-        });
-        botao.classList.add("ativo");
-        statusAtivo = botao.dataset.status || "";
-        paginaAtual = 1;
-        renderizarTabela();
-      });
-    }
-
-    renderizarTabela();
-
-  </script>
-
-  <script src="/static/js/armarios.js"></script>
+  <script src="/static/js/armarios.js?v=20260824_05"></script>
 
 </body>
 
