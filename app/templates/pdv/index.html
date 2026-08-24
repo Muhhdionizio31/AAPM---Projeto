@@ -100,9 +100,7 @@
             <line x1="7" y1="8" x2="7" y2="8.01" />
             <line x1="18" y1="8" x2="18" y2="8.01" />
           </svg>
-
           Armários
-
         </a>
       </li>
 
@@ -126,8 +124,7 @@
       <li>
         <a href="/usuarios/">
 
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
-            stroke-width="2" stroke-linecap="round"
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
             stroke-linejoin="round">
 
             <rect x="2" y="5" width="20" height="14" rx="2"></rect>
@@ -192,9 +189,7 @@
 
       <div class="acoes-cabecalho">
 
-        <form method="get" action="/pdv/"
-          class="filtro-data-form"
-          style="display:flex;gap:10px;">
+        <form method="get" action="/pdv/" class="filtro-data-form" style="display:flex;gap:10px;">
 
           <div class="filtro-data">
 
@@ -205,12 +200,7 @@
               <line x1="3" y1="10" x2="21" y2="10" />
             </svg>
 
-            <input
-              type="month"
-              id="filtroMes"
-              name="mes"
-              value="{{ mes_selecionado }}"
-              onchange="this.form.submit()" />
+            <input type="month" id="filtroMes" name="mes" value="{{ mes_selecionado }}" onchange="this.form.submit()" />
 
           </div>
 
@@ -256,8 +246,7 @@
 
       {% if request and request.query_params.get('erro') %}
 
-      <div class="alerta-sucesso"
-        style="background:#fee2e2;color:#991b1b;border-color:#fecaca;">
+      <div class="alerta-sucesso" style="background:#fee2e2;color:#991b1b;border-color:#fecaca;">
 
         Não foi possível registrar a venda.
         Erro: {{ request.query_params.get('erro') }}.
@@ -365,25 +354,17 @@
               Histórico de Vendas
             </span>
 
-            <form method="get"
-              action="/pdv/"
-              class="barra-busca-tabela">
+            <form method="get" action="/pdv/" class="barra-busca-tabela">
 
               <input type="hidden" name="mes" value="{{ mes_selecionado }}" />
 
-              <input
-                type="text"
-                name="busca"
-                placeholder="Buscar por cliente..."
-                value="{{ busca or '' }}" />
+              <input type="text" name="busca" placeholder="Buscar por cliente..." value="{{ busca or '' }}" />
 
               <button type="submit" class="btn-buscar-tabela">
 
                 <svg viewBox="0 0 24 24">
                   <circle cx="11" cy="11" r="8" />
-                  <line x1="21" y1="21"
-                    x2="16.65"
-                    y2="16.65" />
+                  <line x1="21" y1="21" x2="16.65" y2="16.65" />
                 </svg>
 
               </button>
@@ -441,11 +422,7 @@
 
                 <td>
 
-                  <button
-                    class="btn-ver"
-                    type="button"
-                    onclick="verDetalhesVenda('{{ v.id }}')"
-                    title="Ver comprovante"
+                  <button class="btn-ver" type="button" onclick="verDetalhesVenda('{{ v.id }}')" title="Ver comprovante"
                     style="background:none;border:none;cursor:pointer;">
 
                     🧾
@@ -492,44 +469,16 @@
             </span>
 
           </div>
-
-          {% if total_pages > 1 %}
-          <nav class="paginacao" aria-label="Paginação do histórico de vendas">
-            {% if page > 1 %}
-            <a class="paginacao-btn"
-              href="/pdv/?page={{ page - 1 }}&per_page={{ per_page }}&mes={{ mes_selecionado }}&busca={{ busca }}">
-              Anterior
-            </a>
-            {% else %}
-            <span class="paginacao-btn desabilitado">Anterior</span>
-            {% endif %}
-
-            <span class="paginacao-info">Página {{ page }} de {{ total_pages }}</span>
-
-            {% if page < total_pages %}
-            <a class="paginacao-btn"
-              href="/pdv/?page={{ page + 1 }}&per_page={{ per_page }}&mes={{ mes_selecionado }}&busca={{ busca }}">
-              Próxima
-            </a>
-            {% else %}
-            <span class="paginacao-btn desabilitado">Próxima</span>
-            {% endif %}
-          </nav>
-          {% endif %}
-
         </div>
-
 
         <div class="painel-lateral">
 
           <div class="painel painel-top">
 
             <div class="painel-cabecalho">
-
               <span class="painel-titulo">
                 Mais Vendidos
               </span>
-
             </div>
 
             <div id="listaMaisVendidos">
@@ -559,16 +508,41 @@
               {% endif %}
 
             </div>
-
           </div>
-
         </div>
-
       </div>
-
     </main>
 
+    <br>
+    <div class="paginacao">
 
+      <span class="paginacao-info">
+        Página {{ page }} de {{ total_pages }}
+      </span>
+
+      {% if page > 1 %}
+      <a class="paginacao-btn" href="/pdv?page={{ page - 1 }}&per_page={{ per_page }}">
+        Anterior
+      </a>
+      {% else %}
+
+      <span class="paginacao-btn desabilitado">
+        Anterior
+      </span>
+      {% endif %}
+
+      {% if page < total_pages %} <a class="paginacao-btn"
+        href="/pdv?page={{ page + 1 }}&per_page={{ per_page }}">
+        Próxima
+        </a>
+        {% else %}
+        <span class="paginacao-btn desabilitado">
+          Próxima
+        </span>
+        {% endif %}
+
+    </div>
+    <br>
     <footer class="rodape-admin">
       Gerenciamento de Vendas &nbsp;·&nbsp;© 2026 Todos os direitos reservados
     </footer>
@@ -580,9 +554,7 @@
        MODAL NOVA VENDA
   ========================================================== -->
 
-  <div class="sobreposicao-modal"
-    id="modalVenda"
-    onclick="fecharModalFora(event,'modalVenda')">
+  <div class="sobreposicao-modal" id="modalVenda" onclick="fecharModalFora(event,'modalVenda')">
 
     <div class="modal">
 
@@ -592,10 +564,7 @@
           Nova Venda
         </h2>
 
-        <button
-          class="btn-fechar-modal"
-          type="button"
-          onclick="fecharModal('modalVenda')">
+        <button class="btn-fechar-modal" type="button" onclick="fecharModal('modalVenda')">
 
           ✕
 
@@ -604,15 +573,9 @@
       </div>
 
 
-      <form
-        id="formNovaVenda"
-        method="POST"
-        action="/pdv/finalizar">
+      <form id="formNovaVenda" method="POST" action="/pdv/finalizar">
 
-        <input
-          type="hidden"
-          name="carrinho_json"
-          id="carrinhoJson" />
+        <input type="hidden" name="carrinho_json" id="carrinhoJson" />
 
 
         <div class="form-linha">
@@ -629,9 +592,7 @@
 
               {% for cliente in clientes %}
 
-              <option
-                value="{{ cliente.id }}"
-                data-desconto="{{ desconto_associado if cliente.is_associado else 0 }}">
+              <option value="{{ cliente.id }}" data-desconto="{{ desconto_associado if cliente.is_associado else 0 }}">
 
                 {{ cliente.nome }}
 
@@ -654,14 +615,7 @@
               Percentual de Desconto (%)
             </label>
 
-            <input
-              type="number"
-              step="0.1"
-              id="modalDesconto"
-              value="0.0"
-              min="0"
-              max="100"
-              readonly />
+            <input type="number" step="0.1" id="modalDesconto" value="0.0" min="0" max="100" readonly />
 
           </div>
 
@@ -674,11 +628,7 @@
 
             <label>Observação</label>
 
-            <input
-              type="text"
-              name="observacao"
-              id="modalObservacao"
-              placeholder="Ex: Venda balcão rápida" />
+            <input type="text" name="observacao" id="modalObservacao" placeholder="Ex: Venda balcão rápida" />
 
           </div>
 
@@ -693,10 +643,7 @@
               Itens da Venda
             </span>
 
-            <button
-              type="button"
-              class="btn-add-item"
-              onclick="adicionarLinhaItem()">
+            <button type="button" class="btn-add-item" onclick="adicionarLinhaItem()">
 
               <svg viewBox="0 0 24 24">
                 <line x1="12" y1="5" x2="12" y2="19" />
@@ -709,9 +656,7 @@
 
           </div>
 
-          <div
-            class="lista-itens-modal"
-            id="listaItensModal">
+          <div class="lista-itens-modal" id="listaItensModal">
 
           </div>
 
@@ -733,18 +678,13 @@
 
         <div class="acoes-modal">
 
-          <button
-            type="button"
-            class="btn-cancelar"
-            onclick="fecharModal('modalVenda')">
+          <button type="button" class="btn-cancelar" onclick="fecharModal('modalVenda')">
 
             Cancelar
 
           </button>
 
-          <button
-            type="submit"
-            class="btn-salvar">
+          <button type="submit" class="btn-salvar">
 
             Registrar Venda
 
@@ -763,10 +703,7 @@
        MODAL DO COMPROVANTE
   ========================================================== -->
 
-  <div
-    class="sobreposicao-modal"
-    id="modalDetalhe"
-    onclick="fecharModalFora(event,'modalDetalhe')">
+  <div class="sobreposicao-modal" id="modalDetalhe" onclick="fecharModalFora(event,'modalDetalhe')">
 
     <div class="modal modal-comprovante">
 
@@ -779,10 +716,7 @@
           Comprovante da Venda
         </h2>
 
-        <button
-          class="btn-fechar-modal"
-          type="button"
-          onclick="fecharModal('modalDetalhe')">
+        <button class="btn-fechar-modal" type="button" onclick="fecharModal('modalDetalhe')">
 
           ✕
 
@@ -813,11 +747,7 @@
 
       <div id="areaBotaoComprovante">
 
-        <button
-          class="btn-baixar-comprovante"
-          id="btnBaixarComprovante"
-          type="button"
-          onclick="baixarComprovante()"
+        <button class="btn-baixar-comprovante" id="btnBaixarComprovante" type="button" onclick="baixarComprovante()"
           disabled>
 
           <svg viewBox="0 0 24 24">
@@ -865,8 +795,7 @@
 
   <!-- JAVASCRIPT -->
 
-  <script
-    src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js">
   </script>
 
   <script src="/static/js/vendas.js"></script>

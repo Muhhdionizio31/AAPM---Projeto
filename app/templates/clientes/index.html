@@ -249,6 +249,35 @@
       </div>
     </main>
 
+    <br>
+    <div class="paginacao">
+
+      <span class="paginacao-info">
+        Página {{ page }} de {{ total_pages }}
+      </span>
+
+      {% if page > 1 %}
+      <a class="paginacao-btn" href="/clientes?page={{ page - 1 }}&per_page={{ per_page }}">
+        Anterior
+      </a>
+      {% else %}
+
+      <span class="paginacao-btn desabilitado">
+        Anterior
+      </span>
+      {% endif %}
+
+      {% if page < total_pages %} <a class="paginacao-btn" href="/clientes?page={{ page + 1 }}&per_page={{ per_page }}">
+        Próxima
+        </a>
+        {% else %}
+        <span class="paginacao-btn desabilitado">
+          Próxima
+        </span>
+        {% endif %}
+
+    </div>
+    <br>
     <footer class="rodape-admin">
       Gerenciamento Clientes &nbsp;·&nbsp; © 2026 Todos os direitos reservados
     </footer>
