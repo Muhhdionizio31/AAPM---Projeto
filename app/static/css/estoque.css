@@ -468,6 +468,10 @@
             font-weight: 600;
         }
 
+        .td-nome summary:hover{
+            color: #a70000c9;
+        }
+
         .lista-variacoes {
             margin-top: 8px;
             padding: 8px;
@@ -479,7 +483,7 @@
             padding: 4px 0;
             font-size: 13px;
         }
-        
+
         .acoes-td {
             display: flex;
             align-items: center;

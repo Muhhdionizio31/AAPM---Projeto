@@ -1096,7 +1096,7 @@ body {
 
 
 /* ============================================================
-   BOTÃO ADICIONAR ITEM — CORRIGIDO
+   BOTÃO ADICIONAR ITEM
 ============================================================ */
 
 .btn-add-item {
@@ -1141,8 +1141,6 @@ body {
 }
 
 
-/* ISSO ERA O PRINCIPAL PROBLEMA:
-   DEFINE O TAMANHO DO SVG */
 .btn-add-item svg {
   width: 14px;
 
@@ -1176,7 +1174,7 @@ body {
   gap: 7px;
 }
 
-.item-modal-linha {
+.linha-item-modal {
   display: grid;
 
   grid-template-columns:
@@ -1187,8 +1185,8 @@ body {
   align-items: center;
 }
 
-.item-modal-linha select,
-.item-modal-linha input {
+.linha-item-modal select,
+.linha-item-modal input {
   width: 100%;
 
   min-width: 0;
