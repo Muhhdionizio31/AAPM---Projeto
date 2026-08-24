@@ -27,24 +27,7 @@ templates = Jinja2Templates(directory="app/templates")
 # um modal com erro, já que agora tudo vive no index.html)
 # ============================================================
 
-<<<<<<< HEAD
-@router.get("/")
-def listar_armarios(
-    request: Request,
-    status: str = "",           # filtra por status
-    localizacao: str = "",      # filtra por localização
-    page: int = 1,
-    per_page: int = 15,
-    db: Session = Depends(get_db),
-    usuario = Depends(get_usuario_logado)
-):
-    """
-    Exibe o mapa de armários agrupado por status.
-    Qualquer usuário logado pode ver a disponibilidade.
-    """
-=======
 def _contexto_index(db: Session, usuario, status: str = "", localizacao: str = ""):
->>>>>>> 0b13814e56a4c400dc8def2284acb26acee0ff06
     query = db.query(Armario).filter(Armario.ativo == True)
 
     if status in ("disponivel", "alugado", "inativo"):
@@ -71,28 +54,6 @@ def _contexto_index(db: Session, usuario, status: str = "", localizacao: str = "
 
     localizacoes = sorted(set(a.localizacao for a in todos if a.localizacao))
 
-<<<<<<< HEAD
-    return templates.TemplateResponse(
-        request,
-        "armarios/index.html",
-        {
-            "request":      request,
-            "usuario":      usuario,
-            "armarios":     armarios,
-            "disponiveis":  disponiveis,
-            "alugados":     alugados,
-            "total":        len(todos),
-            "status":       status,
-            "localizacao":  localizacao,
-            "localizacoes": localizacoes,
-            "StatusArmario": StatusArmario,
-            "page": page,
-            "per_page": per_page,
-            "total_pages": total_pages,
-            "total_armarios": total_armarios,
-        }
-    )
-=======
     return {
         "usuario": usuario,
         "armarios": armarios,
@@ -104,7 +65,6 @@ def _contexto_index(db: Session, usuario, status: str = "", localizacao: str = "
         "localizacoes": localizacoes,
         "StatusArmario": StatusArmario,
     }
->>>>>>> 0b13814e56a4c400dc8def2284acb26acee0ff06
 
 
 # ============================================================
