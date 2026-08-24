@@ -1,8 +1,8 @@
 # ============================================================
 # controllers/armario_controller.py
 # ============================================================
-# Admin: gerencia tudo (criar, alugar, liberar, desativar).
-# Qualquer logado: visualiza o mapa de disponibilidade.
+# Admin: gerencia tudo (criar, alugar, liberar, editar, desativar, excluir).
+# Qualquer logado: visualiza o mapa e listagem de armários.
 # ============================================================
 
 from datetime import datetime, timezone
@@ -14,6 +14,7 @@ from sqlalchemy.orm import Session
 
 from app.database import get_db
 from app.models.armario import Armario, StatusArmario
+from app.models.cliente import Cliente
 from app.auth import get_usuario_logado, get_admin
 
 router = APIRouter(prefix="/armarios", tags=["Armários"])
@@ -21,13 +22,7 @@ router = APIRouter(prefix="/armarios", tags=["Armários"])
 templates = Jinja2Templates(directory="app/templates")
 
 
-# ============================================================
-# HELPER — monta o contexto da página index (reaproveitado
-# tanto pelo GET / quanto pelos POSTs que precisam reabrir
-# um modal com erro, já que agora tudo vive no index.html)
-# ============================================================
-
-def _contexto_index(db: Session, usuario, status: str = "", localizacao: str = ""):
+def _contexto_index(db: Session, usuario, status: str = "", localizacao: str = "", page: int = 1, per_page: int = 15):
     query = db.query(Armario).filter(Armario.ativo == True)
 
     if status in ("disponivel", "alugado", "inativo"):
@@ -51,24 +46,32 @@ def _contexto_index(db: Session, usuario, status: str = "", localizacao: str = "
     todos = db.query(Armario).filter(Armario.ativo == True).all()
     disponiveis = sum(1 for a in todos if a.status == StatusArmario.DISPONIVEL)
     alugados = sum(1 for a in todos if a.status == StatusArmario.ALUGADO)
+    inativos = sum(1 for a in todos if a.status == StatusArmario.INATIVO)
 
     localizacoes = sorted(set(a.localizacao for a in todos if a.localizacao))
+    clientes = db.query(Cliente).filter(Cliente.ativo == True).order_by(Cliente.nome).all()
 
     return {
-        "usuario": usuario,
-        "armarios": armarios,
-        "disponiveis": disponiveis,
-        "alugados": alugados,
-        "total": len(todos),
-        "status": status,
-        "localizacao": localizacao,
+        "usuario":      usuario,
+        "armarios":     armarios,
+        "disponiveis":  disponiveis,
+        "alugados":     alugados,
+        "inativos":     inativos,
+        "total":        len(todos),
+        "status":       status,
+        "localizacao":  localizacao,
         "localizacoes": localizacoes,
         "StatusArmario": StatusArmario,
+        "page": page,
+        "per_page": per_page,
+        "total_pages": total_pages,
+        "total_armarios": total_armarios,
+        "clientes": clientes,
     }
 
 
 # ============================================================
-# MAPA DE ARMÁRIOS — visível para todos os logados
+# LISTAGEM DE ARMÁRIOS (Página Principal)
 # ============================================================
 
 @router.get("/")
@@ -76,15 +79,18 @@ def listar_armarios(
     request: Request,
     status: str = "",
     localizacao: str = "",
+    page: int = 1,
+    per_page: int = 15,
     db: Session = Depends(get_db),
     usuario = Depends(get_usuario_logado)
 ):
-    contexto = _contexto_index(db, usuario, status, localizacao)
+    contexto = _contexto_index(db, usuario, status, localizacao, page, per_page)
+    contexto.update({"request": request})
     return templates.TemplateResponse(request, "armarios/index.html", contexto)
 
 
 # ============================================================
-# CADASTRO DE ARMÁRIO — somente admin (agora via modal no index)
+# CADASTRO DE NOVO ARMÁRIO — somente admin
 # ============================================================
 
 @router.post("/novo")
@@ -96,29 +102,20 @@ def criar_armario(
     db: Session      = Depends(get_db),
     admin            = Depends(get_admin)
 ):
+    numero_limpo = numero.strip().upper()
     existente = db.query(Armario).filter(
-        Armario.numero == numero.strip().upper()
+        Armario.numero == numero_limpo
     ).first()
 
     if existente:
-        contexto = _contexto_index(db, admin)
-        contexto.update({
-            "abrir_novo": True,
-            "erro_novo": f"Armário {numero.strip().upper()} já está cadastrado.",
-            "valores_novo": {
-                "numero": numero,
-                "localizacao": localizacao,
-                "observacao": observacao,
-            },
-        })
-        return templates.TemplateResponse(
-            request, "armarios/index.html", contexto, status_code=400
-        )
+        return RedirectResponse(url="/armarios?erro=ja_existe", status_code=302)
 
     db.add(Armario(
-        numero      = numero.strip().upper(),
+        numero      = numero_limpo,
         localizacao = localizacao.strip() or None,
         observacao  = observacao.strip() or None,
+        status      = StatusArmario.DISPONIVEL,
+        ativo       = True
     ))
     db.commit()
 
@@ -126,57 +123,8 @@ def criar_armario(
 
 
 # ============================================================
-# DETALHE DO ARMÁRIO
+# EDITAR DADOS DO ARMÁRIO — somente admin
 # ============================================================
-
-@router.get("/{armario_id}")
-def detalhe_armario(
-    armario_id: int,
-    request: Request,
-    db: Session = Depends(get_db),
-    usuario = Depends(get_usuario_logado)
-):
-    armario = db.query(Armario).filter(Armario.id == armario_id).first()
-
-    if not armario:
-        return RedirectResponse(url="/armarios", status_code=302)
-
-    return templates.TemplateResponse(
-        request,
-        "armarios/detalhe.html",
-        {
-            "usuario": usuario,
-            "armario": armario,
-        }
-    )
-
-
-# ============================================================
-# EDITAR DADOS DO ARMÁRIO (número, localização) — admin
-# (continua em página própria, não foi pedido pra virar modal)
-# ============================================================
-
-@router.get("/{armario_id}/editar")
-def form_editar_armario(
-    armario_id: int,
-    request: Request,
-    db: Session = Depends(get_db),
-    admin = Depends(get_admin)
-):
-    editando = db.query(Armario).filter(Armario.id == armario_id).first()
-
-    if not editando:
-        return RedirectResponse(url="/armarios", status_code=302)
-
-    return templates.TemplateResponse(
-        request,
-        "armarios/form.html",
-        {
-            "usuario":  admin,
-            "editando": editando,
-        }
-    )
-
 
 @router.post("/{armario_id}/editar")
 def editar_armario(
@@ -188,46 +136,36 @@ def editar_armario(
     db: Session      = Depends(get_db),
     admin            = Depends(get_admin)
 ):
-    editando = db.query(Armario).filter(Armario.id == armario_id).first()
+    armario = db.query(Armario).filter(Armario.id == armario_id).first()
 
-    if not editando:
-        return RedirectResponse(url="/armarios", status_code=302)
+    if not armario:
+        return RedirectResponse(url="/armarios?erro=nao_encontrado", status_code=302)
 
+    numero_limpo = numero.strip().upper()
     conflito = db.query(Armario).filter(
-        Armario.numero == numero.strip().upper(),
+        Armario.numero == numero_limpo,
         Armario.id != armario_id
     ).first()
 
     if conflito:
-        return templates.TemplateResponse(
-            request,
-            "armarios/form.html",
-            {
-                "usuario":  admin,
-                "editando": editando,
-                "erro":     f"Armário {numero.upper()} já existe.",
-            },
-            status_code=400
-        )
+        return RedirectResponse(url="/armarios?erro=numero_duplicado", status_code=302)
 
-    editando.numero      = numero.strip().upper()
-    editando.localizacao = localizacao.strip() or None
-    editando.observacao  = observacao.strip() or None
+    armario.numero      = numero_limpo
+    armario.localizacao = localizacao.strip() or None
+    armario.observacao  = observacao.strip() or None
     db.commit()
 
-    return RedirectResponse(url=f"/armarios/{armario_id}?editado=ok", status_code=302)
+    return RedirectResponse(url="/armarios?editado=ok", status_code=302)
 
 
 # ============================================================
-# ALUGAR ARMÁRIO — agora via modal no index (admin)
+# ALUGAR ARMÁRIO — somente admin
 # ============================================================
 
 @router.post("/{armario_id}/alugar")
 def alugar(
     request: Request,
     armario_id: int,
-    # Aceita os nomes usados pelo modal atual e também nomes curtos,
-    # evitando erro 422 quando o HTML estiver usando nome/periodo.
     locatario_nome: str = Form(""),
     nome: str            = Form(""),
     semestre: str        = Form(""),
@@ -236,100 +174,38 @@ def alugar(
     db: Session          = Depends(get_db),
     admin                = Depends(get_admin)
 ):
-    """Aluga um armário disponível para o locatário informado."""
-
     nome_final = (locatario_nome or nome).strip()
     semestre_final = (semestre or periodo).strip()
-    observacao = observacao.strip()
+    observacao_final = observacao.strip()
 
-    # Valida antes de alterar o registro para retornar o modal com a mensagem.
     if not nome_final or not semestre_final:
-        contexto = _contexto_index(db, admin)
-        armario = db.query(Armario).filter(Armario.id == armario_id).first()
-        contexto.update({
-            "abrir_alugar_id": armario_id,
-            "abrir_alugar_numero": armario.numero if armario else "",
-            "abrir_alugar_localizacao": (armario.localizacao if armario else "") or "Localização não informada",
-            "erro_alugar": "Informe o nome do locatário e o semestre.",
-            "valores_alugar": {
-                "locatario_nome": nome_final,
-                "semestre": semestre_final,
-                "observacao": observacao,
-            },
-        })
-        return templates.TemplateResponse(
-            request, "armarios/index.html", contexto, status_code=400
-        )
+        return RedirectResponse(url="/armarios?erro=dados_invalidos", status_code=302)
 
-    # Não usa with_for_update(): ele não é suportado de forma consistente
-    # em SQLite e pode fazer o aluguel falhar mesmo com o armário disponível.
     armario = db.query(Armario).filter(Armario.id == armario_id).first()
 
     if not armario:
-        contexto = _contexto_index(db, admin)
-        contexto.update({
-            "abrir_alugar_id": armario_id,
-            "erro_alugar": "Armário não encontrado.",
-            "valores_alugar": {
-                "locatario_nome": nome_final,
-                "semestre": semestre_final,
-                "observacao": observacao,
-            },
-        })
-        return templates.TemplateResponse(
-            request, "armarios/index.html", contexto, status_code=404
-        )
+        return RedirectResponse(url="/armarios?erro=nao_encontrado", status_code=302)
 
     if armario.status != StatusArmario.DISPONIVEL:
-        contexto = _contexto_index(db, admin)
-        contexto.update({
-            "abrir_alugar_id": armario_id,
-            "abrir_alugar_numero": armario.numero,
-            "abrir_alugar_localizacao": armario.localizacao or "Localização não informada",
-            "erro_alugar": "Este armário não está disponível. Escolha outro armário disponível.",
-            "valores_alugar": {
-                "locatario_nome": nome_final,
-                "semestre": semestre_final,
-                "observacao": observacao,
-            },
-        })
-        return templates.TemplateResponse(
-            request, "armarios/index.html", contexto, status_code=400
-        )
+        return RedirectResponse(url="/armarios?erro=ja_alugado", status_code=302)
 
     try:
         armario.status = StatusArmario.ALUGADO
         armario.locatario_nome = nome_final
         armario.semestre = semestre_final
-        armario.observacao = observacao or armario.observacao
+        if observacao_final:
+            armario.observacao = observacao_final
         armario.alugado_em = datetime.now(timezone.utc)
         db.commit()
     except Exception:
         db.rollback()
-        contexto = _contexto_index(db, admin)
-        contexto.update({
-            "abrir_alugar_id": armario_id,
-            "abrir_alugar_numero": armario.numero,
-            "abrir_alugar_localizacao": armario.localizacao or "Localização não informada",
-            "erro_alugar": "Não foi possível concluir o aluguel. Verifique os dados e tente novamente.",
-            "valores_alugar": {
-                "locatario_nome": nome_final,
-                "semestre": semestre_final,
-                "observacao": observacao,
-            },
-        })
-        return templates.TemplateResponse(
-            request, "armarios/index.html", contexto, status_code=500
-        )
+        return RedirectResponse(url="/armarios?erro=falha_aluguel", status_code=302)
 
-    return RedirectResponse(
-        url=f"/armarios/{armario_id}?alugado=ok",
-        status_code=303
-    )
+    return RedirectResponse(url="/armarios?alugado=ok", status_code=302)
 
 
 # ============================================================
-# LIBERAR ARMÁRIO — remove o locatário e volta a disponível
+# LIBERAR ARMÁRIO — somente admin
 # ============================================================
 
 @router.post("/{armario_id}/liberar")
@@ -341,7 +217,7 @@ def liberar(
     armario = db.query(Armario).filter(Armario.id == armario_id).first()
 
     if not armario:
-        return RedirectResponse(url="/armarios", status_code=302)
+        return RedirectResponse(url="/armarios?erro=nao_encontrado", status_code=302)
 
     armario.status         = StatusArmario.DISPONIVEL
     armario.locatario_nome = None
@@ -350,14 +226,11 @@ def liberar(
 
     db.commit()
 
-    return RedirectResponse(
-        url=f"/armarios/{armario_id}?liberado=ok",
-        status_code=302
-    )
+    return RedirectResponse(url="/armarios?liberado=ok", status_code=302)
 
 
 # ============================================================
-# TOGGLE ATIVO — ativa ou desativa o armário
+# TOGGLE ATIVO / DESATIVAR / REATIVAR — somente admin
 # ============================================================
 
 @router.post("/{armario_id}/toggle-ativo")
@@ -369,18 +242,55 @@ def toggle_ativo(
     armario = db.query(Armario).filter(Armario.id == armario_id).first()
 
     if not armario:
-        return RedirectResponse(url="/armarios", status_code=302)
+        return RedirectResponse(url="/armarios?erro=nao_encontrado", status_code=302)
 
     if armario.status == StatusArmario.ALUGADO:
-        return RedirectResponse(
-            url="/armarios?erro=desativar_alugado",
-            status_code=302
-        )
+        return RedirectResponse(url="/armarios?erro=desativar_alugado", status_code=302)
 
-    armario.ativo = not armario.ativo
-    if armario.ativo:
+    if armario.status == StatusArmario.INATIVO:
         armario.status = StatusArmario.DISPONIVEL
+        armario.ativo = True
+        db.commit()
+        return RedirectResponse(url="/armarios?reativado=ok", status_code=302)
+    else:
+        armario.status = StatusArmario.INATIVO
+        armario.ativo = True
+        db.commit()
+        return RedirectResponse(url="/armarios?desativado=ok", status_code=302)
 
+
+# ============================================================
+# EXCLUIR ARMÁRIO — somente admin
+# ============================================================
+
+@router.post("/{armario_id}/excluir")
+def excluir_armario(
+    armario_id: int,
+    db: Session = Depends(get_db),
+    admin = Depends(get_admin)
+):
+    armario = db.query(Armario).filter(Armario.id == armario_id).first()
+
+    if not armario:
+        return RedirectResponse(url="/armarios?erro=nao_encontrado", status_code=302)
+
+    if armario.status == StatusArmario.ALUGADO:
+        return RedirectResponse(url="/armarios?erro=excluir_alugado", status_code=302)
+
+    db.delete(armario)
     db.commit()
 
+    return RedirectResponse(url="/armarios?excluido=ok", status_code=302)
+
+
+# ============================================================
+# DETALHE DO ARMÁRIO — redireciona para a página principal
+# ============================================================
+
+@router.get("/{armario_id}")
+def detalhe_armario(
+    armario_id: int,
+    db: Session = Depends(get_db),
+    usuario = Depends(get_usuario_logado)
+):
     return RedirectResponse(url="/armarios", status_code=302)
