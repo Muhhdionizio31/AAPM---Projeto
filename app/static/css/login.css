@@ -389,8 +389,8 @@ button.btn-esqueci {
     min-height: 32px !important;
     padding: 0 12px !important;
 
-    background: #fff5f6 !important;
-    color: #c8102e !important;
+    background: #c8102e !important;
+    color: #ffffff !important;
 
     border: 1.5px solid #c8102e !important;
     border-radius: 999px !important;
@@ -414,8 +414,8 @@ button.btn-esqueci {
 
 /* PASSAR O MOUSE */
 button.btn-esqueci:hover {
-    background: #c8102e !important;
-    color: #ffffff !important;
+    background: #fff5f6 !important;
+    color: #c8102e !important;
 
     transform: translateY(-1px) !important;
 
