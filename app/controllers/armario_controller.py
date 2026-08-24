@@ -22,7 +22,17 @@ router = APIRouter(prefix="/armarios", tags=["Armários"])
 templates = Jinja2Templates(directory="app/templates")
 
 
+<<<<<<< HEAD
 def _contexto_index(db: Session, usuario, status: str = "", localizacao: str = "", page: int = 1, per_page: int = 15):
+=======
+# ============================================================
+# HELPER — monta o contexto da página index (reaproveitado
+# tanto pelo GET / quanto pelos POSTs que precisam reabrir
+# um modal com erro, já que agora tudo vive no index.html)
+# ============================================================
+
+def _contexto_index(db: Session, usuario, status: str = "", localizacao: str = ""):
+>>>>>>> e63ee734cac6ae5c57e5fe934f78a2d9ae3ba3cd
     query = db.query(Armario).filter(Armario.ativo == True)
 
     if status in ("disponivel", "alugado", "inativo"):

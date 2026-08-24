@@ -277,11 +277,27 @@
                                 <img src="{{ p.imagem_url }}" alt="{{ p.nome }}">
                             </td>
                             <td class="td-nome">
-                                <a href="/produtos/{{ p.id }}">{{ p.nome }}</a>
+                                <p>{{ p.nome }}</p>
+
+                                {% if p.variacoes %}
+                                <details>
+                                    <summary>Variações</summary>
+
+                                    <div class="lista-variacoes">
+                                        {% for v in p.variacoes %}
+                                        <div>
+                                            <strong>{{ v.tamanho }}</strong>
+                                            - Estoque: {{ v.estoque_atual }}
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+                                </details>
+                                {% endif %}
                             </td>
                             <td>{{ p.categoria.nome if p.categoria else "—" }}</td>
                             <td class="td-preco">R$ {{ "%.2f"|format(p.preco) }}</td>
                             <td>{{ p.estoque_atual }}</td>
+
                             <td>
                                 <div class="celula-acoes">
                                     {% if usuario.role == 'admin' %}

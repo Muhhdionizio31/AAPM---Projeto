@@ -2,6 +2,7 @@ from fastapi import APIRouter, Depends, Request, Form
 from fastapi.responses import RedirectResponse
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
+import math
 
 from app.database import get_db
 from app.models.cliente import Cliente
@@ -16,6 +17,8 @@ def listar_clientes(
     request: Request,
     busca: str = "",
     apenas_associados: bool = False,
+    page: int = 1,
+    per_page: int = 10,
     db: Session = Depends(get_db),
     admin = Depends(get_admin)
 ):
@@ -30,12 +33,19 @@ def listar_clientes(
     if apenas_associados:
         query = query.filter(Cliente.is_associado == True)
 
-    clientes = query.order_by(Cliente.nome).all()
 
     total_associados = db.query(Cliente).filter(
         Cliente.is_associado == True,
         Cliente.ativo == True
     ).count()
+
+    query = db.query(Cliente).order_by(Cliente.nome)
+    total_clientes = query.count()
+    page = max(page, 1)
+    per_page = max(per_page, 1)
+    total_pages = math.ceil(total_clientes / per_page) if total_clientes else 1
+    page = min(page, total_pages)
+    clientes = query.offset((page - 1) * per_page).limit(per_page).all()
 
     return templates.TemplateResponse(
         request,
@@ -47,6 +57,10 @@ def listar_clientes(
             "busca":             busca,
             "apenas_associados": apenas_associados,
             "total_associados":  total_associados,
+            "page":              page,
+            "per_page":          per_page,  
+            "total_pages":       total_pages,
+            "total_clientes":    total_clientes,
         }
     )
 

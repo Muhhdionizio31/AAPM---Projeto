@@ -200,7 +200,6 @@
 
       {% endif %}
 
-
       {% if request.query_params.get('erro') == 'produtos_vinculados' %}
 
       <div class="alerta erro">
@@ -232,7 +231,6 @@
       </div>
 
       {% endif %}
-
     </div>
 
 
@@ -241,11 +239,8 @@
     ========================================================= -->
 
     <main class="area-conteudo">
-
       <div class="painel">
-
         <div class="painel-cabecalho">
-
           <span class="painel-titulo">
             Lista de Categorias
           </span>
@@ -301,7 +296,6 @@
 
           </thead>
 
-
           <tbody id="corpoTabela">
 
             {% for c in categorias %}
@@ -330,7 +324,6 @@
 
               </td>
 
-
               <!-- PRODUTOS -->
 
               <td>
@@ -344,7 +337,6 @@
                   }}
                 </span>
               </td>
-
               <!-- STATUS -->
 
               <td>
@@ -416,7 +408,6 @@
                     </button>
                     {% endif %}
                   </form>
-
 
                   <!-- EXCLUIR -->
 
@@ -519,8 +510,7 @@
       </span>
 
       {% if page > 1 %}
-      <a class="paginacao-btn"
-        href="/categorias?page={{ page - 1 }}&per_page={{ per_page }}">
+      <a class="paginacao-btn" href="/categorias?page={{ page - 1 }}&per_page={{ per_page }}">
         Anterior
       </a>
       {% else %}
@@ -546,11 +536,9 @@
     <!-- RODAPÉ -->
 
     <footer class="rodape-admin">
-
       Gerenciamento de Categorias
       &nbsp;·&nbsp;
       © 2026 Todos os direitos reservados
-
     </footer>
 
   </div>
@@ -573,19 +561,14 @@
         </h2>
 
         <button type="button" class="cat-modal-fechar" onclick="fecharModalCategoria()" aria-label="Fechar">
-
           <svg viewBox="0 0 24 24">
-
             <line x1="18" y1="6" x2="6" y2="18" />
 
             <line x1="6" y1="6" x2="18" y2="18" />
-
           </svg>
 
         </button>
-
       </div>
-
 
       <!-- CORPO -->
 
@@ -637,9 +620,7 @@
           <!-- STATUS -->
 
           <div class="cat-form-group">
-
             <div class="cat-toggle-wrap">
-
               <div class="cat-toggle-label">
 
                 <strong>
@@ -649,76 +630,55 @@
                 <small>
                   Categorias inativas não aparecem para novos produtos.
                 </small>
-
               </div>
 
 
               <label>
-
                 <input type="checkbox" id="ativa" name="ativa" value="true" class="cat-toggle-input" checked />
-
                 <span class="cat-toggle-visual"></span>
 
               </label>
-
             </div>
-
           </div>
-
 
           <!-- PRODUTOS VINCULADOS -->
 
           <div class="cat-bloco-produtos" id="catBlocoProdutos" style="display:none">
-
             <div class="cat-bloco-produtos-titulo">
-
               <span>
                 Produtos vinculados
               </span>
-
               <span class="cat-badge-count" id="catBadgeCount">
                 0 ativos
               </span>
 
             </div>
 
-
             <div class="cat-lista-produtos" id="catListaProdutos"></div>
 
           </div>
 
-
           <!-- DICA -->
 
           <div class="cat-modal-dica" id="catDica">
-
             <strong>Dica:</strong>
-
             após criar a categoria, você pode vinculá-la a produtos no painel de estoque.
-
           </div>
 
 
           <!-- RODAPÉ DO FORM -->
-
           <div class="cat-modal-rodape">
-
             <button type="button" class="cat-btn-cancelar" onclick="fecharModalCategoria()">
               Cancelar
             </button>
-
             <button type="submit" class="cat-btn-salvar" id="catBtnSalvar">
               Criar categoria
             </button>
 
           </div>
-
         </form>
-
       </div>
-
     </div>
-
   </div>
 
 
@@ -727,35 +687,22 @@
   =========================================================== -->
 
   <div class="sobreposicao-modal" id="modalDesativar">
-
     <div class="modal">
-
       <div class="modal-cabecalho">
-
         <span></span>
-
         <button type="button" class="btn-fechar-modal" onclick="fecharModal('modalDesativar')">
           ✕
         </button>
-
       </div>
-
 
       <div class="confirmacao-icone amarelo">
-
         <svg viewBox="0 0 24 24">
-
           <rect x="1" y="5" width="22" height="14" rx="7" />
-
           <circle cx="8" cy="12" r="3" />
-
         </svg>
-
       </div>
 
-
       <div class="confirmacao-texto">
-
         <h3>
           Desativar categoria
         </h3>
@@ -790,22 +737,16 @@
   =========================================================== -->
 
   <div class="sobreposicao-modal" id="modalExcluir">
-
     <div class="modal">
-
       <div class="modal-cabecalho">
-
         <span></span>
-
         <button type="button" class="btn-fechar-modal" onclick="fecharModal('modalExcluir')">
           ✕
         </button>
 
       </div>
 
-
       <div class="confirmacao-icone vermelho">
-
         <svg viewBox="0 0 24 24">
 
           <polyline points="3 6 5 6 21 6" />
@@ -822,9 +763,7 @@
 
       </div>
 
-
       <div class="confirmacao-texto">
-
         <h3>
           Excluir categoria
         </h3>
@@ -840,7 +779,6 @@
 
 
       <div class="acoes-modal">
-
         <button type="button" class="btn-cancelar" onclick="fecharModal('modalExcluir')">
           Cancelar
         </button>
@@ -850,9 +788,7 @@
         </button>
 
       </div>
-
     </div>
-
   </div>
 
 
