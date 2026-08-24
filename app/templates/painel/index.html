@@ -257,81 +257,83 @@
             <span>Estoque atual</span>
           </div>
 
-          <div style="position:relative;height:220px;">
-            <canvas id="graficoCategorias" role="img"
-              aria-label="Gráfico de rosca com distribuição real por categorias do estoque"></canvas>
+          <div class="rosca-container">
+            <div class="rosca-canvas-wrap">
+              <canvas id="graficoCategorias" role="img"
+                aria-label="Gráfico de rosca com distribuição real por categorias do estoque"></canvas>
+            </div>
+            <ul class="legenda-categorias" id="legendaCategorias"></ul>
           </div>
         </div>
 
-      </div>
+        <div class="grade-graficos-2">
 
-      <div class="grade-graficos-2">
-
-        <div class="card-grafico">
-          <div class="card-grafico-cabecalho">
-            <h3>Receita Mensal (R$)</h3>
-            <span>Histórico recente</span>
-          </div>
-          <div class="legenda-grafico">
-            <div class="legenda-item">
-              <div class="legenda-cor" style="background:#c8102e;"></div>Receita
+          <div class="card-grafico">
+            <div class="card-grafico-cabecalho">
+              <h3>Receita Mensal (R$)</h3>
+              <span>Histórico recente</span>
+            </div>
+            <div class="legenda-grafico">
+              <div class="legenda-item">
+                <div class="legenda-cor" style="background:#c8102e;"></div>Receita
+              </div>
+            </div>
+            <div style="position:relative;height:180px;">
+              <canvas id="graficoReceita" role="img"
+                aria-label="Gráfico de linha com receita mensal histórica"></canvas>
             </div>
           </div>
-          <div style="position:relative;height:180px;">
-            <canvas id="graficoReceita" role="img" aria-label="Gráfico de linha com receita mensal histórica"></canvas>
+
+          <div class="card-grafico">
+            <div class="card-grafico-cabecalho">
+              <h3>Movimentações Recentes</h3>
+              <span>Últimos registros</span>
+            </div>
+            <table class="tabela-recente">
+              <thead>
+                <tr>
+                  <th>Produto</th>
+                  <th>Tipo</th>
+                  <th>Qtd</th>
+                  <th>Valor</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for item in ultimas_vendas %}
+                <tr>
+                  <td>
+                    {% if item.produto_nome is defined %}
+                    {{ item.produto_nome }}
+                    {% else %}
+                    {{ item.produto.nome }}
+                    {% endif %}
+                  </td>
+
+                  <td><span class="tag-tipo verde">Venda</span></td>
+
+                  <td>{{ item.quantidade }}</td>
+
+                  <td>
+                    R$
+                    {% if item.preco_unitario is defined %}
+                    {{ "%.2f"|format(item.preco_unitario * item.quantidade) }}
+                    {% else %}
+                    {{ "%.2f"|format(item.produto.preco * item.quantidade) }}
+                    {% endif %}
+                  </td>
+                </tr>
+                {% else %}
+                <tr>
+                  <td colspan="4" style="text-align: center; color: #777; padding: 20px;">
+                    Nenhuma venda ou movimentação registrada recentemente.
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
           </div>
+
         </div>
-
-        <div class="card-grafico">
-          <div class="card-grafico-cabecalho">
-            <h3>Movimentações Recentes</h3>
-            <span>Últimos registros</span>
-          </div>
-          <table class="tabela-recente">
-            <thead>
-              <tr>
-                <th>Produto</th>
-                <th>Tipo</th>
-                <th>Qtd</th>
-                <th>Valor</th>
-              </tr>
-            </thead>
-            <tbody>
-              {% for item in ultimas_vendas %}
-              <tr>
-                <td>
-                  {% if item.produto_nome is defined %}
-                  {{ item.produto_nome }}
-                  {% else %}
-                  {{ item.produto.nome }}
-                  {% endif %}
-                </td>
-
-                <td><span class="tag-tipo verde">Venda</span></td>
-
-                <td>{{ item.quantidade }}</td>
-
-                <td>
-                  R$
-                  {% if item.preco_unitario is defined %}
-                  {{ "%.2f"|format(item.preco_unitario * item.quantidade) }}
-                  {% else %}
-                  {{ "%.2f"|format(item.produto.preco * item.quantidade) }}
-                  {% endif %}
-                </td>
-              </tr>
-              {% else %}
-              <tr>
-                <td colspan="4" style="text-align: center; color: #777; padding: 20px;">
-                  Nenhuma venda ou movimentação registrada recentemente.
-                </td>
-              </tr>
-              {% endfor %}
-            </tbody>
-          </table>
-        </div>
-
-      </div>
 
     </main>
 

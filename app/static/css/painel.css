@@ -1152,3 +1152,85 @@ body {
   }
 
 }
+
+/* ============================================================
+   ROSCA COM LEGENDA LATERAL
+   ============================================================ */
+
+.rosca-container {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+.rosca-canvas-wrap {
+  position: relative;
+  height: 200px;
+  width: 200px;
+  flex-shrink: 0;
+}
+
+.legenda-categorias {
+  list-style: none;
+  flex: 1;
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.legenda-categorias li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+
+  font-size: 0.78rem;
+  color: var(--cinza-texto);
+}
+
+.legenda-categorias li .lc-nome {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  font-weight: 600;
+}
+
+.legenda-categorias li .lc-nome span.bolinha {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.legenda-categorias li .lc-nome span.texto {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.legenda-categorias li .lc-valor {
+  font-weight: 800;
+  color: var(--preto);
+  white-space: nowrap;
+}
+
+.legenda-categorias::-webkit-scrollbar {
+  width: 4px;
+}
+
+.legenda-categorias::-webkit-scrollbar-thumb {
+  background: var(--cinza-medio);
+  border-radius: 10px;
+}
+
+@media (max-width: 500px) {
+  .rosca-container {
+    flex-direction: column;
+  }
+}

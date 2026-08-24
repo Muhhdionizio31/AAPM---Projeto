@@ -19,8 +19,8 @@ document.addEventListener("DOMContentLoaded", function () {
     const categoriasValores = JSON.parse(divCategorias.getAttribute("data-valores"));
     const vendasMensais = JSON.parse(divVendas.getAttribute("data-vendas"));
 
-  // 3. RENDERIZAÇÃO DO GRÁFICO DE CATEGORIAS (Rosca/Doughnut)
-  const canvasCategorias = document.getElementById("graficoCategorias");
+    // 3. RENDERIZAÇÃO DO GRÁFICO DE CATEGORIAS (Rosca/Doughnut)
+    const canvasCategorias = document.getElementById("graficoCategorias");
     if (canvasCategorias) {
         const ctxCategorias = canvasCategorias.getContext("2d");
 
@@ -58,7 +58,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 maintainAspectRatio: false,
                 plugins: {
                     legend: {
-                        display: false // Mantém a legenda padrão oculta (pois você usa a do HTML)
+                        display: false // Escondemos a legenda padrão do Chart.js (usamos a lateral em HTML)
                     },
                     tooltip: {
                         enabled: true, // Garante que a caixinha preta ao passar o mouse está ativa
@@ -70,7 +70,7 @@ document.addEventListener("DOMContentLoaded", function () {
                         displayColors: true, // Mostra o quadradinho da cor ao lado do texto no hover
                         callbacks: {
                             // Customiza o texto que aparece dentro do balão do mouse
-                            label: function(context) {
+                            label: function (context) {
                                 const quantidade = context.raw;
                                 return ` Produtos: ${quantidade} un.`;
                             }
@@ -79,6 +79,23 @@ document.addEventListener("DOMContentLoaded", function () {
                 }
             }
         });
+
+        // 3.1 MONTA A LEGENDA LATERAL FIXA (dados sempre visíveis, sem precisar do hover)
+        const listaLegenda = document.getElementById("legendaCategorias");
+        if (listaLegenda) {
+            listaLegenda.innerHTML = "";
+            categoriasLabels.forEach((label, index) => {
+                const li = document.createElement("li");
+                li.innerHTML = `
+                    <span class="lc-nome">
+                        <span class="bolinha" style="background:${coresDoGrafico[index]};"></span>
+                        <span class="texto">${label}</span>
+                    </span>
+                    <span class="lc-valor">${categoriasValores[index]}</span>
+                `;
+                listaLegenda.appendChild(li);
+            });
+        }
     }
 
     // 4. RENDERIZAÇÃO DO GRÁFICO DE VENDAS (Barras)
@@ -120,11 +137,11 @@ document.addEventListener("DOMContentLoaded", function () {
     // 5. RENDERIZAÇÃO DO GRÁFICO DE RECEITA MENSAL (Dados 100% Reais)
     const divReceita = document.getElementById("dados-grafico-receita");
     const canvasReceita = document.getElementById("graficoReceita");
-    
+
     if (divReceita && canvasReceita) {
         const receitaLabels = JSON.parse(divReceita.getAttribute("data-labels"));
         const receitaValores = JSON.parse(divReceita.getAttribute("data-valores"));
-        
+
         new Chart(canvasReceita.getContext("2d"), {
             type: 'line',
             data: {
