@@ -2,352 +2,1263 @@
 <html lang="pt-BR">
 
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Usuários - AAPM</title>
-    <link rel="stylesheet" href="/static/css/usuarios.css" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Usuários & Acessos – AAPM SENAI Francisco Matarazzo</title>
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Lato:wght@300;400;700&display=swap"
+    rel="stylesheet" />
+
+  <link rel="stylesheet" href="/static/css/usuarios.css?v=6" />
+
+  <style>
+    /* ==========================================================
+       ESTILOS DOS MODAIS EMBUTIDOS (100% GARANTIDO CONTRA CACHE)
+       ========================================================== */
+    .modal-sobreposicao {
+      display: none !important;
+      position: fixed !important;
+      inset: 0 !important;
+      background: rgba(15, 23, 42, 0.70) !important;
+      backdrop-filter: blur(8px) !important;
+      -webkit-backdrop-filter: blur(8px) !important;
+      z-index: 9999 !important;
+      align-items: center !important;
+      justify-content: center !important;
+      padding: 16px !important;
+    }
+
+    .modal-sobreposicao.visivel,
+    .modal-sobreposicao.aberto {
+      display: flex !important;
+    }
+
+    body.modal-aberto-body {
+      overflow: hidden !important;
+    }
+
+    .modal-caixa {
+      background: #ffffff !important;
+      width: 100% !important;
+      max-width: 520px !important;
+      max-height: 90vh !important;
+      overflow-y: auto !important;
+      border-radius: 16px !important;
+      box-shadow: 0 25px 65px rgba(0, 0, 0, 0.35) !important;
+      animation: modalEntrar 0.22s cubic-bezier(0.16, 1, 0.3, 1) !important;
+      padding-bottom: 12px !important;
+      position: relative !important;
+      z-index: 10000 !important;
+    }
+
+    @keyframes modalEntrar {
+      from { opacity: 0; transform: translateY(-12px) scale(0.97); }
+      to   { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    .modal-cabecalho {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      padding: 22px 28px;
+      border-bottom: 1px solid #f1f5f9;
+      background: #fafbfc;
+      border-top-left-radius: 16px;
+      border-top-right-radius: 16px;
+    }
+
+    .modal-cabecalho-esquerda {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      min-width: 0;
+    }
+
+    .modal-cabecalho-icone {
+      width: 42px;
+      height: 42px;
+      border-radius: 10px;
+      background: #fef2f2;
+      color: #c8102e;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .modal-cabecalho-icone svg {
+      width: 20px;
+      height: 20px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .modal-cabecalho-icone.verde {
+      background: #ecfdf5;
+      color: #059669;
+    }
+
+    .modal-cabecalho-icone.azul {
+      background: #eff6ff;
+      color: #2563eb;
+    }
+
+    .modal-cabecalho-icone.amarelo {
+      background: #fffbeb;
+      color: #d97706;
+    }
+
+    .modal-cabecalho h3 {
+      margin: 0;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: #111827;
+    }
+
+    .modal-cabecalho span {
+      font-size: 0.84rem;
+      color: #6b7280;
+      display: block;
+      margin-top: 2px;
+    }
+
+    .modal-fechar {
+      background: #f3f4f6;
+      border: none;
+      cursor: pointer;
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      color: #6b7280;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.15s ease;
+    }
+
+    .modal-fechar:hover {
+      background: #e5e7eb;
+      color: #111827;
+    }
+
+    .modal-fechar svg {
+      width: 18px;
+      height: 18px;
+      stroke: currentColor;
+      stroke-width: 2;
+    }
+
+    .modal-corpo {
+      padding: 24px 28px;
+    }
+
+    .campo-form {
+      margin-bottom: 18px;
+    }
+
+    .campo-form label {
+      display: block;
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: #374151;
+      margin-bottom: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .campo-form input,
+    .campo-form select,
+    .campo-form textarea {
+      width: 100%;
+      padding: 11px 14px;
+      border: 1.5px solid #d1d5db;
+      border-radius: 8px;
+      font-family: 'Lato', sans-serif;
+      font-size: 0.92rem;
+      color: #111827;
+      outline: none;
+      background: #ffffff;
+      transition: all 0.2s ease;
+    }
+
+    .campo-form input:focus,
+    .campo-form select:focus,
+    .campo-form textarea:focus {
+      border-color: #c8102e;
+      box-shadow: 0 0 0 3px rgba(200, 16, 46, 0.1);
+    }
+
+    .campo-form-grade {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
+    .campo-dica {
+      font-size: 0.75rem;
+      color: #6b7280;
+      margin-top: 5px;
+      display: block;
+    }
+
+    .modal-acoes {
+      display: flex;
+      gap: 12px;
+      justify-content: flex-end;
+      padding-top: 18px;
+      border-top: 1px solid #f3f4f6;
+    }
+
+    .modal-acoes .btn-cancelar {
+      background: #f3f4f6;
+      color: #374151;
+      border: 1px solid #d1d5db;
+      padding: 11px 20px;
+      border-radius: 8px;
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 700;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .modal-acoes .btn-cancelar:hover {
+      background: #e5e7eb;
+    }
+
+    .detalhe-grade {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-bottom: 8px;
+    }
+
+    .detalhe-item {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      background: #f9fafb;
+      padding: 12px 14px;
+      border-radius: 8px;
+      border: 1px solid #f3f4f6;
+    }
+
+    .detalhe-item-completo {
+      grid-column: 1 / -1;
+    }
+
+    .detalhe-label {
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: #9ca3af;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .detalhe-valor {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: #111827;
+      word-break: break-all;
+    }
+
+    .chip-status {
+      display: inline-block;
+      width: fit-content;
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 4px;
+    }
+
+    .chip-status.verde { background: #ecfdf5; color: #059669; }
+    .chip-status.vermelho { background: #fef2f2; color: #dc2626; }
+    .chip-status.azul { background: #eff6ff; color: #2563eb; }
+    .chip-status.cinza { background: #f3f4f6; color: #6b7280; }
+
+    /* TOAST */
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: #111827;
+      color: #ffffff;
+      padding: 14px 20px;
+      border-radius: 10px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+      z-index: 10000;
+      opacity: 0;
+      transform: translateY(20px);
+      pointer-events: none;
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .toast.visivel {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+
+    .toast.erro {
+      background: #dc2626;
+    }
+
+    .toast-icone svg {
+      width: 18px;
+      height: 18px;
+      stroke: currentColor;
+      stroke-width: 2.5;
+      fill: none;
+    }
+  </style>
 </head>
 
 <body>
 
-    <!-- ── BARRA LATERAL ── -->
-    <aside class="barra-lateral">
-        <div class="barra-logo">
-            <img class="barra-logo-senai" src="/static/uploads/foto-senai.png" alt="SENAI">
-            <div class="barra-logo-separador"></div>
-            <img class="barra-logo-aapm" src="/static/uploads/logo-aapm.png" alt="AAPM">
-        </div>
-
-        <span class="barra-menu-titulo">Menu</span>
-
-        <ul class="barra-nav">
-            <li>
-                <a href="/painel">
-                    <svg viewBox="0 0 24 24">
-                        <line x1="18" y1="20" x2="18" y2="10" />
-                        <line x1="12" y1="20" x2="12" y2="4" />
-                        <line x1="6" y1="20" x2="6" y2="14" />
-                    </svg>
-                    Painel
-                </a>
-            </li>
-            <li>
-                <a href="/produtos/">
-                    <svg viewBox="0 0 24 24">
-                        <path
-                            d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
-                    </svg>
-                    Estoque
-                </a>
-            </li>
-            <li>
-                <a href="/categorias/">
-                    <svg viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M3 3h7v7H3V3zm11 0h7v7h-7V3zM3 14h7v7H3v-7zm11 0h7v7h-7v-7z" />
-                    </svg>
-                    Categorias
-                </a>
-            </li>
-            <li>
-                <a href="/pdv/">
-                    <svg viewBox="0 0 24 24">
-                        <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" />
-                        <line x1="3" y1="6" x2="21" y2="6" />
-                        <path d="M16 10a4 4 0 0 1-8 0" />
-                    </svg>
-                    Vendas
-                </a>
-            </li>
-            <li>
-                <a href="/armarios/" aria-current="page">
-                    <svg viewBox="0 0 24 24">
-                        <rect x="3" y="3" width="7" height="18" rx="1" />
-                        <rect x="14" y="3" width="7" height="18" rx="1" />
-                        <line x1="7" y1="8" x2="7" y2="8.01" />
-                        <line x1="18" y1="8" x2="18" y2="8.01" />
-                    </svg>
-                    Armários
-                </a>
-            </li>
-            <li>
-                <a href="/clientes/">
-                    <svg viewBox="0 0 24 24">
-                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
-                        <circle cx="9" cy="7" r="4" />
-                        <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
-                        <path d="M16 3.13a4 4 0 0 1 0 7.75" />
-                    </svg>
-                    Clientes
-                </a>
-            </li>
-            <li>
-                <a href="/usuarios/" class="ativo">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                        stroke-linejoin="round">
-                        <rect x="2" y="5" width="20" height="14" rx="2"></rect>
-                        <circle cx="8" cy="11" r="2"></circle>
-                        <path d="M5.5 16c0-1.4 1.1-2.5 2.5-2.5s2.5 1.1 2.5 2.5"></path>
-                        <line x1="14" y1="10" x2="19" y2="10"></line>
-                        <line x1="14" y1="14" x2="17" y2="14"></line>
-                    </svg>
-                    Usuarios
-                </a>
-            </li>
-        </ul>
-
-        <div class="barra-rodape">
-            <div class="barra-usuario">
-                <div class="avatar-usuario">
-                    {{ usuario.nome[:2] | upper if usuario else 'A' }}
-                </div>
-                <div class="info-usuario">
-                    <strong>{{ usuario.nome if usuario else 'Admin' }}</strong>
-                    <small>
-                        {{ usuario.role|capitalize if usuario and usuario.role else 'Usuário' }}
-                    </small>
-                </div>
-
-            </div>
-
-            <button class="btn-sair" onclick="window.location.href='/auth/logout'">
-                Sair
-            </button>
-        </div>
-    </aside>
-
-    <!-- ── CONTEÚDO ── -->
-    <div class="conteudo-principal">
-
-        <header class="cabecalho-pagina">
-            <h1>Usuários</h1>
-            <span class="cabecalho-data" id="dataAtual"></span>
-        </header>
-
-        <main class="area-conteudo">
-
-            <!-- Alertas de feedback -->
-            {% if request.query_params.get('criado') == 'ok' %}
-            <div class="alerta sucesso">
-                <svg viewBox="0 0 24 24">
-                    <polyline points="20 6 9 17 4 12" />
-                </svg>
-                Usuário criado com sucesso!
-            </div>
-            {% endif %}
-
-            {% if request.query_params.get('editado') == 'ok' %}
-            <div class="alerta sucesso">
-                <svg viewBox="0 0 24 24">
-                    <polyline points="20 6 9 17 4 12" />
-                </svg>
-                Usuário atualizado com sucesso!
-            </div>
-            {% endif %}
-
-            {% if request.query_params.get('erro') == 'autoproprio' %}
-            <div class="alerta erro">
-                <svg viewBox="0 0 24 24">
-                    <circle cx="12" cy="12" r="10" />
-                    <line x1="12" y1="8" x2="12" y2="12" />
-                    <line x1="12" y1="16" x2="12.01" y2="16" />
-                </svg>
-                Você não pode desativar sua própria conta.
-            </div>
-            {% endif %}
-
-            <!-- Topo da seção -->
-            <div class="topo-secao">
-                <div>
-                    <div class="topo-secao-titulo">Gerenciamento de Usuários</div>
-                    <div class="topo-secao-sub">Gerencie os acessos ao sistema AAPM</div>
-                </div>
-                <button class="btn-novo" onclick="abrirModal()">
-                    <svg viewBox="0 0 24 24">
-                        <line x1="12" y1="5" x2="12" y2="19" />
-                        <line x1="5" y1="12" x2="19" y2="12" />
-                    </svg>
-                    Novo Usuário
-                </button>
-            </div>
-
-            <!-- Tabela -->
-            <div class="card-tabela">
-                <div class="card-tabela-cabecalho">
-                    <div class="busca-wrapper">
-                        <svg viewBox="0 0 24 24">
-                            <circle cx="11" cy="11" r="8" />
-                            <line x1="21" y1="21" x2="16.65" y2="16.65" />
-                        </svg>
-                        <input type="text" class="busca-input" placeholder="Buscar usuário…" id="campoBusca"
-                            oninput="filtrarTabela()" />
-                    </div>
-                    <span class="contagem-usuarios" id="contagemUsuarios"></span>
-                </div>
-
-                <table class="tabela-usuarios" id="tabelaUsuarios">
-                    <thead>
-                        <tr>
-                            <th>Usuário</th>
-                            <th>Perfil</th>
-                            <th>Status</th>
-                            <th>Ações</th>
-                        </tr>
-                    </thead>
-                    <tbody id="corpoTabela">
-                        {% for u in usuarios %}
-                        <tr data-nome="{{ u.nome | lower }}" data-email="{{ u.email | lower }}">
-                            <td>
-                                <div class="usuario-cell">
-                                    <div class="usuario-avatar {{ 'ativo-av' if u.ativo else '' }}">
-                                        {{ u.nome[:2] }}
-                                    </div>
-                                    <div>
-                                        <div class="usuario-info-nome">{{ u.nome }}</div>
-                                        <div class="usuario-info-email">{{ u.email }}</div>
-                                    </div>
-                                </div>
-                            </td>
-                            <td>
-                                <span class="tag role-{{ u.role | lower }}">{{ u.role }}</span>
-                            </td>
-                            <td>
-                                <span class="tag status-{{ 'ativo' if u.ativo else 'inativo' }}">
-                                    {{ "Ativo" if u.ativo else "Inativo" }}
-                                </span>
-                            </td>
-                            <td>
-                                <div class="acoes-cell">
-                                    <button class="btn-acao editar"
-                                        onclick="abrirModalEdicao('{{ u.id }}', '{{ u.nome }}', '{{ u.email }}', '{{ u.role }}')">
-                                        <svg viewBox="0 0 24 24">
-                                            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
-                                            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
-                                        </svg>
-                                        Editar
-                                    </button>
-                                    <form action="/usuarios/{{ u.id }}/toggle-ativo" method="post"
-                                        style="display:inline">
-                                        <button type="submit"
-                                            class="btn-acao {{ 'desativar' if u.ativo else 'ativar' }}">
-                                            {% if u.ativo %}
-                                            <svg viewBox="0 0 24 24">
-                                                <circle cx="12" cy="12" r="10" />
-                                                <line x1="8" y1="12" x2="16" y2="12" />
-                                            </svg>
-                                            Desativar
-                                            {% else %}
-                                            <svg viewBox="0 0 24 24">
-                                                <circle cx="12" cy="12" r="10" />
-                                                <line x1="12" y1="8" x2="12" y2="16" />
-                                                <line x1="8" y1="12" x2="16" y2="12" />
-                                            </svg>
-                                            Ativar
-                                            {% endif %}
-                                        </button>
-                                    </form>
-                                </div>
-                            </td>
-                        </tr>
-                        {% else %}
-                        <tr>
-                            <td colspan="4">
-                                <div class="empty-state">
-                                    <svg viewBox="0 0 24 24">
-                                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
-                                        <circle cx="9" cy="7" r="4" />
-                                        <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
-                                        <path d="M16 3.13a4 4 0 0 1 0 7.75" />
-                                    </svg>
-                                    <p>Nenhum usuário cadastrado ainda.</p>
-                                </div>
-                            </td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-
-        </main>
-
-        <footer class="rodape-admin"> Gerenciamento de Usuários &nbsp;·&nbsp;© 2026 Todos os direitos reservados</footer>
+  <!-- =========================================================
+       BARRA LATERAL
+  ========================================================== -->
+  <aside class="barra-lateral" id="barraLateral">
+    <div class="barra-logo">
+      <img class="barra-logo-senai" src="/static/uploads/foto-senai.png" alt="SENAI" />
+      <div class="barra-logo-separador"></div>
+      <img class="barra-logo-aapm" src="/static/uploads/logo-aapm.png" alt="AAPM" />
+      <button class="barra-fechar-mobile" type="button" onclick="fecharMenuMobile()" aria-label="Fechar menu">
+        <svg viewBox="0 0 24 24">
+          <line x1="18" y1="6" x2="6" y2="18" />
+          <line x1="6" y1="6" x2="18" y2="18" />
+        </svg>
+      </button>
     </div>
 
-<!-- ═════════════════════════════════=
-        MODAL — NOVO / EDITAR USUÁRIO
-══════════════════════════════════ -->
-    <div class="modal-overlay" id="modalOverlay" onclick="fecharModalFora(event)">
-        <div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitulo">
+    <span class="barra-menu-titulo">Menu</span>
 
-            <div class="modal-cabecalho">
-                <div class="modal-titulo-wrapper">
-                    <div class="modal-icone">
-                        <svg viewBox="0 0 24 24">
-                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
-                            <circle cx="9" cy="7" r="4" />
-                            <line x1="19" y1="8" x2="19" y2="14" />
-                            <line x1="22" y1="11" x2="16" y2="11" />
-                        </svg>
+    <ul class="barra-nav">
+      <li>
+        <a href="/painel">
+          <svg viewBox="0 0 24 24">
+            <line x1="18" y1="20" x2="18" y2="10" />
+            <line x1="12" y1="20" x2="12" y2="4" />
+            <line x1="6" y1="20" x2="6" y2="14" />
+          </svg>
+          Painel
+        </a>
+      </li>
+      <li>
+        <a href="/produtos/">
+          <svg viewBox="0 0 24 24">
+            <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
+          </svg>
+          Estoque
+        </a>
+      </li>
+      <li>
+        <a href="/categorias/">
+          <svg viewBox="0 0 24 24" fill="currentColor">
+            <path d="M3 3h7v7H3V3zm11 0h7v7h-7V3zM3 14h7v7H3v-7zm11 0h7v7h-7v-7z" />
+          </svg>
+          Categorias
+        </a>
+      </li>
+      <li>
+        <a href="/pdv/">
+          <svg viewBox="0 0 24 24">
+            <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" />
+            <line x1="3" y1="6" x2="21" y2="6" />
+            <path d="M16 10a4 4 0 0 1-8 0" />
+          </svg>
+          Vendas
+        </a>
+      </li>
+      <li>
+        <a href="/armarios/">
+          <svg viewBox="0 0 24 24">
+            <rect x="3" y="3" width="7" height="18" rx="1" />
+            <rect x="14" y="3" width="7" height="18" rx="1" />
+            <line x1="7" y1="8" x2="7" y2="8.01" />
+            <line x1="18" y1="8" x2="18" y2="8.01" />
+          </svg>
+          Armários
+        </a>
+      </li>
+      <li>
+        <a href="/clientes/">
+          <svg viewBox="0 0 24 24">
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+            <circle cx="9" cy="7" r="4" />
+            <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+            <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+          </svg>
+          Clientes
+        </a>
+      </li>
+      <li>
+        <a href="/usuarios/" class="ativo" aria-current="page">
+          <svg viewBox="0 0 24 24">
+            <rect x="2" y="5" width="20" height="14" rx="2"></rect>
+            <circle cx="8" cy="11" r="2"></circle>
+            <path d="M5.5 16c0-1.4 1.1-2.5 2.5-2.5s2.5 1.1 2.5 2.5"></path>
+            <line x1="14" y1="10" x2="19" y2="10"></line>
+            <line x1="14" y1="14" x2="17" y2="14"></line>
+          </svg>
+          Usuários
+        </a>
+      </li>
+    </ul>
+
+    <div class="barra-rodape">
+      <div class="barra-usuario">
+        <div class="avatar-usuario">
+          {{ (admin.nome[0] if admin and admin.nome else (usuario.nome[0] if usuario and usuario.nome else 'A')) | upper }}
+        </div>
+        <div class="info-usuario">
+          <strong>{{ admin.nome if admin and admin.nome else (usuario.nome if usuario and usuario.nome else 'Administrador') }}</strong>
+          <small>{{ (admin.role if admin and admin.role else (usuario.role if usuario and usuario.role else 'Admin')) | capitalize }}</small>
+        </div>
+      </div>
+      <button class="btn-sair" type="button" onclick="window.location.href='/auth/logout'">
+        Sair
+      </button>
+    </div>
+  </aside>
+
+  <div class="barra-sobreposicao" id="barraSobreposicao" onclick="fecharMenuMobile()"></div>
+
+  <!-- =========================================================
+       CONTEÚDO PRINCIPAL
+  ========================================================== -->
+  <div class="conteudo-principal">
+    <header class="cabecalho-pagina">
+      <div class="cabecalho-titulo">
+        <button class="btn-menu-mobile" type="button" onclick="abrirMenuMobile()" aria-label="Abrir menu">
+          <svg viewBox="0 0 24 24">
+            <line x1="3" y1="12" x2="21" y2="12" />
+            <line x1="3" y1="6" x2="21" y2="6" />
+            <line x1="3" y1="18" x2="21" y2="18" />
+          </svg>
+        </button>
+        <h1>Gestão de Usuários</h1>
+      </div>
+      <span class="cabecalho-data" id="dataAtual"></span>
+    </header>
+
+    <main class="area-conteudo">
+      <!-- HERO -->
+      <section class="bloco-boas-vindas">
+        <div class="bv-texto">
+          <h2>Controle de <span>Acessos & Usuários</span></h2>
+          <p>Gerencie permissões, crie contas para administradores e operadores do sistema AAPM.</p>
+        </div>
+        <div class="bv-badge">Painel de Acessos</div>
+      </section>
+
+      <!-- MÉTRICAS -->
+      {% set total_usuarios = usuarios | length %}
+      {% set total_admins = usuarios | selectattr('role', 'equalto', 'admin') | list | length %}
+      {% set total_operadores = usuarios | selectattr('role', 'equalto', 'operador') | list | length %}
+      {% set total_inativos = usuarios | selectattr('ativo', 'equalto', false) | list | length %}
+      {% set total_ativos = usuarios | selectattr('ativo', 'equalto', true) | list | length %}
+
+      <section class="grade-metricas">
+        <div class="card-metrica card-total">
+          <div class="cm-topo">
+            <span class="cm-label">Total de Contas</span>
+            <div class="cm-icone azul">
+              <svg viewBox="0 0 24 24">
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                <circle cx="9" cy="7" r="4" />
+                <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+                <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+              </svg>
+            </div>
+          </div>
+          <div class="cm-valor">{{ total_usuarios }}</div>
+          <div class="cm-variacao"><span>Cadastradas no banco</span></div>
+        </div>
+
+        <div class="card-metrica card-alugado">
+          <div class="cm-topo">
+            <span class="cm-label">Administradores</span>
+            <div class="cm-icone vermelho">
+              <svg viewBox="0 0 24 24">
+                <path d="M12 2l3 6 7 1-5 5 1 7-6-3-6 3 1-7-5-5 7-1z" />
+              </svg>
+            </div>
+          </div>
+          <div class="cm-valor">{{ total_admins }}</div>
+          <div class="cm-variacao positivo">
+            <span>Acesso Total</span>
+          </div>
+        </div>
+
+        <div class="card-metrica card-disponivel">
+          <div class="cm-topo">
+            <span class="cm-label">Operadores</span>
+            <div class="cm-icone verde">
+              <svg viewBox="0 0 24 24">
+                <circle cx="12" cy="12" r="10" />
+                <polyline points="12 6 12 12 16 14" />
+              </svg>
+            </div>
+          </div>
+          <div class="cm-valor">{{ total_operadores }}</div>
+          <div class="cm-variacao disponivel"><span>Acesso Operacional</span></div>
+        </div>
+
+        <div class="card-metrica card-inativo">
+          <div class="cm-topo">
+            <span class="cm-label">Contas Inativas</span>
+            <div class="cm-icone cinza">
+              <svg viewBox="0 0 24 24">
+                <circle cx="12" cy="12" r="10" />
+                <line x1="4.93" y1="4.93" x2="19.07" y2="19.07" />
+              </svg>
+            </div>
+          </div>
+          <div class="cm-valor">{{ total_inativos }}</div>
+          <div class="cm-variacao"><span>Desativados</span></div>
+        </div>
+      </section>
+
+      <!-- TABELA CARD -->
+      <section class="armarios-card">
+        <div class="card-cabecalho">
+          <div>
+            <h3>Lista de Usuários</h3>
+            <span>Visualize, edite e gerencie o acesso de cada usuário</span>
+          </div>
+          <button class="btn-principal" type="button" onclick="abrirModalNovo()">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="12" y1="5" x2="12" y2="19" />
+              <line x1="5" y1="12" x2="19" y2="12" />
+            </svg>
+            Novo Usuário
+          </button>
+        </div>
+
+        <div class="filtros-clientes">
+          <div class="barra-busca-cliente">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="11" cy="11" r="8" />
+              <line x1="21" y1="21" x2="16.65" y2="16.65" />
+            </svg>
+            <input type="text" id="buscaUsuario" placeholder="Buscar por nome ou e-mail..." autocomplete="off" />
+          </div>
+
+          <div class="grupo-chips" id="grupoFiltroTipo">
+            <button class="btn-filtro ativo" type="button" data-tipo="">
+              Todos <span class="chip-contador">{{ total_usuarios }}</span>
+            </button>
+            <button class="btn-filtro" type="button" data-tipo="admin">
+              Administradores <span class="chip-contador">{{ total_admins }}</span>
+            </button>
+            <button class="btn-filtro" type="button" data-tipo="operador">
+              Operadores <span class="chip-contador">{{ total_operadores }}</span>
+            </button>
+            <button class="btn-filtro" type="button" data-tipo="inativo">
+              Inativos <span class="chip-contador">{{ total_inativos }}</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="tabela-container">
+          <table class="tabela-armarios">
+            <thead>
+              <tr>
+                <th>Usuário</th>
+                <th>Perfil de Acesso</th>
+                <th>Status</th>
+                <th style="text-align:right">Ações</th>
+              </tr>
+            </thead>
+            <tbody id="tabelaUsuarios">
+              {% set email_logado = (admin.email if admin and admin.email else (usuario.email if usuario and usuario.email else '')) %}
+              {% for u in usuarios %}
+              <tr data-tipo="{{ 'inativo' if not u.ativo else u.role }}">
+                <td>
+                  <div class="usuario-cell">
+                    <div class="usuario-avatar {{ 'ativo-av' if u.ativo else '' }}">
+                      {{ u.nome[:2] | upper }}
                     </div>
                     <div>
-                        <div class="modal-titulo" id="modalTitulo">Novo Usuário</div>
-                        <div class="modal-subtitulo" id="modalSubtitulo">Preencha os dados para criar o acesso</div>
+                      <div class="usuario-info-nome">{{ u.nome }}</div>
+                      <div class="usuario-info-email">{{ u.email }}</div>
                     </div>
-                </div>
-                <button class="modal-fechar" onclick="fecharModal()" aria-label="Fechar">
-                    <svg viewBox="0 0 24 24">
-                        <line x1="18" y1="6" x2="6" y2="18" />
-                        <line x1="6" y1="6" x2="18" y2="18" />
-                    </svg>
-                </button>
-            </div>
+                  </div>
+                </td>
+                <td>
+                  <span class="tag-tipo {{ 'vermelho' if u.role == 'admin' else 'azul' }}">
+                    <span class="ponto-status"></span>
+                    {{ "Administrador" if u.role == 'admin' else "Operador" }}
+                  </span>
+                </td>
+                <td>
+                  <span class="tag-tipo {{ 'verde' if u.ativo else 'cinza' }}">
+                    <span class="ponto-status"></span>
+                    {{ "Ativo" if u.ativo else "Inativo" }}
+                  </span>
+                </td>
+                <td>
+                  <div class="acoes-armario" style="justify-content: flex-end;">
+                    
+                    <!-- VER DETALHES -->
+                    <button
+                      class="btn-acao btn-abrir-ver"
+                      type="button"
+                      title="Ver detalhes do usuário"
+                      data-id="{{ u.id }}"
+                      data-nome="{{ u.nome }}"
+                      data-email="{{ u.email }}"
+                      data-role="{{ u.role }}"
+                      data-ativo="{{ 'true' if u.ativo else 'false' }}"
+                      onclick="abrirModalVerBtn(this)">
+                      <svg viewBox="0 0 24 24">
+                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                        <circle cx="12" cy="12" r="3" />
+                      </svg>
+                      Ver
+                    </button>
 
-            <form id="formUsuario" action="/usuarios/novo" method="post">
-                <input type="hidden" name="_method" id="formMethod" value="POST" />
+                    <!-- EDITAR -->
+                    <button
+                      class="btn-acao btn-editar"
+                      type="button"
+                      title="Editar usuário"
+                      data-id="{{ u.id }}"
+                      data-nome="{{ u.nome }}"
+                      data-email="{{ u.email }}"
+                      data-role="{{ u.role }}"
+                      onclick="abrirModalEditarBtn(this)">
+                      <svg viewBox="0 0 24 24">
+                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+                        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+                      </svg>
+                      Editar
+                    </button>
 
-                <div class="modal-corpo">
+                    <!-- TOGGLE ATIVO / DESATIVAR -->
+                    {% set is_proprio = (u.email == email_logado) %}
+                    {% if u.ativo %}
+                    <button
+                      class="btn-acao btn-excluir"
+                      type="button"
+                      title="{{ 'Você não pode desativar seu próprio acesso' if is_proprio else 'Desativar acesso' }}"
+                      data-id="{{ u.id }}"
+                      data-nome="{{ u.nome }}"
+                      data-acao="desativar"
+                      data-proprio="{{ 'true' if is_proprio else 'false' }}"
+                      onclick="abrirModalToggleBtn(this)">
+                      <svg viewBox="0 0 24 24">
+                        <circle cx="12" cy="12" r="10" />
+                        <line x1="8" y1="12" x2="16" y2="12" />
+                      </svg>
+                      Desativar
+                    </button>
+                    {% else %}
+                    <button
+                      class="btn-acao btn-alugar"
+                      type="button"
+                      title="Reativar acesso"
+                      data-id="{{ u.id }}"
+                      data-nome="{{ u.nome }}"
+                      data-acao="reativar"
+                      data-proprio="false"
+                      onclick="abrirModalToggleBtn(this)">
+                      <svg viewBox="0 0 24 24">
+                        <circle cx="12" cy="12" r="10" />
+                        <line x1="12" y1="8" x2="12" y2="16" />
+                        <line x1="8" y1="12" x2="16" y2="12" />
+                      </svg>
+                      Ativar
+                    </button>
+                    {% endif %}
 
-                    <div class="campo-grupo">
-                        <div class="campo">
-                            <label for="inputNome">Nome completo</label>
-                            <input type="text" id="inputNome" name="nome" placeholder="Ex: Maria Silva" required />
-                        </div>
-                        <div class="campo">
-                            <label for="inputEmail">E-mail</label>
-                            <input type="email" id="inputEmail" name="email" placeholder="usuario@senai.br" required />
-                        </div>
-                    </div>
+                  </div>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
 
-                    <hr class="modal-divisor" />
-
-                    <div class="campo-grupo">
-                        <div class="campo">
-                            <label for="inputPerfil">Perfil de acesso</label>
-                            <div class="select-wrapper">
-                                <select id="inputPerfil" name="role">
-                                    <option value="operador">Operador</option>
-                                    <option value="admin">Administrador</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="campo" id="campoSenha">
-                            <label for="inputSenha">Senha</label>
-                            <input type="password" id="inputSenha" name="senha" placeholder="Mínimo 8 caracteres" />
-                            <span class="campo-hint" id="hintSenha">Obrigatório para novo usuário</span>
-                        </div>
-                    </div>
-
-                </div>
-
-                <div class="modal-rodape">
-                    <button type="button" class="btn-cancelar" onclick="fecharModal()">Cancelar</button>
-                    <button type="submit" class="btn-salvar" id="btnSalvar">Criar Usuário</button>
-                </div>
-            </form>
-
+          <div id="estadoVazio" class="estado-vazio" style="{{ 'display: none;' if usuarios else 'display: flex;' }}">
+            <svg viewBox="0 0 24 24">
+              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+              <circle cx="9" cy="7" r="4" />
+              <line x1="23" y1="11" x2="17" y2="11" />
+            </svg>
+            <p id="estadoVazioTitulo">Nenhum usuário encontrado</p>
+            <span id="estadoVazioSub">Tente buscar por outro termo ou cadastre um novo usuário.</span>
+          </div>
         </div>
-    </div>
-    <script src="/static/js/usuarios.js"></script>
+      </section>
 
+      <footer class="rodape-admin">
+        Gestão de Usuários & Acessos &middot; AAPM SENAI Francisco Matarazzo &copy; 2026
+      </footer>
+    </main>
+  </div>
+
+  <!-- =========================================================
+       MODAL 1: NOVO USUÁRIO
+  ========================================================== -->
+  <div class="modal-sobreposicao" id="modalNovoSobreposicao" onclick="fecharModalNovoClique(event)">
+    <div class="modal-caixa" role="dialog" aria-modal="true">
+      <div class="modal-cabecalho">
+        <div class="modal-cabecalho-esquerda">
+          <div class="modal-cabecalho-icone">
+            <svg viewBox="0 0 24 24">
+              <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+              <circle cx="8.5" cy="7" r="4" />
+              <line x1="20" y1="8" x2="20" y2="14" />
+              <line x1="23" y1="11" x2="17" y2="11" />
+            </svg>
+          </div>
+          <div>
+            <h3>Novo Usuário</h3>
+            <span>Preencha os dados para criar uma nova conta</span>
+          </div>
+        </div>
+        <button class="modal-fechar" type="button" onclick="fecharModalNovo()" aria-label="Fechar">
+          <svg viewBox="0 0 24 24">
+            <line x1="18" y1="6" x2="6" y2="18" />
+            <line x1="6" y1="6" x2="18" y2="18" />
+          </svg>
+        </button>
+      </div>
+
+      <form class="modal-corpo" id="formNovoUsuario" method="POST" action="/usuarios/novo">
+        <div class="campo-form">
+          <label for="nomeNovo">Nome Completo *</label>
+          <input type="text" id="nomeNovo" name="nome" placeholder="Ex: Maria Silva" required autocomplete="off" />
+        </div>
+
+        <div class="campo-form">
+          <label for="emailNovo">E-mail Institucional *</label>
+          <input type="email" id="emailNovo" name="email" placeholder="usuario@senai.br" required autocomplete="off" />
+        </div>
+
+        <div class="campo-form-grade">
+          <div class="campo-form">
+            <label for="roleNovo">Perfil de Acesso *</label>
+            <select id="roleNovo" name="role" required>
+              <option value="operador">Operador (PDV/Estoque)</option>
+              <option value="admin">Administrador (Total)</option>
+            </select>
+          </div>
+          <div class="campo-form">
+            <label for="senhaNovo">Senha de Acesso *</label>
+            <input type="password" id="senhaNovo" name="senha" placeholder="Mín. 6 caracteres" required minlength="6" />
+          </div>
+        </div>
+
+        <div class="modal-acoes">
+          <button class="btn-cancelar" type="button" onclick="fecharModalNovo()">Cancelar</button>
+          <button class="btn-principal" type="submit">Criar Usuário</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- =========================================================
+       MODAL 2: EDITAR USUÁRIO
+  ========================================================== -->
+  <div class="modal-sobreposicao" id="modalEditarSobreposicao" onclick="fecharModalEditarClique(event)">
+    <div class="modal-caixa" role="dialog" aria-modal="true">
+      <div class="modal-cabecalho">
+        <div class="modal-cabecalho-esquerda">
+          <div class="modal-cabecalho-icone azul">
+            <svg viewBox="0 0 24 24">
+              <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+              <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+            </svg>
+          </div>
+          <div>
+            <h3>Editar Usuário</h3>
+            <span>Atualize os dados de acesso do usuário</span>
+          </div>
+        </div>
+        <button class="modal-fechar" type="button" onclick="fecharModalEditar()" aria-label="Fechar">
+          <svg viewBox="0 0 24 24">
+            <line x1="18" y1="6" x2="6" y2="18" />
+            <line x1="6" y1="6" x2="18" y2="18" />
+          </svg>
+        </button>
+      </div>
+
+      <form class="modal-corpo" id="formEditarUsuario" method="POST" action="">
+        <input type="hidden" id="editarUsuarioId" name="usuario_id" />
+
+        <div class="campo-form">
+          <label for="editarNome">Nome Completo *</label>
+          <input type="text" id="editarNome" name="nome" required autocomplete="off" />
+        </div>
+
+        <div class="campo-form">
+          <label for="editarEmail">E-mail Institucional *</label>
+          <input type="email" id="editarEmail" name="email" required autocomplete="off" />
+        </div>
+
+        <div class="campo-form-grade">
+          <div class="campo-form">
+            <label for="editarRole">Perfil de Acesso *</label>
+            <select id="editarRole" name="role" required>
+              <option value="operador">Operador (PDV/Estoque)</option>
+              <option value="admin">Administrador (Total)</option>
+            </select>
+          </div>
+          <div class="campo-form">
+            <label for="editarSenha">Nova Senha (opcional)</label>
+            <input type="password" id="editarSenha" name="senha" placeholder="Vazio para manter atual" />
+            <span class="campo-dica">Deixe em branco para não alterar</span>
+          </div>
+        </div>
+
+        <div class="modal-acoes">
+          <button class="btn-cancelar" type="button" onclick="fecharModalEditar()">Cancelar</button>
+          <button class="btn-principal" type="submit">Salvar Alterações</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- =========================================================
+       MODAL 3: VER DETALHES DO USUÁRIO
+  ========================================================== -->
+  <div class="modal-sobreposicao" id="modalDetalheUsuario" onclick="fecharModalDetalheClique(event)">
+    <div class="modal-caixa" role="dialog" aria-modal="true">
+      <div class="modal-cabecalho">
+        <div class="modal-cabecalho-esquerda">
+          <div class="modal-cabecalho-icone verde">
+            <svg viewBox="0 0 24 24">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+              <circle cx="12" cy="7" r="4" />
+            </svg>
+          </div>
+          <div>
+            <h3 id="detalheUsuarioTitulo">Detalhes do Usuário</h3>
+            <span id="detalheUsuarioSub">Informações da conta</span>
+          </div>
+        </div>
+        <button class="modal-fechar" type="button" onclick="fecharModalDetalhe()" aria-label="Fechar">
+          <svg viewBox="0 0 24 24">
+            <line x1="18" y1="6" x2="6" y2="18" />
+            <line x1="6" y1="6" x2="18" y2="18" />
+          </svg>
+        </button>
+      </div>
+
+      <div class="modal-corpo">
+        <div id="conteudoDetalheUsuario"></div>
+        <div class="modal-acoes">
+          <button class="btn-cancelar" type="button" onclick="fecharModalDetalhe()">Fechar</button>
+          <button class="btn-principal" type="button" id="btnDetalheEditar">Editar Usuário</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- =========================================================
+       MODAL 4: CONFIRMAÇÃO TOGGLE ATIVO / DESATIVAR
+  ========================================================== -->
+  <div class="modal-sobreposicao" id="modalToggleSobreposicao" onclick="fecharModalToggleClique(event)">
+    <div class="modal-caixa" role="dialog" aria-modal="true" style="max-width: 440px;">
+      <div class="modal-cabecalho">
+        <div class="modal-cabecalho-esquerda">
+          <div class="modal-cabecalho-icone amarelo">
+            <svg viewBox="0 0 24 24">
+              <circle cx="12" cy="12" r="10" />
+              <line x1="12" y1="8" x2="12" y2="12" />
+              <line x1="12" y1="16" x2="12.01" y2="16" />
+            </svg>
+          </div>
+          <div>
+            <h3 id="modalToggleTitulo">Alterar Status</h3>
+            <span>Confirmação necessária</span>
+          </div>
+        </div>
+        <button class="modal-fechar" type="button" onclick="fecharModalToggle()" aria-label="Fechar">
+          <svg viewBox="0 0 24 24">
+            <line x1="18" y1="6" x2="6" y2="18" />
+            <line x1="6" y1="6" x2="18" y2="18" />
+          </svg>
+        </button>
+      </div>
+
+      <form class="modal-corpo" id="formToggleUsuario" method="POST" action="">
+        <p id="modalToggleMensagem" style="font-size: 0.9rem; color: #4b5563; line-height: 1.5; margin-bottom: 20px;">
+          Deseja alterar o status de acesso deste usuário?
+        </p>
+        <div class="modal-acoes">
+          <button class="btn-cancelar" type="button" onclick="fecharModalToggle()">Cancelar</button>
+          <button class="btn-principal" type="submit" id="btnConfirmarToggle">Confirmar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- =========================================================
+       TOAST NOTIFICAÇÃO
+  ========================================================== -->
+  <div class="toast" id="toast">
+    <div class="toast-icone">
+      <svg viewBox="0 0 24 24">
+        <polyline points="20 6 9 17 4 12" />
+      </svg>
+    </div>
+    <span id="toastTexto">Operação concluída com sucesso!</span>
+  </div>
+
+  <!-- =========================================================
+       SCRIPTS JAVASCRIPT
+  ========================================================== -->
+  <script>
+    function abrirModal(id) {
+      var modal = document.getElementById(id);
+      if (!modal) {
+        console.error('Modal não encontrado:', id);
+        return;
+      }
+      modal.style.setProperty('display', 'flex', 'important');
+      modal.classList.add('visivel');
+      modal.classList.add('aberto');
+      document.body.classList.add('modal-aberto-body');
+    }
+
+    function fecharModal(id) {
+      var modal = document.getElementById(id);
+      if (!modal) return;
+      modal.style.setProperty('display', 'none', 'important');
+      modal.classList.remove('visivel');
+      modal.classList.remove('aberto');
+      document.body.classList.remove('modal-aberto-body');
+    }
+
+    function fecharModalFora(event, id) {
+      if (event && event.target && event.target.id === id) {
+        fecharModal(id);
+      }
+    }
+
+    function abrirMenuMobile() {
+      var lateral = document.getElementById('barraLateral');
+      var sobreposicao = document.getElementById('barraSobreposicao');
+      if (lateral) lateral.classList.add('aberta');
+      if (sobreposicao) sobreposicao.classList.add('visivel');
+    }
+
+    function fecharMenuMobile() {
+      var lateral = document.getElementById('barraLateral');
+      var sobreposicao = document.getElementById('barraSobreposicao');
+      if (lateral) lateral.classList.remove('aberta');
+      if (sobreposicao) sobreposicao.classList.remove('visivel');
+    }
+
+    var toastTimeout;
+    function mostrarToast(mensagem, tipo) {
+      var toast = document.getElementById('toast');
+      var texto = document.getElementById('toastTexto');
+      if (!toast || !texto) return;
+
+      texto.textContent = mensagem;
+      if (tipo === 'erro') {
+        toast.classList.add('erro');
+      } else {
+        toast.classList.remove('erro');
+      }
+      toast.classList.add('visivel');
+
+      clearTimeout(toastTimeout);
+      toastTimeout = setTimeout(function() {
+        toast.classList.remove('visivel');
+      }, 4000);
+    }
+
+    /* MODAL NOVO */
+    function abrirModalNovo() {
+      var form = document.getElementById('formNovoUsuario');
+      if (form) form.reset();
+      abrirModal('modalNovoSobreposicao');
+      setTimeout(function() {
+        var input = document.getElementById('nomeNovo');
+        if (input) input.focus();
+      }, 100);
+    }
+
+    function fecharModalNovo() {
+      fecharModal('modalNovoSobreposicao');
+    }
+
+    function fecharModalNovoClique(event) {
+      fecharModalFora(event, 'modalNovoSobreposicao');
+    }
+
+    /* MODAL EDITAR */
+    function abrirModalEditar(id, nome, email, role) {
+      var form = document.getElementById('formEditarUsuario');
+      if (!form) return;
+
+      var inputId = document.getElementById('editarUsuarioId');
+      var inputNome = document.getElementById('editarNome');
+      var inputEmail = document.getElementById('editarEmail');
+      var inputRole = document.getElementById('editarRole');
+      var inputSenha = document.getElementById('editarSenha');
+
+      if (inputId) inputId.value = id;
+      if (inputNome) inputNome.value = nome || '';
+      if (inputEmail) inputEmail.value = email || '';
+      if (inputRole) inputRole.value = role || 'operador';
+      if (inputSenha) inputSenha.value = '';
+
+      form.action = '/usuarios/' + encodeURIComponent(id) + '/editar';
+      abrirModal('modalEditarSobreposicao');
+
+      setTimeout(function() {
+        if (inputNome) inputNome.focus();
+      }, 100);
+    }
+
+    function fecharModalEditar() {
+      fecharModal('modalEditarSobreposicao');
+    }
+
+    function fecharModalEditarClique(event) {
+      fecharModalFora(event, 'modalEditarSobreposicao');
+    }
+
+    /* MODAL DETALHES */
+    function abrirModalVer(dados) {
+      if (!dados) return;
+      var id = dados.id;
+      var nome = dados.nome;
+      var email = dados.email;
+      var role = dados.role;
+      var ativo = dados.ativo;
+
+      var titulo = document.getElementById('detalheUsuarioTitulo');
+      var sub = document.getElementById('detalheUsuarioSub');
+      var conteudo = document.getElementById('conteudoDetalheUsuario');
+
+      if (titulo) titulo.textContent = nome || 'Usuário';
+      if (sub) sub.textContent = (role === 'admin') ? 'Administrador do Sistema' : 'Operador do Sistema';
+
+      var isAdmin = (role === 'admin');
+      var isAtivo = (ativo === true || ativo === 'true');
+
+      var html = '<div class="detalhe-grade">' +
+        '<div class="detalhe-item">' +
+          '<span class="detalhe-label">Perfil de Acesso</span>' +
+          '<span class="chip-status ' + (isAdmin ? 'vermelho' : 'azul') + '">' + (isAdmin ? '👑 Administrador' : '💼 Operador') + '</span>' +
+        '</div>' +
+        '<div class="detalhe-item">' +
+          '<span class="detalhe-label">Status da Conta</span>' +
+          '<span class="chip-status ' + (isAtivo ? 'verde' : 'cinza') + '">' + (isAtivo ? '🟢 Ativo' : '⚪ Inativo') + '</span>' +
+        '</div>' +
+        '<div class="detalhe-item detalhe-item-completo">' +
+          '<span class="detalhe-label">E-mail Institucional</span>' +
+          '<span class="detalhe-valor">' + (email || 'Não informado') + '</span>' +
+        '</div>' +
+        '<div class="detalhe-item detalhe-item-completo">' +
+          '<span class="detalhe-label">Nível de Permissão</span>' +
+          '<span class="detalhe-valor">' + (isAdmin ? 'Acesso Total (Estoque, Vendas, Armários, Clientes, Usuários)' : 'Acesso Operacional (Vendas, PDV e Consulta de Estoque)') + '</span>' +
+        '</div>' +
+      '</div>';
+
+      if (conteudo) conteudo.innerHTML = html;
+
+      var btnEditarRapido = document.getElementById('btnDetalheEditar');
+      if (btnEditarRapido) {
+        btnEditarRapido.onclick = function() {
+          fecharModalDetalhe();
+          abrirModalEditar(id, nome, email, role);
+        };
+      }
+
+      abrirModal('modalDetalheUsuario');
+    }
+
+    function fecharModalDetalhe() {
+      fecharModal('modalDetalheUsuario');
+    }
+
+    function fecharModalDetalheClique(event) {
+      fecharModalFora(event, 'modalDetalheUsuario');
+    }
+
+    /* MODAL TOGGLE ATIVO / DESATIVAR */
+    function abrirModalToggle(id, nome, acao, isProprio) {
+      if (isProprio === true || isProprio === 'true') {
+        mostrarToast('Você não pode desativar seu próprio acesso ao sistema.', 'erro');
+        return;
+      }
+
+      var form = document.getElementById('formToggleUsuario');
+      if (!form) return;
+
+      var titulo = document.getElementById('modalToggleTitulo');
+      var msg = document.getElementById('modalToggleMensagem');
+      var btn = document.getElementById('btnConfirmarToggle');
+
+      var isDesativar = (acao === 'desativar');
+      if (titulo) {
+        titulo.textContent = isDesativar ? 'Desativar Usuário' : 'Reativar Usuário';
+      }
+      if (msg) {
+        msg.textContent = isDesativar
+          ? 'Deseja desativar o acesso de "' + nome + '"? O usuário não conseguirá mais entrar no sistema até ser reativado.'
+          : 'Deseja reativar o acesso de "' + nome + '"? O usuário poderá logar novamente no sistema.';
+      }
+      if (btn) {
+        btn.textContent = isDesativar ? 'Desativar Acesso' : 'Reativar Acesso';
+        btn.style.background = isDesativar ? '#dc2626' : '';
+      }
+
+      form.action = '/usuarios/' + encodeURIComponent(id) + '/toggle-ativo';
+      abrirModal('modalToggleSobreposicao');
+    }
+
+    function fecharModalToggle() {
+      fecharModal('modalToggleSobreposicao');
+    }
+
+    function fecharModalToggleClique(event) {
+      fecharModalFora(event, 'modalToggleSobreposicao');
+    }
+
+    /* Handlers chamados diretamente nos botões */
+    function abrirModalVerBtn(btn) {
+      var b = btn ? (btn.closest('button') || btn) : null;
+      if (!b) return;
+      abrirModalVer({
+        id: b.getAttribute('data-id'),
+        nome: b.getAttribute('data-nome'),
+        email: b.getAttribute('data-email'),
+        role: b.getAttribute('data-role'),
+        ativo: b.getAttribute('data-ativo') === 'true'
+      });
+    }
+
+    function abrirModalEditarBtn(btn) {
+      var b = btn ? (btn.closest('button') || btn) : null;
+      if (!b) return;
+      abrirModalEditar(
+        b.getAttribute('data-id'),
+        b.getAttribute('data-nome'),
+        b.getAttribute('data-email'),
+        b.getAttribute('data-role')
+      );
+    }
+
+    function abrirModalToggleBtn(btn) {
+      var b = btn ? (btn.closest('button') || btn) : null;
+      if (!b) return;
+      abrirModalToggle(
+        b.getAttribute('data-id'),
+        b.getAttribute('data-nome'),
+        b.getAttribute('data-acao') || 'desativar',
+        b.getAttribute('data-proprio') === 'true'
+      );
+    }
+
+    /* Expor no window */
+    window.abrirModal = abrirModal;
+    window.fecharModal = fecharModal;
+    window.abrirModalNovo = abrirModalNovo;
+    window.fecharModalNovo = fecharModalNovo;
+    window.fecharModalNovoClique = fecharModalNovoClique;
+    window.abrirModalEditar = abrirModalEditar;
+    window.fecharModalEditar = fecharModalEditar;
+    window.fecharModalEditarClique = fecharModalEditarClique;
+    window.abrirModalVer = abrirModalVer;
+    window.fecharModalDetalhe = fecharModalDetalhe;
+    window.fecharModalDetalheClique = fecharModalDetalheClique;
+    window.abrirModalToggle = abrirModalToggle;
+    window.fecharModalToggle = fecharModalToggle;
+    window.fecharModalToggleClique = fecharModalToggleClique;
+    window.abrirModalVerBtn = abrirModalVerBtn;
+    window.abrirModalEditarBtn = abrirModalEditarBtn;
+    window.abrirModalToggleBtn = abrirModalToggleBtn;
+    window.abrirMenuMobile = abrirMenuMobile;
+    window.fecharMenuMobile = fecharMenuMobile;
+    window.mostrarToast = mostrarToast;
+
+    document.addEventListener('DOMContentLoaded', function() {
+      var elData = document.getElementById('dataAtual');
+      if (elData) {
+        var hoje = new Date();
+        elData.textContent = hoje.toLocaleDateString('pt-BR', {
+          weekday: 'long', day: '2-digit', month: 'long', year: 'numeric'
+        });
+      }
+
+      /* Toasts via Query Params */
+      var params = new URLSearchParams(window.location.search);
+      if (params.get('criado') === 'ok') mostrarToast('Usuário cadastrado com sucesso!', 'sucesso');
+      else if (params.get('editado') === 'ok') mostrarToast('Dados do usuário atualizados com sucesso!', 'sucesso');
+      else if (params.get('erro') === 'autoproprio') mostrarToast('Ação não permitida: Você não pode desativar sua própria conta.', 'erro');
+
+      /* Busca & Filtros Rápidos (Chips) */
+      var busca = document.getElementById('buscaUsuario');
+      var grupoFiltroTipo = document.getElementById('grupoFiltroTipo');
+      var tabela = document.getElementById('tabelaUsuarios');
+      var estadoVazio = document.getElementById('estadoVazio');
+      var todasLinhas = tabela ? Array.from(tabela.querySelectorAll('tr')) : [];
+      var tipoAtivo = '';
+
+      function filtrar() {
+        var termo = (busca && busca.value ? busca.value : '').toLowerCase().trim();
+        var visiveis = 0;
+        todasLinhas.forEach(function(linha) {
+          var tipoLinha = linha.getAttribute('data-tipo') || '';
+          var textoLinha = linha.textContent.toLowerCase();
+          var matchTipo = !tipoAtivo || tipoLinha === tipoAtivo;
+          var matchTexto = !termo || textoLinha.indexOf(termo) !== -1;
+          if (matchTipo && matchTexto) {
+            linha.style.display = '';
+            visiveis++;
+          } else {
+            linha.style.display = 'none';
+          }
+        });
+        if (estadoVazio) {
+          estadoVazio.style.display = (visiveis === 0) ? 'flex' : 'none';
+        }
+      }
+
+      if (busca) busca.addEventListener('input', filtrar);
+      if (grupoFiltroTipo) {
+        grupoFiltroTipo.addEventListener('click', function(e) {
+          var botao = e.target.closest('.btn-filtro');
+          if (!botao) return;
+          grupoFiltroTipo.querySelectorAll('.btn-filtro').forEach(function(b) { b.classList.remove('ativo'); });
+          botao.classList.add('ativo');
+          tipoAtivo = botao.getAttribute('data-tipo') || '';
+          filtrar();
+        });
+      }
+
+      /* Tecla ESC para fechar todos os modais */
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+          fecharModalNovo();
+          fecharModalEditar();
+          fecharModalDetalhe();
+          fecharModalToggle();
+        }
+      });
+    });
+  </script>
 </body>
 
 </html>

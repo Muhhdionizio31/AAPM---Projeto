@@ -8,24 +8,31 @@
   <link
     href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Lato:wght@300;400;700&display=swap"
     rel="stylesheet" />
-  <link rel="stylesheet" href="/static/css/painel.css" />
+  <link rel="stylesheet" href="/static/css/painel.css?v=6" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 </head>
 
 <body>
 
-  <aside class="barra-lateral">
+  <!-- BARRA LATERAL -->
+  <aside class="barra-lateral" id="barraLateral">
     <div class="barra-logo">
       <img class="barra-logo-senai" src="/static/uploads/foto-senai.png" alt="SENAI">
       <div class="barra-logo-separador"></div>
       <img class="barra-logo-aapm" src="/static/uploads/logo-aapm.png" alt="AAPM">
+      <button class="barra-fechar-mobile" type="button" onclick="fecharMenuMobile()" aria-label="Fechar menu">
+        <svg viewBox="0 0 24 24">
+          <line x1="18" y1="6" x2="6" y2="18" />
+          <line x1="6" y1="6" x2="18" y2="18" />
+        </svg>
+      </button>
     </div>
 
     <span class="barra-menu-titulo">Menu</span>
 
     <ul class="barra-nav">
       <li>
-        <a href="/painel" class="ativo">
+        <a href="/painel" class="ativo" aria-current="page">
           <svg viewBox="0 0 24 24">
             <line x1="18" y1="20" x2="18" y2="10" />
             <line x1="12" y1="20" x2="12" y2="4" />
@@ -38,8 +45,7 @@
       <li>
         <a href="/produtos/">
           <svg viewBox="0 0 24 24">
-            <path
-              d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
+            <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
           </svg>
           Estoque
         </a>
@@ -66,7 +72,7 @@
       </li>
 
       <li>
-        <a href="/armarios/" aria-current="page">
+        <a href="/armarios/">
           <svg viewBox="0 0 24 24">
             <rect x="3" y="3" width="7" height="18" rx="1" />
             <rect x="14" y="3" width="7" height="18" rx="1" />
@@ -77,9 +83,8 @@
         </a>
       </li>
 
-
       <li>
-        {% if usuario.role == 'admin' %}
+        {% if usuario and usuario.role == 'admin' %}
         <a href="/clientes/">
           <svg viewBox="0 0 24 24">
             <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
@@ -91,73 +96,74 @@
         </a>
         {% endif %}
       </li>
+
       <li>
-        {% if usuario.role == 'admin' %}
+        {% if usuario and usuario.role == 'admin' %}
         <a href="/usuarios/">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-            stroke-linejoin="round">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <rect x="2" y="5" width="20" height="14" rx="2"></rect>
             <circle cx="8" cy="11" r="2"></circle>
             <path d="M5.5 16c0-1.4 1.1-2.5 2.5-2.5s2.5 1.1 2.5 2.5"></path>
             <line x1="14" y1="10" x2="19" y2="10"></line>
             <line x1="14" y1="14" x2="17" y2="14"></line>
           </svg>
-          Usuarios
+          Usuários
         </a>
         {% endif %}
       </li>
     </ul>
 
     <div class="barra-rodape">
-
       <div class="barra-usuario">
-
         <div class="avatar-usuario">
           {{ usuario.nome[0] | upper if usuario and usuario.nome else 'U' }}
         </div>
-
         <div class="info-usuario">
-          <strong>
-            {{ usuario.nome if usuario else 'Usuário' }}
-          </strong>
-
-          <small>
-            {{ usuario.role | capitalize if usuario else 'Usuário' }}
-          </small>
+          <strong>{{ usuario.nome if usuario else 'Usuário' }}</strong>
+          <small>{{ usuario.role | capitalize if usuario and usuario.role else 'Usuário' }}</small>
         </div>
-
       </div>
-
       <button class="btn-sair" type="button" onclick="window.location.href='/auth/logout'">
         Sair
       </button>
-
     </div>
-
   </aside>
 
-  <div class="conteudo-principal">
+  <div class="barra-sobreposicao" id="barraSobreposicao" onclick="fecharMenuMobile()"></div>
 
+  <!-- CONTEÚDO PRINCIPAL -->
+  <div class="conteudo-principal">
     <header class="cabecalho-pagina">
-      <h1>Painel</h1>
+      <div class="cabecalho-titulo">
+        <button class="btn-menu-mobile" type="button" onclick="abrirMenuMobile()" aria-label="Abrir menu">
+          <svg viewBox="0 0 24 24">
+            <line x1="3" y1="12" x2="21" y2="12" />
+            <line x1="3" y1="6" x2="21" y2="6" />
+            <line x1="3" y1="18" x2="21" y2="18" />
+          </svg>
+        </button>
+        <h1>Painel Geral</h1>
+      </div>
       <span class="cabecalho-data" id="dataAtual"></span>
     </header>
 
     <main class="area-conteudo">
-
-      <div class="bloco-boas-vindas">
+      <!-- HERO BOAS-VINDAS -->
+      <section class="bloco-boas-vindas">
         <div class="bv-texto">
-          <h2>Bem-vinda de volta, <span>{{ usuario.nome if usuario else 'Gidalva' }}</span> </h2>
-          <p>Aqui está um resumo do desempenho do estoque e das vendas da AAPM. Tudo atualizado para hoje.</p>
+          <h2>Bem-vindo(a), <span>{{ usuario.nome if usuario and usuario.nome else 'Gestor' }}</span>!</h2>
+          <p>Visão em tempo real do faturamento, controle de estoque, aluguéis de armários e fluxo de vendas da AAPM.</p>
         </div>
-        <div class="bv-badge">AAPM · SENAI</div>
-      </div>
+        <div class="bv-badge">AAPM &middot; SENAI</div>
+      </section>
 
-      <div class="grade-metricas">
-        <div class="card-metrica">
+      <!-- CARDS DE MÉTRICAS (KPIs) -->
+      <section class="grade-metricas">
+        <!-- 1: Valor em Estoque -->
+        <div class="card-metrica card-estoque-valor">
           <div class="cm-topo">
-            <span class="cm-label">Valor do Estoque</span>
-            <div class="cm-icone vermelho">
+            <span class="cm-label">Valor em Estoque</span>
+            <div class="cm-icone azul">
               <svg viewBox="0 0 24 24">
                 <line x1="12" y1="1" x2="12" y2="23" />
                 <path d="M17 5H9.5a3.5 3.5 0 1 0 0 7h5a3.5 3.5 0 1 1 0 7H6" />
@@ -166,31 +172,12 @@
           </div>
           <div class="cm-valor">R$ {{ "%.2f" | format(receita_total) }}</div>
           <div class="cm-variacao positivo">
-            Patrimônio atualizado
+            <span>● Patrimônio em produtos</span>
           </div>
         </div>
 
-        <div class="card-metrica">
-          <div class="cm-topo">
-            <span class="cm-label">Produtos em Estoque</span>
-            <div class="cm-icone azul">
-              <svg viewBox="0 0 24 24">
-                <path
-                  d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
-              </svg>
-            </div>
-          </div>
-          <div class="cm-valor">{{ produtos_em_estoque }}</div>
-          <div class="cm-variacao neutro">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"
-              stroke-linecap="round">
-              <line x1="5" y1="12" x2="19" y2="12" />
-            </svg>
-            Total de itens cadastrados
-          </div>
-        </div>
-
-        <div class="card-metrica">
+        <!-- 2: Vendas no Mês -->
+        <div class="card-metrica card-vendas-mes">
           <div class="cm-topo">
             <span class="cm-label">Vendas no Mês</span>
             <div class="cm-icone verde">
@@ -203,11 +190,28 @@
           </div>
           <div class="cm-valor">{{ total_vendas_mes }}</div>
           <div class="cm-variacao positivo">
-            Mês vigente
+            <span>● Mês corrente</span>
           </div>
         </div>
 
-        <div class="card-metrica">
+        <!-- 3: Produtos em Estoque -->
+        <div class="card-metrica card-produtos-qtd">
+          <div class="cm-topo">
+            <span class="cm-label">Total de Produtos</span>
+            <div class="cm-icone roxo">
+              <svg viewBox="0 0 24 24">
+                <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
+              </svg>
+            </div>
+          </div>
+          <div class="cm-valor">{{ produtos_em_estoque }}</div>
+          <div class="cm-variacao">
+            <span>● Itens cadastrados</span>
+          </div>
+        </div>
+
+        <!-- 4: Estoque Crítico -->
+        <div class="card-metrica card-estoque-critico">
           <div class="cm-topo">
             <span class="cm-label">Estoque Crítico</span>
             <div class="cm-icone laranja">
@@ -219,53 +223,55 @@
             </div>
           </div>
           <div class="cm-valor">{{ estoque_critico }}</div>
-          <div class="cm-variacao negativo">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"
-              stroke-linecap="round">
-              <polyline points="6 9 12 15 18 9" />
-            </svg>
-            Abaixo de 8 unidades
+          <div class="cm-variacao {{ 'negativo' if estoque_critico > 0 else 'positivo' }}">
+            <span>● &le; 7 unidades em estoque</span>
           </div>
         </div>
-      </div>
+      </section>
 
-      <div class="grade-graficos">
-
+      <!-- GRADE DE GRÁFICOS 1: BARRAS (VENDAS) + ROSCA (CATEGORIAS) -->
+      <section class="grade-graficos-principal">
+        <!-- Vendas por Mês -->
         <div class="card-grafico">
           <div class="card-grafico-cabecalho">
-            <h3>Vendas por Mês</h3>
-            <span>Ano Vigente</span>
-          </div>
-          <div class="legenda-grafico">
-            <div class="legenda-item">
-              <div class="legenda-cor" style="background:#c8102e;"></div>Vendas (unid.)
+            <div>
+              <h3>Volume de Vendas Mensais</h3>
+              <span>Evolução por mês</span>
             </div>
-            <div class="legenda-item">
-              <div class="legenda-cor" style="background:#111111; opacity:0.2;border:1.5px dashed #111;"></div>Meta
+            <div class="legenda-grafico">
+              <div class="legenda-item">
+                <div class="legenda-cor" style="background: #c8102e;"></div>
+                Vendas Realizadas
+              </div>
+              <div class="legenda-item">
+                <div class="legenda-cor" style="background: #94a3b8;"></div>
+                Meta
+              </div>
             </div>
           </div>
-          <div style="position:relative;height:220px;">
-            <canvas id="graficoVendas" role="img"
-              aria-label="Gráfico de barras com vendas mensais atualizadas em tempo real do banco de dados"></canvas>
+          <div style="position: relative; height: 230px; width: 100%;">
+            <canvas id="graficoVendas" role="img" aria-label="Gráfico de vendas mensais"></canvas>
           </div>
         </div>
 
-        <!-- ROSCA -->
+        <!-- Categorias (Rosca) -->
         <div class="card-grafico">
           <div class="card-grafico-cabecalho">
-            <h3>Por Categoria</h3>
-            <span>Estoque atual</span>
+            <div>
+              <h3>Por Categoria</h3>
+              <span>Distribuição de itens</span>
+            </div>
           </div>
-
           <div class="rosca-container">
             <div class="rosca-canvas-wrap">
-              <canvas id="graficoCategorias" role="img"
-                aria-label="Gráfico de rosca com distribuição real por categorias do estoque"></canvas>
+              <canvas id="graficoCategorias" role="img" aria-label="Gráfico de produtos por categoria"></canvas>
             </div>
             <ul class="legenda-categorias" id="legendaCategorias"></ul>
           </div>
         </div>
+      </section>
 
+<<<<<<< HEAD
       </div>
       <!-- fecha .grade-graficos -->
 
@@ -277,85 +283,118 @@
             <div class="card-grafico-cabecalho">
               <h3>Receita Mensal (R$)</h3>
               <span>Histórico recente</span>
+=======
+      <!-- GRADE DE GRÁFICOS 2: RECEITA (LINHA) + TABELA RECENTE -->
+      <section class="grade-graficos-secundaria">
+        <!-- Faturamento Mensal -->
+        <div class="card-grafico">
+          <div class="card-grafico-cabecalho">
+            <div>
+              <h3>Evolução da Receita (R$)</h3>
+              <span>Últimos 6 meses</span>
+>>>>>>> ccfac74742593c4554f8879016c32d2ed231d4da
             </div>
             <div class="legenda-grafico">
               <div class="legenda-item">
-                <div class="legenda-cor" style="background:#c8102e;"></div>Receita
+                <div class="legenda-cor" style="background: #c8102e;"></div>
+                Faturamento Real
               </div>
             </div>
-            <div style="position:relative;height:180px;">
-              <canvas id="graficoReceita" role="img"
-                aria-label="Gráfico de linha com receita mensal histórica"></canvas>
+          </div>
+          <div style="position: relative; height: 210px; width: 100%;">
+            <canvas id="graficoReceita" role="img" aria-label="Gráfico de receita mensal"></canvas>
+          </div>
+        </div>
+
+        <!-- Movimentações Recentes -->
+        <div class="card-grafico">
+          <div class="card-grafico-cabecalho">
+            <div>
+              <h3>Últimas Vendas Realizadas</h3>
+              <span>Registros recentes</span>
             </div>
+            <a href="/pdv/" style="font-size: 0.78rem; font-weight: 700; color: #c8102e; text-decoration: none;">
+              Abrir PDV &rarr;
+            </a>
           </div>
 
-          <div class="card-grafico">
-            <div class="card-grafico-cabecalho">
-              <h3>Movimentações Recentes</h3>
-              <span>Últimos registros</span>
-            </div>
+          <div class="tabela-container-painel">
             <table class="tabela-recente">
               <thead>
                 <tr>
                   <th>Produto</th>
-                  <th>Tipo</th>
+                  <th>Status</th>
                   <th>Qtd</th>
-                  <th>Valor</th>
+                  <th>Valor Total</th>
                 </tr>
               </thead>
               <tbody>
                 {% for item in ultimas_vendas %}
                 <tr>
                   <td>
-                    {% if item.produto_nome is defined %}
-                    {{ item.produto_nome }}
-                    {% else %}
-                    {{ item.produto.nome }}
-                    {% endif %}
+                    <strong style="color: #111827;">
+                      {% if item.produto_nome is defined and item.produto_nome %}
+                      {{ item.produto_nome }}
+                      {% elif item.produto and item.produto.nome %}
+                      {{ item.produto.nome }}
+                      {% else %}
+                      Item de Venda #{{ item.id }}
+                      {% endif %}
+                    </strong>
                   </td>
-
-                  <td><span class="tag-tipo verde">Venda</span></td>
-
-                  <td>{{ item.quantidade }}</td>
-
+                  <td><span class="tag-tipo verde">● Concluída</span></td>
+                  <td><span style="font-weight: 700;">{{ item.quantidade }}</span> un.</td>
                   <td>
-                    R$
-                    {% if item.preco_unitario is defined %}
-                    {{ "%.2f"|format(item.preco_unitario * item.quantidade) }}
-                    {% else %}
-                    {{ "%.2f"|format(item.produto.preco * item.quantidade) }}
-                    {% endif %}
+                    <span style="font-weight: 800; color: #111827;">
+                      R$
+                      {% if item.preco_unitario is defined %}
+                      {{ "%.2f"|format(item.preco_unitario * item.quantidade) }}
+                      {% elif item.produto and item.produto.preco %}
+                      {{ "%.2f"|format(item.produto.preco * item.quantidade) }}
+                      {% else %}
+                      0.00
+                      {% endif %}
+                    </span>
                   </td>
                 </tr>
                 {% else %}
                 <tr>
-                  <td colspan="4" style="text-align: center; color: #777; padding: 20px;">
-                    Nenhuma venda ou movimentação registrada recentemente.
+                  <td colspan="4" style="text-align: center; color: #9ca3af; padding: 28px 12px;">
+                    Nenhuma venda registrada recentemente no sistema.
                   </td>
                 </tr>
                 {% endfor %}
               </tbody>
             </table>
           </div>
-
         </div>
+      </section>
 
+      <footer class="rodape-admin">
+        Painel de Controle &middot; AAPM SENAI Francisco Matarazzo &copy; 2026
+      </footer>
     </main>
-
-    <footer class="rodape-admin">
-      Painel de Controle &nbsp;·&nbsp; © 2026 Todos os direitos reservados
-    </footer>
   </div>
 
-  <div id="dados-grafico-categorias" data-labels='{{ categorias_labels | tojson }}'
-    data-valores='{{ categorias_valores | tojson }}' style="display: none;">
+  <!-- DADOS DINÂMICOS PARA O CHART.JS -->
+  <div id="dados-grafico-categorias"
+    data-labels='{{ categorias_labels | tojson }}'
+    data-valores='{{ categorias_valores | tojson }}'
+    style="display: none;">
   </div>
 
-  <div id="dados-grafico-vendas" data-vendas='{{ vendas_mensais_lista | tojson }}' style="display: none;">
+  <div id="dados-grafico-vendas"
+    data-vendas='{{ vendas_mensais_lista | tojson }}'
+    style="display: none;">
   </div>
 
-  <script src="/static/js/painel.js"></script>
+  <div id="dados-grafico-receita"
+    data-labels='{{ meses_labels | tojson }}'
+    data-valores='{{ receita_mensal_lista | tojson }}'
+    style="display: none;">
+  </div>
 
+  <script src="/static/js/painel.js?v=6"></script>
 </body>
 
 </html>
