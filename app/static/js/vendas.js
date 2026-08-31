@@ -1,15 +1,46 @@
+/* =========================================================
+   AAPM SENAI — Módulo de Vendas (PDV)
+   Gerenciamento de Carrinho, Modais e Comprovante
+   ========================================================= */
+
 let vendaAtualId = null;
 let vendaAtualCarregada = false;
-let botaoBaixarComprovante = null;
 
 const produtosPdv = Array.isArray(window.PRODUTOS_PDV)
   ? window.PRODUTOS_PDV
   : [];
 
 /* =========================================================
+   UTILITÁRIOS DE MODAL (PADRÃO ROBUSTO)
+========================================================= */
+function abrirModal(id) {
+  const modal = document.getElementById(id);
+  if (!modal) {
+    console.error('Modal não encontrado:', id);
+    return;
+  }
+  modal.style.setProperty('display', 'flex', 'important');
+  modal.classList.add('visivel', 'aberto');
+  document.body.classList.add('modal-aberto-body');
+}
+
+function fecharModal(id) {
+  const modal = document.getElementById(id);
+  if (!modal) return;
+  modal.style.setProperty('display', 'none', 'important');
+  modal.classList.remove('visivel', 'aberto');
+  document.body.classList.remove('modal-aberto-body');
+}
+
+function fecharModalFora(event, id) {
+  if (event && event.target && event.target.id === id) {
+    fecharModal(id);
+  }
+}
+
+/* =========================================================
    FORMATAÇÃO E SEGURANÇA
 ========================================================= */
-
 const fmt = valor =>
   'R$ ' + Number(valor || 0)
     .toFixed(2)
@@ -27,13 +58,6 @@ function escapeHtml(valor) {
 /* =========================================================
    AUXILIARES DE PRODUTO E DESCONTO
 ========================================================= */
-
-function getProdutoSelecionado(select) {
-  return produtosPdv.find(
-    produto => String(produto.id) === String(select.value)
-  );
-}
-
 function atualizarDesconto() {
   const cliente = document.getElementById('modalCliente');
   const desconto = cliente?.selectedOptions?.[0]?.dataset?.desconto || '0';
@@ -47,7 +71,6 @@ function atualizarDesconto() {
 /* =========================================================
    CÁLCULO E ATUALIZAÇÃO DOS ITENS DA VENDA
 ========================================================= */
-
 function calcularTotal() {
   const containerItens = document.getElementById('listaItensModal');
   const elementoTotal = document.getElementById('totalModal');
@@ -75,8 +98,8 @@ function calcularTotal() {
     const selectVariacao = linha.querySelector('.select-variacao');
     const inputQtd = linha.querySelector('.input-quantidade');
 
-    const produtoId = parseInt(selectProduto.value, 10);
-    const quantidade = parseInt(inputQtd.value, 10) || 0;
+    const produtoId = parseInt(selectProduto?.value, 10);
+    const quantidade = parseInt(inputQtd?.value, 10) || 0;
 
     if (!produtoId || quantidade <= 0) return;
 
@@ -125,16 +148,18 @@ function aoMudarProduto(selectProduto) {
 
   const produto = produtosPdv.find(p => p.id === produtoId);
 
-  selectVariacao.innerHTML = '<option value="">Selecione a variação...</option>';
-  selectVariacao.style.display = 'none';
+  if (selectVariacao) {
+    selectVariacao.innerHTML = '<option value="">Selecione a variação...</option>';
+    selectVariacao.style.display = 'none';
+  }
 
   if (!produto) {
-    spanPreco.textContent = 'R$ 0,00';
+    if (spanPreco) spanPreco.textContent = 'R$ 0,00';
     calcularTotal();
     return;
   }
 
-  if (produto.variacoes && produto.variacoes.length > 0) {
+  if (produto.variacoes && produto.variacoes.length > 0 && selectVariacao) {
     produto.variacoes.forEach(v => {
       const preco = v.preco ?? produto.preco;
       const opt = document.createElement('option');
@@ -145,11 +170,11 @@ function aoMudarProduto(selectProduto) {
     });
 
     selectVariacao.style.display = 'block';
-    spanPreco.textContent = 'R$ 0,00';
+    if (spanPreco) spanPreco.textContent = 'R$ 0,00';
   } else {
     const preco = parseFloat(produto.preco) || 0;
     selectProduto.setAttribute('data-preco', preco);
-    spanPreco.textContent = fmt(preco);
+    if (spanPreco) spanPreco.textContent = fmt(preco);
   }
 
   calcularTotal();
@@ -162,9 +187,9 @@ function aoMudarVariacao(selectVariacao) {
 
   if (selectVariacao.value && optSel) {
     const preco = parseFloat(optSel.getAttribute('data-preco')) || 0;
-    spanPreco.textContent = fmt(preco);
+    if (spanPreco) spanPreco.textContent = fmt(preco);
   } else {
-    spanPreco.textContent = 'R$ 0,00';
+    if (spanPreco) spanPreco.textContent = 'R$ 0,00';
   }
 
   calcularTotal();
@@ -176,7 +201,6 @@ function adicionarLinhaItem() {
 
   const divLinha = document.createElement('div');
   divLinha.className = 'linha-item-modal';
-  divLinha.style.cssText = 'display:flex; gap:10px; align-items:center; margin-bottom:10px;';
 
   let produtosHTML = '<option value="">Selecione um produto...</option>';
   produtosPdv.forEach(p => {
@@ -190,9 +214,9 @@ function adicionarLinhaItem() {
     <select class="select-variacao" style="flex:2; display:none;">
       <option value="">Selecione a variação...</option>
     </select>
-    <input type="number" class="input-quantidade" value="1" min="1" style="width:70px;" placeholder="Qtd">
-    <span class="preco-unitario" style="min-width:70px; font-weight:600; font-size:14px; color:#555;">R$ 0,00</span>
-    <button type="button" class="btn-remover" onclick="removerLinhaItem(this)">✕</button>
+    <input type="number" class="input-quantidade" value="1" min="1" style="width:75px;" placeholder="Qtd">
+    <span class="preco-unitario" style="min-width:80px; font-weight:700; font-size:13px; color:#111;">R$ 0,00</span>
+    <button type="button" class="btn-remover" onclick="removerLinhaItem(this)" title="Remover item">✕</button>
   `;
 
   container.appendChild(divLinha);
@@ -207,13 +231,9 @@ function removerLinhaItem(botao) {
 }
 
 /* =========================================================
-   MODAL DE VENDA & SUBMISSÃO
+   MODAL DE NOVA VENDA
 ========================================================= */
-
 function abrirModalVenda() {
-  const modalVenda = document.getElementById('modalVenda');
-  if (!modalVenda) return;
-
   const listaItens = document.getElementById('listaItensModal');
   const carrinhoJson = document.getElementById('carrinhoJson');
   const modalCliente = document.getElementById('modalCliente');
@@ -231,7 +251,7 @@ function abrirModalVenda() {
   }
 
   calcularTotal();
-  modalVenda.classList.add('aberto');
+  abrirModal('modalVenda');
 }
 
 function prepararEnvioVenda(event) {
@@ -248,143 +268,116 @@ function prepararEnvioVenda(event) {
 
   if (itensCarrinho.length === 0) {
     event.preventDefault();
-    exibirToast('Selecione ao menos um produto válido com quantidade e variação (se houver).', false);
+    exibirToast('Adicione pelo menos um produto com quantidade válida.', false);
     return false;
   }
 }
 
 /* =========================================================
-   GERENCIAMENTO DE COMPROVANTE
+   MODAL DE COMPROVANTE (CORRIGIDO)
 ========================================================= */
-
-function posicionarBotaoComprovante() {
+async function verDetalhesVenda(id) {
   const conteudo = document.getElementById('conteudoDetalhe');
+  const btnBaixar = document.getElementById('btnBaixarComprovante');
+
   if (!conteudo) return;
 
-  const totalCorreto = conteudo.querySelector('.comprovante-total');
-  if (!totalCorreto) return;
-
-  if (!botaoBaixarComprovante) {
-    botaoBaixarComprovante = document.getElementById('btnBaixarComprovante');
-  }
-
-  if (!botaoBaixarComprovante) return;
-
-  totalCorreto.appendChild(botaoBaixarComprovante);
-  botaoBaixarComprovante.disabled = !vendaAtualCarregada;
-}
-
-function removerBotaoDoComprovante() {
-  if (!botaoBaixarComprovante) {
-    botaoBaixarComprovante = document.getElementById('btnBaixarComprovante');
-  }
-
-  if (!botaoBaixarComprovante) return;
-
-  const rodapeOriginal = document.querySelector('.comprovante-rodape-fixo');
-  if (rodapeOriginal) {
-    rodapeOriginal.appendChild(botaoBaixarComprovante);
-  }
-}
-
-async function verDetalhesVenda(id) {
-  const modal = document.getElementById('modalDetalhe');
-  const conteudo = document.getElementById('conteudoDetalhe');
-
-  if (!modal || !conteudo) return;
-
-  if (!botaoBaixarComprovante) {
-    botaoBaixarComprovante = document.getElementById('btnBaixarComprovante');
-  }
-
-  removerBotaoDoComprovante();
-  modal.classList.add('aberto');
+  // 1. Abre o modal imediatamente
+  abrirModal('modalDetalhe');
+  vendaAtualId = id;
   vendaAtualCarregada = false;
 
-  if (botaoBaixarComprovante) {
-    botaoBaixarComprovante.disabled = true;
-  }
+  if (btnBaixar) btnBaixar.disabled = true;
 
+  // 2. Estado de Loading
   conteudo.innerHTML = `
     <div class="comprovante-loading">
-      <span>Carregando comprovante...</span>
+      <div class="spinner"></div>
+      <span>Carregando comprovante #${id}...</span>
     </div>
   `;
 
   try {
+    // 3. Busca os dados no backend
     const resposta = await fetch(`/pdv/venda/${id}/json`, {
       method: 'GET',
       headers: { 'Accept': 'application/json' }
     });
 
-    if (!resposta.ok) throw new Error(`Erro HTTP ${resposta.status}`);
+    if (!resposta.ok) throw new Error(`Erro ${resposta.status}: Não foi possível carregar os dados.`);
 
     const dados = await resposta.json();
     if (dados.erro) throw new Error(dados.mensagem || 'Venda não encontrada.');
 
+    // 4. Renderiza os itens
     let itensHtml = '';
     if (dados.itens && dados.itens.length > 0) {
       itensHtml = dados.itens.map(item => `
         <div class="comprovante-item">
-          <div>
+          <div class="comprovante-item-nome">
             <strong>${escapeHtml(item.produto_nome)}</strong>
-            <small>${item.quantidade} x ${fmt(item.preco_unitario)}</small>
+            <small>${item.quantidade}x un. (${fmt(item.preco_unitario)})</small>
           </div>
-          <strong>${fmt(item.subtotal)}</strong>
+          <strong class="comprovante-item-preco">${fmt(item.subtotal)}</strong>
         </div>
       `).join('');
     } else {
-      itensHtml = `<div style="text-align:center; color:#999; padding:20px;">Nenhum item encontrado.</div>`;
+      itensHtml = `<div style="text-align:center; color:#999; padding:15px;">Nenhum item registrado.</div>`;
     }
 
+    // 5. Monta o cupom fiscal completo
     conteudo.innerHTML = `
-      <div class="comprovante">
+      <div class="comprovante" id="cupomImpressao">
         <div class="comprovante-topo">
           <div>
-            <h3>Comprovante de Venda</h3>
-            <span>AAPM SENAI Francisco Matarazzo</span>
+            <h3>AAPM SENAI</h3>
+            <span>Escola SENAI Francisco Matarazzo</span>
           </div>
-          <strong>#${dados.id}</strong>
+          <div class="comprovante-cupom-id">#${dados.id}</div>
         </div>
+
         <div class="comprovante-info">
-          <div><span>Cliente</span><strong>${escapeHtml(dados.cliente)}</strong></div>
-          <div><span>Operador</span><strong>${escapeHtml(dados.operador)}</strong></div>
-          <div><span>Data</span><strong>${escapeHtml(dados.data)}</strong></div>
+          <div><span>Data/Hora:</span> <strong>${escapeHtml(dados.data || '—')}</strong></div>
+          <div><span>Cliente:</span> <strong>${escapeHtml(dados.cliente || 'Cliente Balcão')}</strong></div>
+          <div><span>Operador:</span> <strong>${escapeHtml(dados.operador || 'Sistema')}</strong></div>
         </div>
+
         <div class="comprovante-itens">
-          <h4>Itens da venda</h4>
+          <h4>Itens Comprados</h4>
           ${itensHtml}
         </div>
+
         <div class="comprovante-valores">
-          <div><span>Valor bruto</span><strong>${fmt(dados.total_bruto)}</strong></div>
-          <div><span>Desconto</span><strong>${Number(dados.desconto_percentual || 0).toFixed(1)}%</strong></div>
+          <div><span>Total Bruto:</span> <strong>${fmt(dados.total_bruto)}</strong></div>
+          <div><span>Desconto:</span> <strong>${Number(dados.desconto_percentual || 0).toFixed(1)}%</strong></div>
           <div class="comprovante-total">
-            <span>Total líquido</span>
+            <span>TOTAL PAGO:</span>
             <strong>${fmt(dados.total_liquido)}</strong>
           </div>
         </div>
+
         ${dados.observacao ? `
           <div class="comprovante-observacao">
-            <strong>Observação:</strong> ${escapeHtml(dados.observacao)}
+            <strong>Obs:</strong> ${escapeHtml(dados.observacao)}
           </div>` : ''}
-        <div style="margin-top:20px; padding-top:15px; border-top:1px solid #eee; text-align:center; color:#888; font-size:0.8rem;">
-          Venda registrada no sistema AAPM SENAI.
+
+        <div class="comprovante-rodape-texto">
+          Documento Não Fiscal · Sistema AAPM
         </div>
       </div>
     `;
 
-    vendaAtualId = dados.id;
     vendaAtualCarregada = true;
-    posicionarBotaoComprovante();
+    if (btnBaixar) btnBaixar.disabled = false;
 
   } catch (erro) {
-    console.error('Erro ao carregar comprovante:', erro);
+    console.error('Erro ao abrir comprovante:', erro);
     conteudo.innerHTML = `
-      <div style="padding:30px; text-align:center; color:#991b1b;">
-        <div style="font-size:40px; margin-bottom:10px;">⚠️</div>
-        <strong>Erro ao carregar o comprovante.</strong>
-        <p style="margin-top:10px; color:#666;">${escapeHtml(erro.message)}</p>
-        <button type="button" onclick="verDetalhesVenda(${Number(id)})" style="margin-top:15px; padding:10px 18px; border:none; border-radius:8px; background:#c8102e; color:white; cursor:pointer;">
+      <div style="padding:24px; text-align:center; color:#dc2626;">
+        <div style="font-size:36px; margin-bottom:8px;">⚠️</div>
+        <strong style="font-size:1rem;">Falha ao carregar o comprovante</strong>
+        <p style="margin:8px 0 16px; color:#6b7280; font-size:0.85rem;">${escapeHtml(erro.message)}</p>
+        <button type="button" onclick="verDetalhesVenda(${Number(id)})" class="btn-novo" style="margin:0 auto;">
           Tentar novamente
         </button>
       </div>
@@ -392,63 +385,47 @@ async function verDetalhesVenda(id) {
   }
 }
 
+/* =========================================================
+   BAIXAR COMPROVANTE (IMAGEM PNG)
+========================================================= */
 async function baixarComprovante() {
   if (!vendaAtualCarregada) return;
 
-  const elemento = document.querySelector('#conteudoDetalhe .comprovante');
-  const btn = botaoBaixarComprovante || document.getElementById('btnBaixarComprovante');
-
+  const elemento = document.getElementById('cupomImpressao');
+  const btn = document.getElementById('btnBaixarComprovante');
   if (!elemento || !btn) return;
 
-  const conteudoOriginal = btn.innerHTML;
+  const textoOriginal = btn.innerHTML;
   btn.disabled = true;
-  btn.innerHTML = 'Gerando...';
+  btn.innerHTML = 'Gerando imagem...';
 
   try {
-    const displayOriginal = btn.style.display;
-    btn.style.display = 'none';
-
     const canvas = await html2canvas(elemento, {
-      scale: 2,
+      scale: 2.5,
       backgroundColor: '#ffffff',
       useCORS: true
     });
 
-    btn.style.display = displayOriginal;
-
     const link = document.createElement('a');
     link.download = `comprovante-venda-${vendaAtualId}.png`;
     link.href = canvas.toDataURL('image/png', 1.0);
-
     document.body.appendChild(link);
     link.click();
     link.remove();
+
+    exibirToast('Comprovante baixado com sucesso!');
   } catch (erro) {
-    console.error('Erro ao gerar comprovante:', erro);
-    exibirToast('Não foi possível baixar o comprovante.', false);
+    console.error('Erro ao baixar comprovante:', erro);
+    exibirToast('Não foi possível gerar a imagem.', false);
   } finally {
     btn.disabled = false;
-    btn.innerHTML = conteudoOriginal;
-    btn.style.display = '';
+    btn.innerHTML = textoOriginal;
   }
 }
 
 /* =========================================================
-   INTERFACE E EVENTOS
+   TOAST DE NOTIFICAÇÃO
 ========================================================= */
-
-function fecharModal(id) {
-  const modal = document.getElementById(id);
-  if (modal) modal.classList.remove('aberto');
-}
-
-function fecharModalFora(event, id) {
-  const modal = document.getElementById(id);
-  if (modal && event.target === modal) {
-    fecharModal(id);
-  }
-}
-
 function exibirToast(mensagem, sucesso = true) {
   const toast = document.getElementById('toast');
   const mensagemElemento = document.getElementById('toastMensagem');
@@ -457,7 +434,7 @@ function exibirToast(mensagem, sucesso = true) {
 
   const icone = toast.querySelector('.toast-icone');
   if (icone) {
-    icone.style.background = sucesso ? '#22c55e' : '#ef4444';
+    icone.style.background = sucesso ? '#059669' : '#dc2626';
   }
 
   mensagemElemento.textContent = mensagem;
@@ -465,16 +442,13 @@ function exibirToast(mensagem, sucesso = true) {
 
   setTimeout(() => {
     toast.classList.remove('visivel');
-  }, 3000);
+  }, 3500);
 }
 
 /* =========================================================
-   INICIALIZAÇÃO ÚNICA DE LISTENERS
+   INICIALIZAÇÃO E EVENTOS
 ========================================================= */
-
 document.addEventListener('DOMContentLoaded', () => {
-  botaoBaixarComprovante = document.getElementById('btnBaixarComprovante');
-
   document.getElementById('btnNovaVenda')?.addEventListener('click', abrirModalVenda);
 
   const modalVenda = document.getElementById('modalVenda');
@@ -498,16 +472,24 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   document.getElementById('formNovaVenda')?.addEventListener('submit', prepararEnvioVenda);
+
+  // Fecha modais com ESC
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      fecharModal('modalVenda');
+      fecharModal('modalDetalhe');
+    }
+  });
 });
 
-/* Exposição global de funções necessárias no HTML */
-
+/* Exposição no escopo global */
+window.abrirModal = abrirModal;
+window.fecharModal = fecharModal;
+window.fecharModalFora = fecharModalFora;
 window.abrirModalVenda = abrirModalVenda;
 window.adicionarLinhaItem = adicionarLinhaItem;
 window.removerLinhaItem = removerLinhaItem;
 window.verDetalhesVenda = verDetalhesVenda;
-window.fecharModal = fecharModal;
-window.fecharModalFora = fecharModalFora;
-window.exibirToast = exibirToast;
 window.baixarComprovante = baixarComprovante;
+window.exibirToast = exibirToast;
 window.calcularTotal = calcularTotal;
