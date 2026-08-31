@@ -8,7 +8,7 @@
   <link
     href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Lato:wght@300;400;700&display=swap"
     rel="stylesheet" />
-  <link rel="stylesheet" href="/static/css/painel.css?v=6" />
+  <link rel="stylesheet" href="/static/css/painel.css?v=8" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 </head>
 
@@ -83,8 +83,8 @@
         </a>
       </li>
 
+      {% if usuario and usuario.role == 'admin' %}
       <li>
-        {% if usuario and usuario.role == 'admin' %}
         <a href="/clientes/">
           <svg viewBox="0 0 24 24">
             <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
@@ -94,11 +94,9 @@
           </svg>
           Clientes
         </a>
-        {% endif %}
       </li>
 
       <li>
-        {% if usuario and usuario.role == 'admin' %}
         <a href="/usuarios/">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <rect x="2" y="5" width="20" height="14" rx="2"></rect>
@@ -109,8 +107,8 @@
           </svg>
           Usuários
         </a>
-        {% endif %}
       </li>
+      {% endif %}
     </ul>
 
     <div class="barra-rodape">
@@ -194,7 +192,7 @@
           </div>
         </div>
 
-        <!-- 3: Produtos em Estoque -->
+        <!-- 3: Total de Produtos -->
         <div class="card-metrica card-produtos-qtd">
           <div class="cm-topo">
             <span class="cm-label">Total de Produtos</span>
@@ -243,10 +241,6 @@
                 <div class="legenda-cor" style="background: #c8102e;"></div>
                 Vendas Realizadas
               </div>
-              <div class="legenda-item">
-                <div class="legenda-cor" style="background: #94a3b8;"></div>
-                Meta
-              </div>
             </div>
           </div>
           <div style="position: relative; height: 230px; width: 100%;">
@@ -271,19 +265,6 @@
         </div>
       </section>
 
-<<<<<<< HEAD
-      </div>
-      <!-- fecha .grade-graficos -->
-
-      <div class="grade-graficos-2">
-
-        <div class="grade-graficos-2">
-
-          <div class="card-grafico">
-            <div class="card-grafico-cabecalho">
-              <h3>Receita Mensal (R$)</h3>
-              <span>Histórico recente</span>
-=======
       <!-- GRADE DE GRÁFICOS 2: RECEITA (LINHA) + TABELA RECENTE -->
       <section class="grade-graficos-secundaria">
         <!-- Faturamento Mensal -->
@@ -292,7 +273,6 @@
             <div>
               <h3>Evolução da Receita (R$)</h3>
               <span>Últimos 6 meses</span>
->>>>>>> ccfac74742593c4554f8879016c32d2ed231d4da
             </div>
             <div class="legenda-grafico">
               <div class="legenda-item">
@@ -394,7 +374,7 @@
     style="display: none;">
   </div>
 
-  <script src="/static/js/painel.js?v=6"></script>
+  <script src="/static/js/painel.js?v=8"></script>
 </body>
 
 </html>

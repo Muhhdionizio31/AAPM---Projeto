@@ -1,17 +1,17 @@
 /* =========================================================
    AAPM SENAI — Módulo de Vendas (PDV)
-   Gerenciamento de Carrinho, Modais e Comprovante
+   Gerenciamento de Carrinho, Modais, Comprovantes e Interações
    ========================================================= */
 
 let vendaAtualId = null;
 let vendaAtualCarregada = false;
 
-const produtosPdv = Array.isArray(window.PRODUTOS_PDV)
-  ? window.PRODUTOS_PDV
-  : [];
+function obterProdutosPdv() {
+  return Array.isArray(window.PRODUTOS_PDV) ? window.PRODUTOS_PDV : [];
+}
 
 /* =========================================================
-   UTILITÁRIOS DE MODAL (PADRÃO ROBUSTO)
+   UTILITÁRIOS DE MODAL
 ========================================================= */
 function abrirModal(id) {
   const modal = document.getElementById(id);
@@ -39,6 +39,23 @@ function fecharModalFora(event, id) {
 }
 
 /* =========================================================
+   MENU MOBILE
+========================================================= */
+function abrirMenuMobile() {
+  const lateral = document.getElementById('barraLateral');
+  const sobreposicao = document.getElementById('barraSobreposicao');
+  if (lateral) lateral.classList.add('aberta');
+  if (sobreposicao) sobreposicao.classList.add('visivel');
+}
+
+function fecharMenuMobile() {
+  const lateral = document.getElementById('barraLateral');
+  const sobreposicao = document.getElementById('barraSobreposicao');
+  if (lateral) lateral.classList.remove('aberta');
+  if (sobreposicao) sobreposicao.classList.remove('visivel');
+}
+
+/* =========================================================
    FORMATAÇÃO E SEGURANÇA
 ========================================================= */
 const fmt = valor =>
@@ -56,20 +73,23 @@ function escapeHtml(valor) {
 }
 
 /* =========================================================
-   AUXILIARES DE PRODUTO E DESCONTO
+   AUXILIARES DE CLIENTE E DESCONTO
 ========================================================= */
-function atualizarDesconto() {
-  const cliente = document.getElementById('modalCliente');
-  const desconto = cliente?.selectedOptions?.[0]?.dataset?.desconto || '0';
-  const campoDesconto = document.getElementById('modalDesconto');
+function atualizarDescontoECliente() {
+  const selectCliente = document.getElementById('modalCliente');
+  const inputDesconto = document.getElementById('modalDesconto');
 
-  if (campoDesconto) {
-    campoDesconto.value = Number(desconto).toFixed(1);
+  if (selectCliente && inputDesconto) {
+    const opcao = selectCliente.options[selectCliente.selectedIndex];
+    const desconto = parseFloat(opcao?.getAttribute('data-desconto')) || 0;
+    inputDesconto.value = desconto.toFixed(1);
   }
+
+  calcularTotal();
 }
 
 /* =========================================================
-   CÁLCULO E ATUALIZAÇÃO DOS ITENS DA VENDA
+   CÁLCULO E ATUALIZAÇÃO DO CARRINHO
 ========================================================= */
 function calcularTotal() {
   const containerItens = document.getElementById('listaItensModal');
@@ -82,8 +102,8 @@ function calcularTotal() {
 
   let percentualDesconto = 0;
   if (selectCliente && selectCliente.selectedIndex >= 0) {
-    const opcaoSelecionada = selectCliente.options[selectCliente.selectedIndex];
-    percentualDesconto = parseFloat(opcaoSelecionada.getAttribute('data-desconto')) || 0;
+    const opcao = selectCliente.options[selectCliente.selectedIndex];
+    percentualDesconto = parseFloat(opcao?.getAttribute('data-desconto')) || 0;
   }
   if (inputDesconto) {
     inputDesconto.value = percentualDesconto.toFixed(1);
@@ -91,19 +111,24 @@ function calcularTotal() {
 
   let totalBruto = 0;
   const carrinho = [];
+  const produtos = obterProdutosPdv();
 
   const linhas = containerItens.querySelectorAll('.linha-item-modal');
   linhas.forEach(linha => {
     const selectProduto = linha.querySelector('.select-produto');
     const selectVariacao = linha.querySelector('.select-variacao');
     const inputQtd = linha.querySelector('.input-quantidade');
+    const spanPreco = linha.querySelector('.preco-unitario');
 
     const produtoId = parseInt(selectProduto?.value, 10);
     const quantidade = parseInt(inputQtd?.value, 10) || 0;
 
-    if (!produtoId || quantidade <= 0) return;
+    if (!produtoId || quantidade <= 0) {
+      if (spanPreco) spanPreco.textContent = 'R$ 0,00';
+      return;
+    }
 
-    const produto = produtosPdv.find(p => p.id === produtoId);
+    const produto = produtos.find(p => p.id === produtoId);
     let precoUnitario = 0;
     let variacaoId = null;
 
@@ -112,11 +137,15 @@ function calcularTotal() {
         if (selectVariacao && selectVariacao.value) {
           const optVar = selectVariacao.options[selectVariacao.selectedIndex];
           variacaoId = parseInt(selectVariacao.value, 10);
-          precoUnitario = parseFloat(optVar.getAttribute('data-preco')) || 0;
+          precoUnitario = parseFloat(optVar.getAttribute('data-preco')) || parseFloat(produto.preco) || 0;
         }
       } else {
         precoUnitario = parseFloat(produto.preco) || 0;
       }
+    }
+
+    if (spanPreco) {
+      spanPreco.textContent = fmt(precoUnitario * quantidade);
     }
 
     if (precoUnitario > 0) {
@@ -131,7 +160,7 @@ function calcularTotal() {
   });
 
   const valorDesconto = totalBruto * (percentualDesconto / 100);
-  const totalLiquido = totalBruto - valorDesconto;
+  const totalLiquido = Math.max(0, totalBruto - valorDesconto);
 
   elementoTotal.textContent = fmt(totalLiquido);
 
@@ -142,14 +171,18 @@ function calcularTotal() {
 
 function aoMudarProduto(selectProduto) {
   const linha = selectProduto.closest('.linha-item-modal');
+  if (!linha) return;
+
   const selectVariacao = linha.querySelector('.select-variacao');
   const spanPreco = linha.querySelector('.preco-unitario');
+  const inputQtd = linha.querySelector('.input-quantidade');
   const produtoId = parseInt(selectProduto.value, 10);
 
-  const produto = produtosPdv.find(p => p.id === produtoId);
+  const produtos = obterProdutosPdv();
+  const produto = produtos.find(p => p.id === produtoId);
 
   if (selectVariacao) {
-    selectVariacao.innerHTML = '<option value="">Selecione a variação...</option>';
+    selectVariacao.innerHTML = '<option value="">Selecione o tamanho...</option>';
     selectVariacao.style.display = 'none';
   }
 
@@ -161,20 +194,24 @@ function aoMudarProduto(selectProduto) {
 
   if (produto.variacoes && produto.variacoes.length > 0 && selectVariacao) {
     produto.variacoes.forEach(v => {
-      const preco = v.preco ?? produto.preco;
+      const preco = parseFloat(produto.preco) || 0;
       const opt = document.createElement('option');
       opt.value = v.id;
       opt.setAttribute('data-preco', preco);
-      opt.textContent = `${v.nome || v.tamanho || v.descricao} (${fmt(preco)})`;
+      opt.setAttribute('data-estoque', v.estoque || 0);
+      opt.textContent = `${v.tamanho || 'Tamanho'} (${v.estoque} em estoque) - ${fmt(preco)}`;
       selectVariacao.appendChild(opt);
     });
 
-    selectVariacao.style.display = 'block';
+    selectVariacao.style.display = 'inline-block';
     if (spanPreco) spanPreco.textContent = 'R$ 0,00';
   } else {
     const preco = parseFloat(produto.preco) || 0;
     selectProduto.setAttribute('data-preco', preco);
-    if (spanPreco) spanPreco.textContent = fmt(preco);
+    if (inputQtd && produto.estoque) {
+      inputQtd.max = produto.estoque;
+    }
+    if (spanPreco) spanPreco.textContent = fmt(preco * (parseInt(inputQtd?.value, 10) || 1));
   }
 
   calcularTotal();
@@ -182,12 +219,20 @@ function aoMudarProduto(selectProduto) {
 
 function aoMudarVariacao(selectVariacao) {
   const linha = selectVariacao.closest('.linha-item-modal');
+  if (!linha) return;
+
   const spanPreco = linha.querySelector('.preco-unitario');
+  const inputQtd = linha.querySelector('.input-quantidade');
   const optSel = selectVariacao.options[selectVariacao.selectedIndex];
 
   if (selectVariacao.value && optSel) {
     const preco = parseFloat(optSel.getAttribute('data-preco')) || 0;
-    if (spanPreco) spanPreco.textContent = fmt(preco);
+    const estoque = parseInt(optSel.getAttribute('data-estoque'), 10);
+    if (inputQtd && estoque) {
+      inputQtd.max = estoque;
+    }
+    const qtd = parseInt(inputQtd?.value, 10) || 1;
+    if (spanPreco) spanPreco.textContent = fmt(preco * qtd);
   } else {
     if (spanPreco) spanPreco.textContent = 'R$ 0,00';
   }
@@ -202,20 +247,29 @@ function adicionarLinhaItem() {
   const divLinha = document.createElement('div');
   divLinha.className = 'linha-item-modal';
 
+  const produtos = obterProdutosPdv();
   let produtosHTML = '<option value="">Selecione um produto...</option>';
-  produtosPdv.forEach(p => {
-    produtosHTML += `<option value="${p.id}">${escapeHtml(p.nome)}</option>`;
+  produtos.forEach(p => {
+    produtosHTML += `<option value="${p.id}">${escapeHtml(p.nome)} (${fmt(p.preco)})</option>`;
   });
 
   divLinha.innerHTML = `
-    <select class="select-produto" style="flex:2;">
-      ${produtosHTML}
-    </select>
-    <select class="select-variacao" style="flex:2; display:none;">
-      <option value="">Selecione a variação...</option>
-    </select>
-    <input type="number" class="input-quantidade" value="1" min="1" style="width:75px;" placeholder="Qtd">
-    <span class="preco-unitario" style="min-width:80px; font-weight:700; font-size:13px; color:#111;">R$ 0,00</span>
+    <div class="campo-item-produto" style="flex: 2; min-width: 140px;">
+      <select class="select-produto" onchange="aoMudarProduto(this)" style="width: 100%;">
+        ${produtosHTML}
+      </select>
+    </div>
+    <div class="campo-item-variacao" style="flex: 1.5; min-width: 120px;">
+      <select class="select-variacao" onchange="aoMudarVariacao(this)" style="width: 100%; display: none;">
+        <option value="">Selecione o tamanho...</option>
+      </select>
+    </div>
+    <div class="campo-item-qtd" style="width: 70px;">
+      <input type="number" class="input-quantidade" value="1" min="1" oninput="calcularTotal()" style="width: 100%; text-align: center;" placeholder="Qtd">
+    </div>
+    <div class="campo-item-subtotal" style="min-width: 80px; text-align: right;">
+      <span class="preco-unitario" style="font-weight: 700; font-size: 0.85rem; color: #111827;">R$ 0,00</span>
+    </div>
     <button type="button" class="btn-remover" onclick="removerLinhaItem(this)" title="Remover item">✕</button>
   `;
 
@@ -244,9 +298,10 @@ function abrirModalVenda() {
   if (listaItens) listaItens.innerHTML = '';
   if (carrinhoJson) carrinhoJson.value = '';
 
-  atualizarDesconto();
+  atualizarDescontoECliente();
 
-  if (produtosPdv.length > 0) {
+  const produtos = obterProdutosPdv();
+  if (produtos.length > 0) {
     adicionarLinhaItem();
   }
 
@@ -266,15 +321,17 @@ function prepararEnvioVenda(event) {
     itensCarrinho = [];
   }
 
-  if (itensCarrinho.length === 0) {
-    event.preventDefault();
-    exibirToast('Adicione pelo menos um produto com quantidade válida.', false);
+  if (!itensCarrinho || itensCarrinho.length === 0) {
+    if (event) event.preventDefault();
+    exibirToast('Selecione ao menos um produto válido para finalizar.', false);
     return false;
   }
+
+  return true;
 }
 
 /* =========================================================
-   MODAL DE COMPROVANTE (CORRIGIDO)
+   MODAL DE COMPROVANTE
 ========================================================= */
 async function verDetalhesVenda(id) {
   const conteudo = document.getElementById('conteudoDetalhe');
@@ -282,23 +339,19 @@ async function verDetalhesVenda(id) {
 
   if (!conteudo) return;
 
-  // 1. Abre o modal imediatamente
   abrirModal('modalDetalhe');
   vendaAtualId = id;
   vendaAtualCarregada = false;
 
   if (btnBaixar) btnBaixar.disabled = true;
 
-  // 2. Estado de Loading
   conteudo.innerHTML = `
-    <div class="comprovante-loading">
-      <div class="spinner"></div>
-      <span>Carregando comprovante #${id}...</span>
+    <div class="comprovante-loading" style="padding: 30px; text-align: center; color: #6b7280;">
+      <p>Carregando comprovante da venda #${id}...</p>
     </div>
   `;
 
   try {
-    // 3. Busca os dados no backend
     const resposta = await fetch(`/pdv/venda/${id}/json`, {
       method: 'GET',
       headers: { 'Accept': 'application/json' }
@@ -309,7 +362,6 @@ async function verDetalhesVenda(id) {
     const dados = await resposta.json();
     if (dados.erro) throw new Error(dados.mensagem || 'Venda não encontrada.');
 
-    // 4. Renderiza os itens
     let itensHtml = '';
     if (dados.itens && dados.itens.length > 0) {
       itensHtml = dados.itens.map(item => `
@@ -325,7 +377,6 @@ async function verDetalhesVenda(id) {
       itensHtml = `<div style="text-align:center; color:#999; padding:15px;">Nenhum item registrado.</div>`;
     }
 
-    // 5. Monta o cupom fiscal completo
     conteudo.innerHTML = `
       <div class="comprovante" id="cupomImpressao">
         <div class="comprovante-topo">
@@ -362,7 +413,7 @@ async function verDetalhesVenda(id) {
           </div>` : ''}
 
         <div class="comprovante-rodape-texto">
-          Documento Não Fiscal · Sistema AAPM
+          Documento Não Fiscal &middot; Sistema AAPM
         </div>
       </div>
     `;
@@ -374,10 +425,9 @@ async function verDetalhesVenda(id) {
     console.error('Erro ao abrir comprovante:', erro);
     conteudo.innerHTML = `
       <div style="padding:24px; text-align:center; color:#dc2626;">
-        <div style="font-size:36px; margin-bottom:8px;">⚠️</div>
         <strong style="font-size:1rem;">Falha ao carregar o comprovante</strong>
         <p style="margin:8px 0 16px; color:#6b7280; font-size:0.85rem;">${escapeHtml(erro.message)}</p>
-        <button type="button" onclick="verDetalhesVenda(${Number(id)})" class="btn-novo" style="margin:0 auto;">
+        <button type="button" onclick="verDetalhesVenda(${Number(id)})" class="btn-principal" style="margin:0 auto;">
           Tentar novamente
         </button>
       </div>
@@ -386,7 +436,7 @@ async function verDetalhesVenda(id) {
 }
 
 /* =========================================================
-   BAIXAR COMPROVANTE (IMAGEM PNG)
+   BAIXAR / IMPRIMIR COMPROVANTE
 ========================================================= */
 async function baixarComprovante() {
   if (!vendaAtualCarregada) return;
@@ -397,26 +447,31 @@ async function baixarComprovante() {
 
   const textoOriginal = btn.innerHTML;
   btn.disabled = true;
-  btn.innerHTML = 'Gerando imagem...';
+  btn.innerHTML = 'Gerando comprovante...';
 
   try {
-    const canvas = await html2canvas(elemento, {
-      scale: 2.5,
-      backgroundColor: '#ffffff',
-      useCORS: true
-    });
+    if (typeof html2canvas !== 'undefined') {
+      const canvas = await html2canvas(elemento, {
+        scale: 2.5,
+        backgroundColor: '#ffffff',
+        useCORS: true
+      });
 
-    const link = document.createElement('a');
-    link.download = `comprovante-venda-${vendaAtualId}.png`;
-    link.href = canvas.toDataURL('image/png', 1.0);
-    document.body.appendChild(link);
-    link.click();
-    link.remove();
+      const link = document.createElement('a');
+      link.download = `comprovante-venda-${vendaAtualId}.png`;
+      link.href = canvas.toDataURL('image/png', 1.0);
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
 
-    exibirToast('Comprovante baixado com sucesso!');
+      exibirToast('Comprovante baixado com sucesso!');
+    } else {
+      window.print();
+    }
   } catch (erro) {
     console.error('Erro ao baixar comprovante:', erro);
-    exibirToast('Não foi possível gerar a imagem.', false);
+    exibirToast('Não foi possível gerar a imagem. Tentando impressão...', false);
+    window.print();
   } finally {
     btn.disabled = false;
     btn.innerHTML = textoOriginal;
@@ -442,38 +497,42 @@ function exibirToast(mensagem, sucesso = true) {
 
   setTimeout(() => {
     toast.classList.remove('visivel');
-  }, 3500);
+  }, 4000);
 }
 
 /* =========================================================
    INICIALIZAÇÃO E EVENTOS
 ========================================================= */
 document.addEventListener('DOMContentLoaded', () => {
-  document.getElementById('btnNovaVenda')?.addEventListener('click', abrirModalVenda);
-
-  const modalVenda = document.getElementById('modalVenda');
-  if (modalVenda) {
-    modalVenda.addEventListener('change', (e) => {
-      if (e.target.classList.contains('select-produto')) {
-        aoMudarProduto(e.target);
-      } else if (e.target.classList.contains('select-variacao')) {
-        aoMudarVariacao(e.target);
-      } else if (e.target.id === 'modalCliente' || e.target.classList.contains('input-quantidade')) {
-        atualizarDesconto();
-        calcularTotal();
-      }
-    });
-
-    modalVenda.addEventListener('input', (e) => {
-      if (e.target.classList.contains('input-quantidade')) {
-        calcularTotal();
-      }
+  // Data atual
+  const elData = document.getElementById('dataAtual');
+  if (elData) {
+    const hoje = new Date();
+    elData.textContent = hoje.toLocaleDateString('pt-BR', {
+      weekday: 'long', day: '2-digit', month: 'long', year: 'numeric'
     });
   }
 
-  document.getElementById('formNovaVenda')?.addEventListener('submit', prepararEnvioVenda);
+  // Checar feedback via URL
+  const params = new URLSearchParams(window.location.search);
+  if (params.get('criado') === 'ok') {
+    exibirToast('Venda registrada com sucesso!', true);
+    const vendaId = params.get('venda_id');
+    if (vendaId) {
+      setTimeout(() => verDetalhesVenda(vendaId), 300);
+    }
+  } else if (params.get('cancelado') === 'ok') {
+    exibirToast('Venda cancelada.', true);
+  } else if (params.get('erro')) {
+    const erro = params.get('erro');
+    let msg = 'Erro ao processar venda.';
+    if (erro === 'estoque') msg = 'Estoque insuficiente para um ou mais produtos.';
+    else if (erro === 'vazio') msg = 'Adicione ao menos um produto.';
+    else if (erro === 'quantidade') msg = 'Quantidade inválida informada.';
+    exibirToast(msg, false);
+  }
 
-  // Fecha modais com ESC
+  // Fechar modais com ESC
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') {
       fecharModal('modalVenda');
@@ -482,10 +541,12 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 });
 
-/* Exposição no escopo global */
+/* Exposição global */
 window.abrirModal = abrirModal;
 window.fecharModal = fecharModal;
 window.fecharModalFora = fecharModalFora;
+window.abrirMenuMobile = abrirMenuMobile;
+window.fecharMenuMobile = fecharMenuMobile;
 window.abrirModalVenda = abrirModalVenda;
 window.adicionarLinhaItem = adicionarLinhaItem;
 window.removerLinhaItem = removerLinhaItem;
@@ -493,3 +554,7 @@ window.verDetalhesVenda = verDetalhesVenda;
 window.baixarComprovante = baixarComprovante;
 window.exibirToast = exibirToast;
 window.calcularTotal = calcularTotal;
+window.atualizarDescontoECliente = atualizarDescontoECliente;
+window.aoMudarProduto = aoMudarProduto;
+window.aoMudarVariacao = aoMudarVariacao;
+window.prepararEnvioVenda = prepararEnvioVenda;
