@@ -15,8 +15,10 @@ from app.controllers import variacao_controller
 from app.controllers import movimentacao_controller
 from app.controllers import cliente_controller
 from app.controllers import pdv_controllers
+from app.controllers import armario_controller
+from app.controllers import catalogo_controller
 
-
+from app.database import engine, Base
 from dotenv import load_dotenv
 import os
 from app.database import get_db
@@ -25,8 +27,9 @@ from sqlalchemy.orm import Session, joinedload
 from app.models.categoria import Categoria
 from app.models.produto import Produto
 from app.models.venda import Venda, ItemVenda
+from app.models.armario import Armario, StatusArmario
 
-
+Base.metadata.create_all(bind=engine)
 
 load_dotenv()
 
@@ -44,20 +47,42 @@ app.include_router(variacao_controller.router)
 app.include_router(movimentacao_controller.router)
 app.include_router(cliente_controller.router)
 app.include_router(pdv_controllers.router)
-
+app.include_router(armario_controller.router)
+app.include_router(catalogo_controller.router)
 
 
 #Rota para a página inicial
 @app.get("/inicio")
 def home(
     request: Request,
+    usuario = Depends(get_usuario_opcional), # Mantendo o padrão do seu app
+    db: Session = Depends(get_db)
 ):
+    try:
+        # Busca 12 produtos aleatórios que estejam ativos (.ativa == True)
+        # func.random() funciona no SQLite e PostgreSQL. (Se for MySQL, use func.rand())
+        produtos_carrossel = (
+            db.query(Produto)
+            .filter(Produto.ativa == True)
+            .options(joinedload(Produto.categoria))
+            .order_by(func.random()) 
+            .limit(10)
+            .all()
+        )
+    except Exception as e:
+        print(f"Erro ao buscar produtos aleatórios: {e}")
+        produtos_carrossel = []
+
     return templates.TemplateResponse(
         request,
         "site/index.html",
-        {"request": request, 
+        {
+            "request": request, 
+            "usuario": usuario,
+            "produtos": produtos_carrossel # Envia os 12 produtos aleatórios para a Home
         }
     )
+
 # Rota para o horário de atendimento
 @app.get("/horario")
 def horario(
@@ -72,26 +97,6 @@ def horario(
 
 
 # Rota para o catálogo de produtos
-@app.get("/catalogo")
-def catalogo(
-    request: Request,
-    usuario = Depends(get_usuario_opcional),
-    db: Session = Depends(get_db) 
-):
-    categorias = db.query(Categoria).all()
-    produtos = (db.query(Produto).filter(Produto.ativa == True).options(joinedload(Produto.categoria)).all())
-
-    return templates.TemplateResponse(
-        request,
-        "site/catalogo.html",
-        {
-            "request": request, 
-            "usuario": usuario,
-            "produtos": produtos,
-            "categorias": categorias
-        }
-    )
-
 @app.get("/login")
 def login(
     request: Request,
@@ -116,8 +121,7 @@ def politica(
     )
 
 # Rota para acesso não autenticado
-ROTAS_PUBLICAS = ["/auth/login", "/inicio", "/static", "/catalogo", "/horario", "/politica"]
-
+ROTAS_PUBLICAS = ["/auth/login", "/inicio", "/static", "/catalogo", "/horario", "/politica", "/auth/esqueci-senha", "/auth/recuperar-senha"] 
 @app.middleware("http")
 async def verificar_login_middleware(request: Request, call_next):
     # 1. Se o usuário digitar só o IP/Domínio (ex: 127.0.0.1:49669), 
@@ -144,6 +148,20 @@ def visualizar_painel(
     db: Session = Depends(get_db),
     usuario = Depends(get_usuario_opcional)
 ):
+
+    todos_armarios = db.query(Armario).filter(
+        Armario.ativo == True
+    ).all()
+
+    armarios_disponiveis = sum(
+        1 for a in todos_armarios
+        if a.status == StatusArmario.DISPONIVEL
+    )
+
+    armarios_alugados = sum(
+        1 for a in todos_armarios
+        if a.status == StatusArmario.ALUGADO
+    )
 
     # ── 2. CARDS DE MÉTRICAS EM TEMPO REAL ──
     total_produtos = db.query(func.count(Produto.id)).scalar() or 0
@@ -257,7 +275,9 @@ def visualizar_painel(
             "categorias_labels": categorias_labels,
             "categorias_valores": categorias_valores,
             "receita_mensal_lista": receita_mensal_lista,
-            "meses_labels": meses_labels
+            "meses_labels": meses_labels,
+            "armarios_disponiveis": armarios_disponiveis,
+            "armarios_alugados": armarios_alugados
         }       
     )
 

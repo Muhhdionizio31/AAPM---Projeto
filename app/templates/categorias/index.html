@@ -4,21 +4,27 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
   <title>Categorias — AAPM SENAI</title>
+
   <link
     href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Lato:wght@300;400;700&display=swap"
     rel="stylesheet" />
+
   <link rel="stylesheet" href="/static/css/categorias.css" />
 </head>
 
 <body>
 
-  <!-- BARRA LATERAL -->
+  <!-- ==========================================================
+       BARRA LATERAL
+  =========================================================== -->
+
   <aside class="barra-lateral">
     <div class="barra-logo">
-      <span class="barra-logo-texto">SENAI <span>///</span></span>
+      <img class="barra-logo-senai" src="/static/uploads/foto-senai.png" alt="SENAI">
       <div class="barra-logo-separador"></div>
-      <span class="barra-logo-sub">AAPM</span>
+      <img class="barra-logo-aapm" src="/static/uploads/logo-aapm.png" alt="AAPM">
     </div>
 
     <span class="barra-menu-titulo">Menu</span>
@@ -65,6 +71,19 @@
         </a>
       </li>
       <li>
+        <a href="/armarios/" aria-current="page">
+          <svg viewBox="0 0 24 24">
+            <rect x="3" y="3" width="7" height="18" rx="1" />
+            <rect x="14" y="3" width="7" height="18" rx="1" />
+            <line x1="7" y1="8" x2="7" y2="8.01" />
+            <line x1="18" y1="8" x2="18" y2="8.01" />
+          </svg>
+          Armários
+        </a>
+      </li>
+
+      <li>
+        {% if usuario.role == 'admin' %}
         <a href="/clientes/">
           <svg viewBox="0 0 24 24">
             <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
@@ -74,8 +93,10 @@
           </svg>
           Clientes
         </a>
+        {% endif %}
       </li>
       <li>
+        {% if usuario.role == 'admin' %}
         <a href="/usuarios/">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
             stroke-linejoin="round">
@@ -87,16 +108,18 @@
           </svg>
           Usuarios
         </a>
+        {% endif %}
       </li>
     </ul>
-
 
     <div class="barra-rodape">
       <div class="barra-usuario">
         <div class="avatar-usuario">{{ usuario.nome[0] | upper if usuario else 'AD' }}</div>
         <div class="info-usuario">
           <strong>{{ usuario.nome if usuario else 'Usuário' }}</strong>
-          <small>Administrador</small>
+          <small>
+            {{ usuario.role|capitalize if usuario and usuario.role else 'Usuário' }}
+          </small>
         </div>
       </div>
       <button class="btn-sair" onclick="window.location.href='/auth/logout'">
@@ -105,110 +128,216 @@
     </div>
   </aside>
 
-  <!-- CONTEÚDO -->
+
+  <!-- ==========================================================
+       CONTEÚDO PRINCIPAL
+  =========================================================== -->
+
   <div class="conteudo-principal">
 
+    <!-- CABEÇALHO -->
     <header class="cabecalho-pagina">
-        <h1>Categorias</h1>
+
+      <h1>Categorias</h1>
+
       {% if usuario.role == 'admin' %}
-      <a href="/categorias/nova" class="btn-novo">
+
+      <!-- AGORA NÃO ABRE OUTRA PÁGINA -->
+      <button type="button" class="btn-novo" onclick="abrirModalCategoriaNova()">
         <svg viewBox="0 0 24 24">
           <line x1="12" y1="5" x2="12" y2="19" />
           <line x1="5" y1="12" x2="19" y2="12" />
         </svg>
+
         Nova Categoria
-      </a>
+      </button>
+
       {% endif %}
+
     </header>
 
-    <!-- Alertas (query params do backend) -->
+
+    <!-- ========================================================
+         ALERTAS
+    ========================================================= -->
+
     <div class="area-alertas">
+
       {% if request.query_params.get('criado') == 'ok' %}
+
       <div class="alerta sucesso">
+
         <svg viewBox="0 0 24 24">
           <polyline points="20 6 9 17 4 12" />
         </svg>
+
         <span>Categoria criada com sucesso!</span>
-        <button class="btn-fechar-alerta" onclick="this.parentElement.remove()">✕</button>
+
+        <button class="btn-fechar-alerta" onclick="this.parentElement.remove()">
+          ✕
+        </button>
+
       </div>
+
       {% endif %}
 
+
       {% if request.query_params.get('editado') == 'ok' %}
+
       <div class="alerta sucesso">
+
         <svg viewBox="0 0 24 24">
           <polyline points="20 6 9 17 4 12" />
         </svg>
+
         <span>Categoria atualizada com sucesso!</span>
-        <button class="btn-fechar-alerta" onclick="this.parentElement.remove()">✕</button>
+
+        <button class="btn-fechar-alerta" onclick="this.parentElement.remove()">
+          ✕
+        </button>
+
       </div>
+
       {% endif %}
 
       {% if request.query_params.get('erro') == 'produtos_vinculados' %}
+
       <div class="alerta erro">
+
         <svg viewBox="0 0 24 24">
           <circle cx="12" cy="12" r="10" />
           <line x1="12" y1="8" x2="12" y2="12" />
           <line x1="12" y1="16" x2="12.01" y2="16" />
         </svg>
+
         <span>
+
           Não é possível desativar
-          <strong>"{{ request.query_params.get('categoria') }}"</strong>
+
+          <strong>
+            "{{ request.query_params.get('categoria') }}"
+          </strong>
+
           pois ela possui produtos ativos vinculados.
+
           Desative ou mova os produtos antes.
+
         </span>
-        <button class="btn-fechar-alerta" onclick="this.parentElement.remove()">✕</button>
+
+        <button class="btn-fechar-alerta" onclick="this.parentElement.remove()">
+          ✕
+        </button>
+
       </div>
+
       {% endif %}
     </div>
+
+
+    <!-- ========================================================
+         ÁREA DA TABELA
+    ========================================================= -->
 
     <main class="area-conteudo">
       <div class="painel">
         <div class="painel-cabecalho">
-          <span class="painel-titulo">Lista de Categorias</span>
+          <span class="painel-titulo">
+            Lista de Categorias
+          </span>
+
           <div class="filtros-status">
+
             {% if usuario.role == 'admin' %}
-            <button class="btn-filtro ativo" onclick="filtrar('todos', this)">Todas</button>
-            <button class="btn-filtro" onclick="filtrar('ativa', this)">Ativas</button>
-            <button class="btn-filtro" onclick="filtrar('inativa', this)">Inativas</button>
+
+            <button class="btn-filtro ativo" onclick="filtrar('todos', this)">
+              Todas
+            </button>
+
+            <button class="btn-filtro" onclick="filtrar('ativa', this)">
+              Ativas
+            </button>
+
+            <button class="btn-filtro" onclick="filtrar('inativa', this)">
+              Inativas
+            </button>
+
             {% endif %}
+
           </div>
+
         </div>
 
+
+        <!-- TABELA -->
+
         <table class="tabela-categorias">
+
           <thead>
+
             <tr>
+
               <th>Nome</th>
+
               <th>Produtos Ativos</th>
+
               <th>Status</th>
+
               {% if usuario.role == 'admin' %}
-              <th style="text-align:right">Ações</th>
+              <th style="text-align:right">
+                Ações
+              </th>
               {% endif %}
+
               {% if usuario.role == 'operador' %}
               <th style="text-align:right"></th>
               {% endif %}
+
             </tr>
+
           </thead>
+
           <tbody id="corpoTabela">
 
             {% for c in categorias %}
+
             <tr data-status="{{ 'ativa' if c.ativa else 'inativa' }}">
 
+              <!-- NOME -->
+
               <td>
+
                 <div class="celula-nome">
+
                   <div class="icone-categoria">
+
                     <svg viewBox="0 0 24 24">
                       <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z" />
                     </svg>
+
                   </div>
-                  <span class="nome-categoria">{{ c.nome }}</span>
+
+                  <span class="nome-categoria">
+                    {{ c.nome }}
+                  </span>
+
                 </div>
+
               </td>
+
+              <!-- PRODUTOS -->
 
               <td>
                 <span class="badge-contagem">
-                  {{ c.produtos | selectattr('ativa') | list | length }}
+
+                  {{
+                  c.produtos
+                  | selectattr('ativa')
+                  | list
+                  | length
+                  }}
                 </span>
               </td>
+              <!-- STATUS -->
 
               <td>
                 <span class="badge-status {{ 'ativa' if c.ativa else 'inativa' }}">
@@ -216,140 +345,459 @@
                 </span>
               </td>
 
-              <td>
-                {% if usuario.role == 'admin' %}
-                <div class="celula-acoes">
-                  <!-- Editar -->
-                  <a href="/categorias/{{ c.id }}/editar" class="btn-acao btn-editar" title="Editar">
-                    <svg viewBox="0 0 24 24">
-                      <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
-                      <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
-                    </svg>
-                  </a>
 
-                  <!-- Toggle ativo/inativo -->
+              <!-- AÇÕES -->
+
+              {% if usuario.role == 'admin' %}
+              <td>
+                <div class="celula-acoes">
+                  <!-- EDITAR -->
+
+                  <button type="button" class="btn-acao btn-editar" title="Editar" data-id="{{ c.id }}"
+                    data-nome="{{ c.nome }}" data-ativa="{{ 'true' if c.ativa else 'false' }}" data-produtos='[
+                      {% for p in c.produtos %}
+                      {
+                        "nome": {{ p.nome | tojson }},
+                        "preco": {{ p.preco | default(0) }}
+                      }{% if not loop.last %},{% endif %}
+                      {% endfor %}
+                    ]' onclick="abrirModalCategoriaEditar(this)">
+
+                    <svg viewBox="0 0 24 24">
+
+                      <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+
+                      <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+
+                    </svg>
+
+                  </button>
+
+
+                  <!-- DESATIVAR / ATIVAR -->
+
                   <form action="/categorias/{{ c.id }}/toggle-ativo" method="post" style="display:contents">
+
                     {% if c.ativa %}
+
                     <button type="button" class="btn-acao btn-toggle-desativar" title="Desativar"
                       onclick="confirmarToggle(this, '{{ c.nome }}')">
+
                       <svg viewBox="0 0 24 24">
+
                         <rect x="1" y="5" width="22" height="14" rx="7" />
+
                         <circle cx="16" cy="12" r="3" />
+
                       </svg>
+
                     </button>
+
                     {% else %}
+
                     <button type="submit" class="btn-acao btn-toggle-ativar" title="Ativar">
+
                       <svg viewBox="0 0 24 24">
+
                         <rect x="1" y="5" width="22" height="14" rx="7" />
+
                         <circle cx="8" cy="12" r="3" />
+
                       </svg>
+
                     </button>
                     {% endif %}
                   </form>
 
-                  <!-- Excluir -->
+                  <!-- EXCLUIR -->
+
                   <form action="/categorias/{{ c.id }}/deletar" method="post" style="display:contents">
+
                     <button type="button" class="btn-acao btn-excluir" title="Excluir"
                       onclick="confirmarExclusao(this, '{{ c.nome }}')">
+
                       <svg viewBox="0 0 24 24">
+
                         <polyline points="3 6 5 6 21 6" />
+
                         <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" />
+
                         <path d="M10 11v6" />
+
                         <path d="M14 11v6" />
+
                         <path d="M9 6V4h6v2" />
                       </svg>
                     </button>
+
                   </form>
+
                 </div>
-                {% endif %}
+
               </td>
+
+              {% endif %}
+
             </tr>
+
             {% endfor %}
 
+
+            <!-- NENHUMA CATEGORIA -->
+
             {% if not categorias %}
+
             <tr class="linha-vazia">
+
               <td colspan="4">
+
                 <div class="icone-vazio">
+
                   <svg viewBox="0 0 24 24">
+
                     <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z" />
+
                   </svg>
+
                 </div>
+
                 <p>Nenhuma categoria cadastrada.</p>
-                <a href="/categorias/nova" class="btn-novo" style="display:inline-flex;margin:0 auto">
+
+                {% if usuario.role == 'admin' %}
+
+                <button type="button" class="btn-novo" style="display:inline-flex;margin:0 auto"
+                  onclick="abrirModalCategoriaNova()">
                   + Criar primeira categoria
-                </a>
+                </button>
+
+                {% endif %}
+
               </td>
+
             </tr>
+
             {% endif %}
 
           </tbody>
+
         </table>
 
+
+        <!-- RODAPÉ DA TABELA -->
+
         <div class="rodape-tabela">
+
           <span id="infoTabela">
-            {{ categorias | length }} categoria{{ 's' if categorias | length != 1 else '' }}
+
+            {{ categorias | length }}
+
+            categoria{{ 's' if categorias | length != 1 else '' }}
+
           </span>
+
         </div>
+
       </div>
+
     </main>
 
+    <br>
+
+    <div class="paginacao">
+
+      <span class="paginacao-info">
+        Página {{ page }} de {{ total_pages }}
+      </span>
+
+      {% if page > 1 %}
+      <a class="paginacao-btn" href="/categorias?page={{ page - 1 }}&per_page={{ per_page }}">
+        Anterior
+      </a>
+      {% else %}
+
+      <span class="paginacao-btn desabilitado">
+        Anterior
+      </span>
+      {% endif %}
+
+      {% if page < total_pages %} <a class="paginacao-btn"
+        href="/categorias?page={{ page + 1 }}&per_page={{ per_page }}">
+        Próxima
+        </a>
+        {% else %}
+        <span class="paginacao-btn desabilitado">
+          Próxima
+        </span>
+        {% endif %}
+
+    </div>
+    <br>
+
+    <!-- RODAPÉ -->
+
     <footer class="rodape-admin">
-      Gerenciamento de Categorias &nbsp;·&nbsp; © 2026 Todos os direitos reservados
+      Gerenciamento de Categorias
+      &nbsp;·&nbsp;
+      © 2026 Todos os direitos reservados
     </footer>
+
   </div>
 
-  <!-- MODAL — confirmar desativação -->
+
+  <!-- ==========================================================
+       MODAL — NOVA / EDITAR CATEGORIA
+  =========================================================== -->
+
+  <div class="cat-overlay" id="catModalCategoria">
+
+    <div class="cat-modal" role="dialog" aria-modal="true" aria-labelledby="catModalTitulo">
+
+      <!-- CABEÇALHO -->
+
+      <div class="cat-modal-cabecalho">
+
+        <h2 id="catModalTitulo">
+          Nova categoria
+        </h2>
+
+        <button type="button" class="cat-modal-fechar" onclick="fecharModalCategoria()" aria-label="Fechar">
+          <svg viewBox="0 0 24 24">
+            <line x1="18" y1="6" x2="6" y2="18" />
+
+            <line x1="6" y1="6" x2="18" y2="18" />
+          </svg>
+
+        </button>
+      </div>
+
+      <!-- CORPO -->
+
+      <div class="cat-modal-corpo">
+
+        <!-- ERRO DO BACKEND -->
+
+        {% if erro %}
+
+        <div class="cat-alerta-erro">
+
+          <svg viewBox="0 0 24 24">
+
+            <circle cx="12" cy="12" r="10" />
+
+            <line x1="12" y1="8" x2="12" y2="12" />
+
+            <line x1="12" y1="16" x2="12.01" y2="16" />
+
+          </svg>
+
+          <span>
+            {{ erro }}
+          </span>
+
+        </div>
+
+        {% endif %}
+
+
+        <!-- FORMULÁRIO -->
+
+        <form id="catForm" action="/categorias/nova" method="post">
+
+          <!-- NOME -->
+
+          <div class="cat-form-group">
+
+            <label for="nome">
+              Nome da categoria
+            </label>
+
+            <input type="text" id="nome" name="nome" placeholder="Ex.: Bebidas, Alimentos, Material escolar..."
+              maxlength="100" required autocomplete="off" />
+
+          </div>
+
+
+          <!-- STATUS -->
+
+          <div class="cat-form-group">
+            <div class="cat-toggle-wrap">
+              <div class="cat-toggle-label">
+
+                <strong>
+                  Categoria ativa
+                </strong>
+
+                <small>
+                  Categorias inativas não aparecem para novos produtos.
+                </small>
+              </div>
+
+
+              <label>
+                <input type="checkbox" id="ativa" name="ativa" value="true" class="cat-toggle-input" checked />
+                <span class="cat-toggle-visual"></span>
+
+              </label>
+            </div>
+          </div>
+
+          <!-- PRODUTOS VINCULADOS -->
+
+          <div class="cat-bloco-produtos" id="catBlocoProdutos" style="display:none">
+            <div class="cat-bloco-produtos-titulo">
+              <span>
+                Produtos vinculados
+              </span>
+              <span class="cat-badge-count" id="catBadgeCount">
+                0 ativos
+              </span>
+
+            </div>
+
+            <div class="cat-lista-produtos" id="catListaProdutos"></div>
+
+          </div>
+
+          <!-- DICA -->
+
+          <div class="cat-modal-dica" id="catDica">
+            <strong>Dica:</strong>
+            após criar a categoria, você pode vinculá-la a produtos no painel de estoque.
+          </div>
+
+
+          <!-- RODAPÉ DO FORM -->
+          <div class="cat-modal-rodape">
+            <button type="button" class="cat-btn-cancelar" onclick="fecharModalCategoria()">
+              Cancelar
+            </button>
+            <button type="submit" class="cat-btn-salvar" id="catBtnSalvar">
+              Criar categoria
+            </button>
+
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ==========================================================
+       MODAL — CONFIRMAR DESATIVAÇÃO
+  =========================================================== -->
+
   <div class="sobreposicao-modal" id="modalDesativar">
     <div class="modal">
       <div class="modal-cabecalho">
         <span></span>
-        <button class="btn-fechar-modal" onclick="fecharModal('modalDesativar')">✕</button>
+        <button type="button" class="btn-fechar-modal" onclick="fecharModal('modalDesativar')">
+          ✕
+        </button>
       </div>
+
       <div class="confirmacao-icone amarelo">
         <svg viewBox="0 0 24 24">
           <rect x="1" y="5" width="22" height="14" rx="7" />
           <circle cx="8" cy="12" r="3" />
         </svg>
       </div>
+
       <div class="confirmacao-texto">
-        <h3>Desativar categoria</h3>
-        <p>Deseja realmente desativar <strong id="nomeDesativar"></strong>?</p>
+        <h3>
+          Desativar categoria
+        </h3>
+
+        <p>
+          Deseja realmente desativar
+          <strong id="nomeDesativar"></strong>?
+        </p>
+
       </div>
+
+
       <div class="acoes-modal">
-        <button class="btn-cancelar" onclick="fecharModal('modalDesativar')">Cancelar</button>
-        <button class="btn-confirmar amarelo" id="btnConfirmarDesativar">Desativar</button>
+
+        <button type="button" class="btn-cancelar" onclick="fecharModal('modalDesativar')">
+          Cancelar
+        </button>
+
+        <button type="button" class="btn-confirmar amarelo" id="btnConfirmarDesativar">
+          Desativar
+        </button>
+
       </div>
+
     </div>
+
   </div>
 
-  <!-- MODAL — confirmar exclusão -->
+
+  <!-- ==========================================================
+       MODAL — CONFIRMAR EXCLUSÃO
+  =========================================================== -->
+
   <div class="sobreposicao-modal" id="modalExcluir">
     <div class="modal">
       <div class="modal-cabecalho">
         <span></span>
-        <button class="btn-fechar-modal" onclick="fecharModal('modalExcluir')">✕</button>
+        <button type="button" class="btn-fechar-modal" onclick="fecharModal('modalExcluir')">
+          ✕
+        </button>
+
       </div>
+
       <div class="confirmacao-icone vermelho">
         <svg viewBox="0 0 24 24">
+
           <polyline points="3 6 5 6 21 6" />
+
           <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" />
+
           <path d="M10 11v6" />
+
           <path d="M14 11v6" />
+
           <path d="M9 6V4h6v2" />
+
         </svg>
+
       </div>
+
       <div class="confirmacao-texto">
-        <h3>Excluir categoria</h3>
-        <p>Deseja realmente excluir <strong id="nomeExcluir"></strong>? Esta ação não pode ser desfeita.</p>
+        <h3>
+          Excluir categoria
+        </h3>
+
+        <p>
+          Deseja realmente excluir
+          <strong id="nomeExcluir"></strong>?
+
+          Esta ação não pode ser desfeita.
+        </p>
+
       </div>
+
+
       <div class="acoes-modal">
-        <button class="btn-cancelar" onclick="fecharModal('modalExcluir')">Cancelar</button>
-        <button class="btn-confirmar vermelho" id="btnConfirmarExcluir">Excluir</button>
+        <button type="button" class="btn-cancelar" onclick="fecharModal('modalExcluir')">
+          Cancelar
+        </button>
+
+        <button type="button" class="btn-confirmar vermelho" id="btnConfirmarExcluir">
+          Excluir
+        </button>
+
       </div>
     </div>
   </div>
 
+
+  <!-- ==========================================================
+       JAVASCRIPT
+  =========================================================== -->
+
   <script src="/static/js/categorias.js"></script>
+
 
 </body>
 

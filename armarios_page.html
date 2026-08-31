@@ -1,13 +1,36 @@
-{% extends 'site/base.html' %}
+<!DOCTYPE html>
+<html lang="pt-br">
 
-{% block titulo %}Login — AAPM SENAI{% endblock %}
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login — AAPM SENAI</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Lato:wght@300;400;700&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="/static/css/base-style.css" />
 
-{% block css %}
+  
 <link rel="stylesheet" href="/static/css/esqueci_senha.css" />
 <link rel="stylesheet" href="/static/css/login.css" />
-{% endblock %}
 
-{% block conteudo %}
+</head>
+
+<body>
+
+  <nav>
+    <a class="nav-logo" href="#">
+      <img src="/static/uploads/foto-senai.png" alt="Logo SENAI" class="img-logo">
+    </a>
+    <ul class="nav-links">
+      <li><a href="/">Início</a></li>
+      <li><a href="/horario">Horário de Atendimento</a></li>
+      <li><a href="/login" class="btn-admin">Sou Administrador</a></li>
+    </ul>
+  </nav>
+
+  <main>
+    
 <!-- LOGIN LAYOUT -->
 <div class="login-wrapper">
 
@@ -57,18 +80,10 @@
             </div>
 
             <!-- Mensagem de cadastro bem-sucedido -->
-            {% if request.query_params.get('cadastro') == 'sucesso' %}
-            <div class="form-error" style="background:#f0fdf4; border-color:#86efac; color:#166534;">
-                Cadastro realizado com sucesso! Faça login para continuar.
-            </div>
-            {% endif %}
+            
 
             <!-- Mensagem de erro vinda do backend -->
-            {% if erro %}
-            <div class="form-error visible">
-                {{ erro }}
-            </div>
-            {% endif %}
+            
 
             <form action="/auth/login" method="post">
 
@@ -148,7 +163,32 @@
         </div>
     </dialog>
 </div>
-{% block js %}
+
 <script src="/static/js/esqueci_senha.js"></script>
-{% endblock %}
-{% endblock %}
+
+
+  </main>
+
+  <div class="footer-nav">
+    <a href="/">Informações</a>
+    <span>•</span>
+    <a href="/horario">Horário de Atendimento</a>
+    <span>•</span>
+    <a href="/politica">Política de Privacidade</a>
+  </div>
+
+  <footer>
+    <div class="footer-brand">
+      SENAI Francisco Matarazzo
+    </div>
+    <span class="footer-copy">Copyright 2024 © Todos os direitos reservados</span>
+  </footer>
+
+  <script src="/static/js/scripts.js"></script>
+
+  
+  
+
+</body>
+
+</html>
