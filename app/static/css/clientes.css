@@ -1,8 +1,8 @@
-﻿/* =============================================================
+/* =============================================================
    CLIENTES.CSS
    Folha de estilo completa e independente da página de
    Clientes e Associados — AAPM SENAI Francisco Matarazzo.
-   Design premium consistente com Armários, Estoque e Painel.
+   Design premium consistente com Armários, Estoque, Vendas e Painel.
    ============================================================= */
 
 *,
@@ -298,6 +298,7 @@ body {
   color: #999;
   font-weight: 600;
   white-space: nowrap;
+  text-transform: capitalize;
 }
 
 .btn-menu-mobile {
@@ -385,7 +386,8 @@ body {
 .bv-texto p {
   font-size: 0.88rem;
   color: rgba(255, 255, 255, 0.5);
-  max-width: 460px;
+  max-width: 520px;
+  line-height: 1.4;
 }
 
 .bv-badge {
@@ -411,18 +413,6 @@ body {
   grid-template-columns: repeat(4, 1fr);
   gap: 16px;
   margin-bottom: 26px;
-}
-
-@media (max-width: 1100px) {
-  .grade-metricas {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-@media (max-width: 600px) {
-  .grade-metricas {
-    grid-template-columns: 1fr;
-  }
 }
 
 .card-metrica {
@@ -574,6 +564,7 @@ body {
   gap: 8px;
   box-shadow: 0 4px 14px rgba(200, 16, 46, 0.28);
   transition: all 0.2s ease;
+  text-decoration: none;
 }
 
 .btn-principal:hover {
@@ -604,6 +595,9 @@ body {
   flex: 1;
   min-width: 240px;
   max-width: 380px;
+  height: 38px;
+  padding: 0 10px;
+  gap: 6px;
 }
 
 .barra-busca-cliente:focus-within {
@@ -615,17 +609,18 @@ body {
   width: 16px;
   height: 16px;
   stroke: #9ca3af;
-  margin-left: 12px;
+  flex-shrink: 0;
 }
 
 .barra-busca-cliente input {
   border: none;
   outline: none;
-  padding: 10px 12px;
+  padding: 0 6px;
   font-family: 'Lato', sans-serif;
   font-size: 0.88rem;
   color: #111827;
   width: 100%;
+  background: transparent;
 }
 
 .grupo-chips {
@@ -683,6 +678,7 @@ body {
 
 .tabela-container {
   overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 .tabela-clientes {
@@ -745,6 +741,7 @@ body {
 .cliente-nome-texto {
   font-weight: 700;
   color: #111827;
+  white-space: nowrap;
 }
 
 .cliente-matricula-badge {
@@ -900,6 +897,7 @@ body {
   padding: 16px 24px;
   border-top: 1px solid #f3f4f6;
   background: #fafbfc;
+  flex-wrap: wrap;
 }
 
 .btn-pagina {
@@ -939,16 +937,16 @@ body {
    ------------------------------------------------------------- */
 
 .modal-sobreposicao {
-  display: none;
-  position: fixed;
-  inset: 0;
-  background: rgba(15, 23, 42, 0.65);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  z-index: 1000 !important;
-  align-items: center;
-  justify-content: center;
-  padding: 16px;
+  display: none !important;
+  position: fixed !important;
+  inset: 0 !important;
+  background: rgba(15, 23, 42, 0.70) !important;
+  backdrop-filter: blur(8px) !important;
+  -webkit-backdrop-filter: blur(8px) !important;
+  z-index: 9999 !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 16px !important;
 }
 
 .modal-sobreposicao.visivel,
@@ -957,19 +955,21 @@ body {
 }
 
 body.modal-aberto-body {
-  overflow: hidden;
+  overflow: hidden !important;
 }
 
 .modal-caixa {
-  background: #ffffff;
-  width: 100%;
-  max-width: 520px;
-  max-height: 90vh;
-  overflow-y: auto;
-  border-radius: 16px;
-  box-shadow: 0 25px 65px rgba(0, 0, 0, 0.28);
-  animation: modalEntrar 0.22s cubic-bezier(0.16, 1, 0.3, 1);
-  padding-bottom: 12px;
+  background: #ffffff !important;
+  width: 100% !important;
+  max-width: 520px !important;
+  max-height: 90vh !important;
+  overflow-y: auto !important;
+  border-radius: 16px !important;
+  box-shadow: 0 25px 65px rgba(0, 0, 0, 0.35) !important;
+  animation: modalEntrar 0.22s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  padding-bottom: 12px !important;
+  position: relative !important;
+  z-index: 10000 !important;
 }
 
 @keyframes modalEntrar {
@@ -1340,4 +1340,143 @@ body.modal-aberto-body {
   font-size: 0.78rem;
   color: #9ca3af;
   padding: 24px 0 16px;
+}
+
+/* -------------------------------------------------------------
+   RESPONSIVO COMPLETO
+   ------------------------------------------------------------- */
+
+@media (max-width: 1100px) {
+  .grade-metricas {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .barra-lateral {
+    transform: translateX(-100%);
+  }
+
+  .barra-lateral.aberta {
+    transform: translateX(0);
+  }
+
+  .barra-fechar-mobile {
+    display: block;
+  }
+
+  .btn-menu-mobile {
+    display: flex;
+  }
+
+  .conteudo-principal {
+    margin-left: 0;
+  }
+
+  .cabecalho-pagina {
+    padding: 0 16px;
+  }
+
+  .cabecalho-pagina h1 {
+    font-size: 1.1rem;
+  }
+
+  .cabecalho-data {
+    display: none;
+  }
+
+  .area-conteudo {
+    padding: 20px 16px;
+  }
+
+  .bloco-boas-vindas {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+    padding: 22px 20px;
+  }
+
+  .card-cabecalho {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 14px;
+    padding: 18px 20px;
+  }
+
+  .card-cabecalho .btn-principal {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .filtros-clientes {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+    padding: 14px 20px;
+  }
+
+  .barra-busca-cliente {
+    min-width: 100%;
+    max-width: 100%;
+  }
+
+  .grupo-chips {
+    overflow-x: auto;
+    padding-bottom: 6px;
+    flex-wrap: nowrap;
+    -webkit-overflow-scrolling: touch;
+    width: 100%;
+  }
+
+  .btn-filtro {
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .tabela-clientes th,
+  .tabela-clientes td {
+    padding: 12px 16px;
+  }
+
+  .campo-form-grade,
+  .detalhe-grade {
+    grid-template-columns: 1fr !important;
+  }
+
+  .modal-acoes {
+    flex-direction: column-reverse;
+  }
+
+  .modal-acoes .btn-cancelar,
+  .modal-acoes .btn-principal {
+    width: 100%;
+    justify-content: center;
+    text-align: center;
+  }
+
+  .paginacao-servidor {
+    justify-content: center;
+    padding: 16px;
+  }
+
+  .toast {
+    left: 16px;
+    right: 16px;
+    bottom: 16px;
+    max-width: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .grade-metricas {
+    grid-template-columns: 1fr;
+  }
+
+  .modal-corpo {
+    padding: 18px 16px !important;
+  }
+
+  .modal-cabecalho {
+    padding: 16px 18px !important;
+  }
 }
