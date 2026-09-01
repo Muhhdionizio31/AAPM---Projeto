@@ -79,11 +79,18 @@ function somarGradeNaTela(containerId, estoqueId) {
   if (!container || !campoEstoque) return;
 
   const inputsQtd = container.querySelectorAll('.grade-qtd');
-  let soma = 0;
-  inputsQtd.forEach(input => {
-    soma += parseInt(input.value, 10) || 0;
-  });
-  campoEstoque.value = soma;
+  if (inputsQtd.length > 0) {
+    let soma = 0;
+    inputsQtd.forEach(input => {
+      soma += parseInt(input.value, 10) || 0;
+    });
+    campoEstoque.value = soma;
+    campoEstoque.readOnly = true;
+    campoEstoque.style.backgroundColor = '#f1f5f9';
+  } else {
+    campoEstoque.readOnly = false;
+    campoEstoque.style.backgroundColor = '#ffffff';
+  }
 }
 
 function adicionarLinha(containerId, estoqueId, tamanhoVal = '', qtdVal = 0) {
@@ -93,9 +100,9 @@ function adicionarLinha(containerId, estoqueId, tamanhoVal = '', qtdVal = 0) {
   const novaLinha = document.createElement('div');
   novaLinha.className = 'linha-grade';
   novaLinha.innerHTML = `
-    <input type="text" class="grade-tamanho" placeholder="Ex: P, M, G, 42" value="${tamanhoVal}" style="flex: 2; padding: 8px 10px; border: 1.5px solid #cbd5e1; border-radius: 6px; font-size: 0.88rem;">
+    <input type="text" class="grade-tamanho" placeholder="Ex: P, M, G, 42, Azul" value="${tamanhoVal}" style="flex: 2; padding: 8px 10px; border: 1.5px solid #cbd5e1; border-radius: 6px; font-size: 0.88rem;">
     <input type="number" class="grade-qtd" placeholder="Qtd" min="0" value="${qtdVal}" style="flex: 1; padding: 8px 10px; border: 1.5px solid #cbd5e1; border-radius: 6px; font-size: 0.88rem;">
-    <button type="button" class="btn-remover-grade" title="Remover tamanho">✕</button>
+    <button type="button" class="btn-remover-grade" title="Remover variação">✕</button>
   `;
 
   const inputQtd = novaLinha.querySelector('.grade-qtd');
@@ -103,15 +110,16 @@ function adicionarLinha(containerId, estoqueId, tamanhoVal = '', qtdVal = 0) {
     inputQtd.addEventListener('input', () => somarGradeNaTela(containerId, estoqueId));
   }
 
+  const inputTam = novaLinha.querySelector('.grade-tamanho');
+  if (inputTam) {
+    inputTam.addEventListener('input', () => somarGradeNaTela(containerId, estoqueId));
+  }
+
   const btnRemover = novaLinha.querySelector('.btn-remover-grade');
   if (btnRemover) {
     btnRemover.addEventListener('click', () => {
-      if (container.children.length > 1) {
-        novaLinha.remove();
-        somarGradeNaTela(containerId, estoqueId);
-      } else {
-        mostrarToast('Produtos com grade exigem ao menos uma variação.', 'erro');
-      }
+      novaLinha.remove();
+      somarGradeNaTela(containerId, estoqueId);
     });
   }
 
@@ -120,31 +128,16 @@ function adicionarLinha(containerId, estoqueId, tamanhoVal = '', qtdVal = 0) {
 }
 
 function gerenciarExibicaoGrade(selectId, grupoId, estoqueId, containerId) {
-  const select = document.getElementById(selectId);
   const grupo = document.getElementById(grupoId);
-  const estoque = document.getElementById(estoqueId);
   const container = document.getElementById(containerId);
 
-  if (!select || !grupo || !estoque) return;
-
-  const textoCategoria = (select.options[select.selectedIndex]?.text || '').toLowerCase();
-  const usaGrade = textoCategoria.includes('uniforme') || textoCategoria.includes('vestuário') || textoCategoria.includes('camisa') || textoCategoria.includes('calça') || select.value === '1' || select.value === '10';
-
-  if (usaGrade) {
-    grupo.style.display = 'block';
-    estoque.readOnly = true;
-    estoque.style.backgroundColor = '#f1f5f9';
-    if (container && container.children.length === 0) {
-      adicionarLinha(containerId, estoqueId, 'P', 0);
-      adicionarLinha(containerId, estoqueId, 'M', 0);
-      adicionarLinha(containerId, estoqueId, 'G', 0);
-    }
-    somarGradeNaTela(containerId, estoqueId);
-  } else {
-    grupo.style.display = 'none';
-    estoque.readOnly = false;
-    estoque.style.backgroundColor = '#ffffff';
+  if (grupo) grupo.style.display = 'block';
+  if (container && container.children.length === 0) {
+    adicionarLinha(containerId, estoqueId, 'P', 0);
+    adicionarLinha(containerId, estoqueId, 'M', 0);
+    adicionarLinha(containerId, estoqueId, 'G', 0);
   }
+  somarGradeNaTela(containerId, estoqueId);
 }
 
 function capturarDadosGrade(containerId) {
@@ -170,16 +163,18 @@ function abrirModalNovo() {
   if (form) form.reset();
 
   const container = document.getElementById('containerGradesNovo');
-  if (container) container.innerHTML = '';
+  if (container) {
+    container.innerHTML = '';
+    // Inicializa sempre com as variações padrão P, M, G (disponível em todas as categorias)
+    adicionarLinha('containerGradesNovo', 'novoEstoque', 'P', 0);
+    adicionarLinha('containerGradesNovo', 'novoEstoque', 'M', 0);
+    adicionarLinha('containerGradesNovo', 'novoEstoque', 'G', 0);
+  }
 
   const grupoGrade = document.getElementById('grupoGradeNovo');
-  if (grupoGrade) grupoGrade.style.display = 'none';
+  if (grupoGrade) grupoGrade.style.display = 'block';
 
-  const campoEstoque = document.getElementById('novoEstoque');
-  if (campoEstoque) {
-    campoEstoque.readOnly = false;
-    campoEstoque.style.backgroundColor = '#ffffff';
-  }
+  somarGradeNaTela('containerGradesNovo', 'novoEstoque');
 
   abrirModal('modalNovoSobreposicao');
   setTimeout(() => {
@@ -390,7 +385,8 @@ async function abrirModalEditar(dados) {
   if (selectCat) selectCat.value = dados.categoriaId || '';
   if (inputPreco) inputPreco.value = dados.preco || '';
   if (inputEstoque) inputEstoque.value = dados.estoque || '0';
-  if (container) container.innerHTML = '';
+  const grupoGrade = document.getElementById('grupoGradeEditar');
+  if (grupoGrade) grupoGrade.style.display = 'block';
 
   try {
     const res = await fetch(`/produtos/${id}/variacoes`);
@@ -400,13 +396,24 @@ async function abrirModalEditar(dados) {
         variacoes.forEach(v => {
           adicionarLinha('containerGradesEditar', 'editarEstoque', v.tamanho, v.estoque_atual);
         });
+      } else {
+        adicionarLinha('containerGradesEditar', 'editarEstoque', 'P', 0);
+        adicionarLinha('containerGradesEditar', 'editarEstoque', 'M', 0);
+        adicionarLinha('containerGradesEditar', 'editarEstoque', 'G', 0);
       }
+    } else {
+      adicionarLinha('containerGradesEditar', 'editarEstoque', 'P', 0);
+      adicionarLinha('containerGradesEditar', 'editarEstoque', 'M', 0);
+      adicionarLinha('containerGradesEditar', 'editarEstoque', 'G', 0);
     }
   } catch (e) {
     console.error('Erro ao carregar grade na edição:', e);
+    adicionarLinha('containerGradesEditar', 'editarEstoque', 'P', 0);
+    adicionarLinha('containerGradesEditar', 'editarEstoque', 'M', 0);
+    adicionarLinha('containerGradesEditar', 'editarEstoque', 'G', 0);
   }
 
-  gerenciarExibicaoGrade('editarCategoria', 'grupoGradeEditar', 'editarEstoque', 'containerGradesEditar');
+  somarGradeNaTela('containerGradesEditar', 'editarEstoque');
 
   abrirModal('modalEditarSobreposicao');
   setTimeout(() => {

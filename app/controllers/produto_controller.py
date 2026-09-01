@@ -10,6 +10,7 @@ from fastapi.responses import RedirectResponse, JSONResponse
 from fastapi import APIRouter, Depends, HTTPException, Request, Form, UploadFile, File, status
 from fastapi.responses import RedirectResponse
 from fastapi.templating import Jinja2Templates
+from sqlalchemy import func
 from sqlalchemy.orm import Session
 
 from app.database import get_db
@@ -60,6 +61,9 @@ def listar_produtos(
 
 
     total_produtos = query.count()
+    total_estoque = query.with_entities(
+        func.coalesce(func.sum(Produto.estoque_atual), 0)
+    ).scalar()
     page = max(page, 1)
     per_page = max(per_page, 1)
     total_pages = math.ceil(total_produtos / per_page) if total_produtos else 1
@@ -82,7 +86,8 @@ def listar_produtos(
             "page":         page,
             "per_page":     per_page,
             "total_pages":  total_pages,
-            "total_produtos": total_produtos
+            "total_produtos": total_produtos,
+            "total_estoque": int(total_estoque or 0)
         }
     )
 
@@ -139,21 +144,27 @@ async def criar_produto(
     db.add(novo_produto)
     db.flush() 
 
-    # 3. Se for categoria de Uniformes (10), insere as variações associadas
-    if categoria_id and variacoes_json:
+    # 3. Salva variações se enviadas (disponível para todas as categorias)
+    if variacoes_json:
         try:
             lista_variacoes = json.loads(variacoes_json)
-            for item in lista_variacoes:
-                nova_var = ProdutoVariacao(
-                    produto_id=novo_produto.id,
-                    tamanho=str(item.get("tamanho")).upper(),
-                    estoque_atual=int(item.get("estoque_atual", 0)),
-                    ativa=True
-                )
-                db.add(nova_var)
-            db.flush()
-            
-            recalcular_estoque_produto(db, novo_produto.id)
+            if lista_variacoes:
+                total_grade = 0
+                for item in lista_variacoes:
+                    tam = str(item.get("tamanho", "")).strip()
+                    qtd = int(item.get("estoque_atual", 0))
+                    if tam:
+                        nova_var = ProdutoVariacao(
+                            produto_id=novo_produto.id,
+                            tamanho=tam,
+                            estoque_atual=qtd,
+                            ativa=True
+                        )
+                        db.add(nova_var)
+                        total_grade += qtd
+                db.flush()
+                novo_produto.estoque_atual = total_grade
+                recalcular_estoque_produto(db, novo_produto.id)
         except Exception as e:
             db.rollback()
             return JSONResponse(
@@ -168,6 +179,28 @@ async def criar_produto(
         content={"status": "sucesso", "mensagem": "Produto criado com sucesso!"}, 
         status_code=201
     )
+
+
+# ============================================================
+# VARIAÇÕES DO PRODUTO (JSON)
+# ============================================================
+@router.get("/{produto_id}/variacoes")
+def obter_variacoes_produto(
+    produto_id: int,
+    db: Session = Depends(get_db)
+):
+    variacoes = db.query(ProdutoVariacao).filter(
+        ProdutoVariacao.produto_id == produto_id,
+        ProdutoVariacao.ativa == True
+    ).all()
+    return [
+        {
+            "id": v.id,
+            "tamanho": v.tamanho,
+            "estoque_atual": v.estoque_atual
+        }
+        for v in variacoes
+    ]
 
 
 # DETALHE
@@ -242,15 +275,19 @@ async def editar_produto(
     produto.categoria_id = categoria_id
     produto.preco = preco
 
+    if imagem and imagem.filename:
+        nova_img = await _salvar_imagem(imagem)
+        if nova_img:
+            _remover_imagem(produto.imagem_path)
+            produto.imagem_path = nova_img
+
     # =========================================================
-    # 2. LOGICA DE VARIÁÇÕES (Roda APENAS para Vestuário)
+    # 2. LOGICA DE VARIÁÇÕES (Disponível para TODAS as categorias)
     # =========================================================
-    if categoria_id and variacoes_json:
+    if variacoes_json:
         try:
             lista_variacoes = json.loads(variacoes_json)
-            
-            # Mapeia os tamanhos que vieram do Front-end nesta edição
-            tamanhos_enviados = [str(item.get("tamanho")).upper().strip() for item in lista_variacoes if item.get("tamanho")]
+            tamanhos_enviados = [str(item.get("tamanho")).strip() for item in lista_variacoes if str(item.get("tamanho", "")).strip()]
 
             # Desativamos apenas os tamanhos que o usuário removeu da tela
             if tamanhos_enviados:
@@ -258,13 +295,16 @@ async def editar_produto(
                     ProdutoVariacao.produto_id == produto_id,
                     ProdutoVariacao.ativa == True,
                     ~ProdutoVariacao.tamanho.in_(tamanhos_enviados)
-                ).update({"ativa": True}, synchronize_session=False)
+                ).update({"ativa": False}, synchronize_session=False)
 
             from sqlalchemy import func
-            # Atualiza ou Cria as variações enviadas
+            total_grade = 0
             for item in lista_variacoes:
-                tamanho_nome = str(item.get("tamanho")).upper().strip()
+                tamanho_nome = str(item.get("tamanho")).strip()
+                if not tamanho_nome:
+                    continue
                 qtd = int(item.get("estoque_atual", 0))
+                total_grade += qtd
                 
                 var_existente = db.query(ProdutoVariacao).filter(
                     ProdutoVariacao.produto_id == produto_id, 
@@ -285,13 +325,8 @@ async def editar_produto(
             
             db.flush()
             
-            # Força a soma manual do estoque para produtos com variação
-            variacoes_ativas = db.query(ProdutoVariacao).filter(
-                ProdutoVariacao.produto_id == produto_id,
-                ProdutoVariacao.ativa == True
-            ).all()
-            
-            produto.estoque_atual = sum(v.estoque_atual for v in variacoes_ativas)
+            if lista_variacoes:
+                produto.estoque_atual = total_grade
             
             try:
                 recalcular_estoque_produto(db, produto_id)
@@ -301,12 +336,17 @@ async def editar_produto(
         except Exception as e:
             db.rollback()
             raise HTTPException(status_code=400, detail=f"Erro na edição da grade: {str(e)}")
+    elif estoque_atual is not None:
+        produto.estoque_atual = estoque_atual
 
     # =========================================================
     # 3. SALVAMENTO DEFINITIVO (Fora dos blocos, salva qualquer caso)
     # =========================================================
     db.commit() 
-    return RedirectResponse(url="/produtos", status_code=status.HTTP_303_SEE_OTHER)
+    return JSONResponse(
+        content={"status": "sucesso", "mensagem": "Produto atualizado com sucesso!"}, 
+        status_code=200
+    )
 # ============================================================
 # DESATIVAR
 # ============================================================

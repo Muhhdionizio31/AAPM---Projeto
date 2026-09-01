@@ -11,48 +11,7 @@
     href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Lato:wght@300;400;700&display=swap"
     rel="stylesheet" />
 
-  <link rel="stylesheet" href="/static/css/estoque.css?v=3" />
-
-  <style>
-    /* ==========================================================
-       ESTILOS DOS MODAIS E ALERTAS DE ESTOQUE (CONTRA CACHE)
-       ========================================================== */
-    .modal-sobreposicao {
-      display: none !important;
-      position: fixed !important;
-      inset: 0 !important;
-      background: rgba(15, 23, 42, 0.65) !important;
-      backdrop-filter: blur(8px) !important;
-      -webkit-backdrop-filter: blur(8px) !important;
-      z-index: 9999 !important;
-      align-items: center !important;
-      justify-content: center !important;
-      padding: 16px !important;
-    }
-
-    .modal-sobreposicao.visivel,
-    .modal-sobreposicao.aberto {
-      display: flex !important;
-    }
-
-    body.modal-aberto-body {
-      overflow: hidden !important;
-    }
-
-    .modal-caixa {
-      background: #ffffff !important;
-      width: 100% !important;
-      max-width: 520px !important;
-      max-height: 90vh !important;
-      overflow-y: auto !important;
-      border-radius: 16px !important;
-      box-shadow: 0 25px 65px rgba(0, 0, 0, 0.28) !important;
-      animation: modalEntrar 0.22s cubic-bezier(0.16, 1, 0.3, 1) !important;
-      padding-bottom: 12px !important;
-      position: relative !important;
-      z-index: 10000 !important;
-    }
-  </style>
+  <link rel="stylesheet" href="/static/css/estoque.css?v=25" />
 </head>
 
 <body>
@@ -207,7 +166,7 @@
 
       <div class="bloco-boas-vindas">
         <div class="bv-texto">
-          <h2>Catálogo & Controle de Estoque</h2>
+          <h2>Gestão de <span>Estoque</span></h2>
           <p>Gerencie produtos, variações de grade, preços e níveis de estoque da AAPM SENAI.</p>
         </div>
 
@@ -246,7 +205,7 @@
         {% set v_inativos = 0 %}
         {% set v_total = total_produtos if (total_produtos is defined and total_produtos is not none) else (produtos | length) %}
       {% endif %}
-      {% set v_itens = produtos | map(attribute='estoque_atual') | sum if produtos else 0 %}
+      {% set v_itens = total_estoque if total_estoque is defined else (produtos | map(attribute='estoque_atual') | sum if produtos else 0) %}
 
       <div class="grade-metricas" style="grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));">
 
@@ -602,8 +561,8 @@
             </select>
           </div>
 
-          <!-- Grade Dinâmica de Variações -->
-          <div class="grade-variacoes-box" id="grupoGradeNovo" style="display: none;">
+          <!-- Grade Dinâmica de Variações (Sempre visível em todas as categorias) -->
+          <div class="grade-variacoes-box" id="grupoGradeNovo">
             <h4>Grade de Tamanhos & Quantidades</h4>
             <div class="container-linhas-grade" id="containerGradesNovo"></div>
             <button type="button" class="btn-adicionar-grade" onclick="adicionarLinha('containerGradesNovo', 'novoEstoque')">
@@ -719,8 +678,8 @@
             </select>
           </div>
 
-          <!-- Grade Dinâmica de Edição -->
-          <div class="grade-variacoes-box" id="grupoGradeEditar" style="display: none;">
+          <!-- Grade Dinâmica de Edição (Sempre visível em todas as categorias) -->
+          <div class="grade-variacoes-box" id="grupoGradeEditar">
             <h4>Grade de Tamanhos & Quantidades (Edição)</h4>
             <div class="container-linhas-grade" id="containerGradesEditar"></div>
             <button type="button" class="btn-adicionar-grade" onclick="adicionarLinha('containerGradesEditar', 'editarEstoque')">
@@ -854,7 +813,7 @@
   </div>
 
 
-  <script src="/static/js/produtos.js?v=4"></script>
+  <script src="/static/js/produtos.js?v=20"></script>
 
 </body>
 
