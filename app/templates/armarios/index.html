@@ -12,6 +12,7 @@
     rel="stylesheet" />
 
   <link rel="stylesheet" href="/static/css/armarios.css?v=20260901_01" />
+  <link rel="stylesheet" href="/static/css/paginacao-estoque.css?v=1" />
 
 </head>
 
@@ -550,7 +551,7 @@
 
         </div>
 
-        <nav class="paginacao-servidor" aria-label="Paginação de armários">
+        <nav class="paginacao-servidor paginacao-estoque" aria-label="Paginação de armários">
           {% if page > 1 %}
           <a class="btn-pagina"
             href="/armarios/?page={{ page - 1 }}&per_page={{ per_page }}&status={{ status }}&localizacao={{ localizacao }}">Anterior</a>

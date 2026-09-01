@@ -720,7 +720,7 @@ body {
 
 .btn-filtro:hover {
   background: #f9fafb;
-  border-color: #d1d5db;
+  border-color: #dbd1d1;
   color: #111827;
 }
 
@@ -1024,7 +1024,7 @@ body {
 }
 
 .paginacao-info {
-  color: #6b7280;
+  color: #db0707;
   font-size: 0.84rem;
   font-weight: 600;
 }

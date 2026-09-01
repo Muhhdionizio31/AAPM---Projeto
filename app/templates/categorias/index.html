@@ -12,6 +12,7 @@
     rel="stylesheet" />
 
   <link rel="stylesheet" href="/static/css/categorias.css?v=3" />
+  <link rel="stylesheet" href="/static/css/paginacao-estoque.css?v=1" />
 
 </head>
 
@@ -453,7 +454,7 @@
         </div>
 
         {% if total_pages > 1 %}
-        <nav class="paginacao-servidor" aria-label="Paginação de categorias">
+        <nav class="paginacao-servidor paginacao-estoque" aria-label="Paginação de categorias">
           {% if page > 1 %}
           <a class="btn-pagina" href="/categorias?page={{ page - 1 }}&per_page={{ per_page }}">Anterior</a>
           {% else %}
