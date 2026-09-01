@@ -24,6 +24,20 @@ function limparTexto(texto) {
  */
 function filterByCategory(selectElement) {
     if (!selectElement) return;
+
+    const url = new URL(window.location.href);
+    url.searchParams.set('page', '1');
+
+    if (selectElement.value === 'todos') {
+        url.searchParams.delete('categoria_id');
+    } else {
+        url.searchParams.set('categoria_id', selectElement.value);
+    }
+
+    window.location.assign(url.toString());
+    return;
+
+    /* Logica local anterior, mantida apenas como referencia durante a transicao.
     
     const selectedOption = selectElement.options[selectElement.selectedIndex];
     const valorSelect = selectElement.value;
@@ -37,6 +51,7 @@ function filterByCategory(selectElement) {
     }
 
     aplicarFiltros();
+    */
 }
 
 /**

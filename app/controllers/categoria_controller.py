@@ -4,7 +4,7 @@ from fastapi import APIRouter, Depends, Request, Form
 from fastapi.responses import RedirectResponse
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
-
+from sqlalchemy import func
 from app.database import get_db
 from app.models.categoria import Categoria
 from app.auth import get_admin, get_usuario_logado
@@ -26,6 +26,8 @@ def listar_categorias(
     """
     query = db.query(Categoria).order_by(Categoria.nome)
     total_categorias = query.count()
+    total_ativas = db.query(func.count(Categoria.id)).filter(Categoria.ativa == True).scalar()
+    total_inativas = db.query(func.count(Categoria.id)).filter(Categoria.ativa == False).scalar()
     page = max(page, 1)
     per_page = max(per_page, 1)
     total_pages = math.ceil(total_categorias / per_page) if total_categorias else 1
@@ -43,6 +45,8 @@ def listar_categorias(
             "per_page": per_page,
             "total_pages": total_pages,
             "total_categorias": total_categorias,
+            "total_ativas": total_ativas or 0,
+            "total_inativas": total_inativas or 0,
         }
     )
 

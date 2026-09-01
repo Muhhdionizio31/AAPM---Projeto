@@ -10,6 +10,7 @@ from fastapi.responses import RedirectResponse, JSONResponse
 from fastapi import APIRouter, Depends, HTTPException, Request, Form, UploadFile, File, status
 from fastapi.responses import RedirectResponse
 from fastapi.templating import Jinja2Templates
+from sqlalchemy import func
 from sqlalchemy.orm import Session
 
 from app.database import get_db
@@ -60,6 +61,9 @@ def listar_produtos(
 
 
     total_produtos = query.count()
+    total_estoque = query.with_entities(
+        func.coalesce(func.sum(Produto.estoque_atual), 0)
+    ).scalar()
     page = max(page, 1)
     per_page = max(per_page, 1)
     total_pages = math.ceil(total_produtos / per_page) if total_produtos else 1
@@ -82,7 +86,8 @@ def listar_produtos(
             "page":         page,
             "per_page":     per_page,
             "total_pages":  total_pages,
-            "total_produtos": total_produtos
+            "total_produtos": total_produtos,
+            "total_estoque": int(total_estoque or 0)
         }
     )
 

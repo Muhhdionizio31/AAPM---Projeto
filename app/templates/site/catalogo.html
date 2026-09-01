@@ -16,17 +16,20 @@
 </div>
 
 <div class="filters-bar">
-  <div class="category-select-wrapper" style="display: flex; align-items: center; gap: 10px;">
+  <form class="category-select-wrapper" action="/catalogo/" method="get" style="display: flex; align-items: center; gap: 10px;">
     <span class="filter-label">Filtrar:</span>
-    <select id="categoryFilter" class="dropdown-btn" onchange="filterByCategory(this)">
-      <option value="todos">Todos os Produtos</option>
+    <input type="hidden" name="page" value="1" />
+    <input type="hidden" name="per_page" value="{{ per_page }}" />
+    <input type="hidden" name="busca" value="{{ busca }}" />
+    <select id="categoryFilter" name="categoria_id" class="dropdown-btn" onchange="this.form.submit()">
+      <option value="0" {{ 'selected' if not categoria_id else '' }}>Todos os Produtos</option>
       {% for c in categorias %}
-      <option value="{{ c.id }}" data-nome="{{ c.nome|lower|trim }}">
+      <option value="{{ c.id }}" data-nome="{{ c.nome|lower|trim }}" {{ 'selected' if categoria_id == c.id else '' }}>
         {{ c.nome }}
       </option>
       {% endfor %}
     </select>
-  </div>
+  </form>
 
   <div class="search-wrap">
     <svg class="search-icon" viewBox="0 0 24 24">

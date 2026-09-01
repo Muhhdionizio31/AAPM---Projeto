@@ -358,37 +358,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const todasLinhas = tabela ? Array.from(tabela.querySelectorAll('tr[data-status]')) : [];
   let statusAtivo = 'todos';
 
-  function atualizarMetricasNaTela() {
-    const elTotal = document.getElementById('metricaTotalCategorias');
-    const elAtivas = document.getElementById('metricaCategoriasAtivas');
-    const elInativas = document.getElementById('metricaCategoriasInativas');
-    const chipTodas = document.getElementById('chipContadorTodas');
-    const chipAtivas = document.getElementById('chipContadorAtivas');
-    const chipInativas = document.getElementById('chipContadorInativas');
-
-    if (!todasLinhas || todasLinhas.length === 0) return;
-
-    let tot = todasLinhas.length;
-    let ativas = 0;
-    let inativas = 0;
-
-    todasLinhas.forEach(linha => {
-      const st = linha.getAttribute('data-status');
-      if (st === 'ativa') ativas++;
-      else inativas++;
-    });
-
-    if (elTotal) elTotal.textContent = tot;
-    if (elAtivas) elAtivas.textContent = ativas;
-    if (elInativas) elInativas.textContent = inativas;
-
-    if (chipTodas) chipTodas.textContent = tot;
-    if (chipAtivas) chipAtivas.textContent = ativas;
-    if (chipInativas) chipInativas.textContent = inativas;
-  }
-
-  atualizarMetricasNaTela();
-
   function filtrarTabelaLocal() {
     const termo = (busca && busca.value ? busca.value : '').toLowerCase().trim();
     let visiveis = 0;

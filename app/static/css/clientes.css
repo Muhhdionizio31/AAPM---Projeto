@@ -1,4 +1,4 @@
-/* =============================================================
+﻿/* =============================================================
    CLIENTES.CSS
    Folha de estilo completa e independente da página de
    Clientes e Associados — AAPM SENAI Francisco Matarazzo.
@@ -1354,20 +1354,10 @@ body.modal-aberto-body {
   padding: 14px 32px;
   text-align: center;
   font-size: 0.78rem;
-<<<<<<< HEAD
   color: #9ca3af;
   padding: 24px 0 16px;
 }
 
-=======
-  color: #aaa;
-}
-
-/* -------------------------------------------------------------
-   RESPONSIVO (EXATAMENTE IGUAL AO ARMARIOS.CSS)
-   ------------------------------------------------------------- */
-
->>>>>>> 67aff725467475500672c4b787dc6bb6b6c7278e
 @media (max-width: 1100px) {
   .grade-metricas {
     grid-template-columns: repeat(2, 1fr);
@@ -1375,10 +1365,6 @@ body.modal-aberto-body {
 }
 
 @media (max-width: 720px) {
-<<<<<<< HEAD
-
-=======
->>>>>>> 67aff725467475500672c4b787dc6bb6b6c7278e
   .barra-lateral {
     transform: translateX(-100%);
   }
@@ -1425,7 +1411,6 @@ body.modal-aberto-body {
     gap: 16px;
   }
 
-<<<<<<< HEAD
   .campo-form-grade {
     grid-template-columns: 1fr;
   }
@@ -1433,77 +1418,6 @@ body.modal-aberto-body {
   .barra-busca-armario {
     max-width: none;
     width: 100%;
-=======
-  .card-cabecalho {
-    padding: 18px 16px;
-    flex-direction: column;
-    align-items: stretch;
-    gap: 14px;
-  }
-
-  .card-cabecalho .btn-principal {
-    width: 100%;
-    justify-content: center;
-  }
-
-  .filtros-clientes {
-    padding: 14px 16px;
-    flex-direction: column;
-    align-items: stretch;
-    gap: 12px;
-  }
-
-  .barra-busca-cliente {
-    max-width: none;
-    width: 100%;
-    flex: 1 1 100%;
-  }
-
-  .grupo-chips {
-    width: 100%;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-  }
-
-  .btn-filtro {
-    white-space: nowrap;
-    flex-shrink: 0;
-  }
-
-  .tabela-clientes th,
-  .tabela-clientes td {
-    padding: 12px 14px;
-  }
-
-  .campo-form-grade,
-  .detalhe-grade {
-    grid-template-columns: 1fr !important;
-  }
-
-  .modal-corpo {
-    padding: 20px 16px;
-  }
-
-  .modal-cabecalho {
-    padding: 16px 20px;
-  }
-
-  .modal-acoes {
-    flex-direction: column-reverse;
-  }
-
-  .modal-acoes .btn-cancelar,
-  .modal-acoes .btn-principal {
-    width: 100%;
-    justify-content: center;
-    text-align: center;
-  }
-
-  .paginacao-servidor {
-    justify-content: center;
-    padding: 16px;
->>>>>>> 67aff725467475500672c4b787dc6bb6b6c7278e
   }
 
   .toast {
@@ -1518,8 +1432,4 @@ body.modal-aberto-body {
   .grade-metricas {
     grid-template-columns: 1fr;
   }
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> 67aff725467475500672c4b787dc6bb6b6c7278e
