@@ -193,8 +193,8 @@
 
       <!-- MÉTRICAS -->
       {% set v_total = total_categorias if (total_categorias is defined and total_categorias is not none) else (categorias | length if categorias else 0) %}
-      {% set v_ativas = (categorias | selectattr('ativa', 'equalto', true) | list | length) if categorias else 0 %}
-      {% set v_inativas = (categorias | selectattr('ativa', 'equalto', false) | list | length) if categorias else 0 %}
+      {% set v_ativas = total_ativas if total_ativas is defined else (categorias | selectattr('ativa', 'equalto', true) | list | length if categorias else 0) %}
+      {% set v_inativas = total_inativas if total_inativas is defined else (categorias | selectattr('ativa', 'equalto', false) | list | length if categorias else 0) %}
 
       <div class="grade-metricas">
 
@@ -724,7 +724,7 @@
   </div>
 
 
-  <script src="/static/js/categorias.js?v=3"></script>
+  <script src="/static/js/categorias.js?v=4"></script>
 
 </body>
 
