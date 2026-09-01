@@ -9,7 +9,7 @@ class ProdutoVariacao(Base):
 
     id = Column(Integer, primary_key=True, autoincrement=True, index=True)
     produto_id = Column(Integer, ForeignKey("produtos.id", ondelete="CASCADE"), nullable=False)
-    tamanho = Column(String(5), nullable=False)
+    tamanho = Column(String(50), nullable=False)
     estoque_atual = Column(Integer, default=0)
     ativa = Column(Boolean, default=True)
     produto = relationship("Produto", back_populates="variacoes")
