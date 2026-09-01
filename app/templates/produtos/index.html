@@ -205,7 +205,7 @@
         {% set v_inativos = 0 %}
         {% set v_total = total_produtos if (total_produtos is defined and total_produtos is not none) else (produtos | length) %}
       {% endif %}
-      {% set v_itens = produtos | map(attribute='estoque_atual') | sum if produtos else 0 %}
+      {% set v_itens = total_estoque if total_estoque is defined else (produtos | map(attribute='estoque_atual') | sum if produtos else 0) %}
 
       <div class="grade-metricas" style="grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));">
 
