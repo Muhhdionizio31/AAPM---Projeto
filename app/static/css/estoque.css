@@ -1502,7 +1502,7 @@ body {
 }
 
 /* -------------------------------------------------------------
-   RESPONSIVO
+   RESPONSIVO COMPLETO E PADRONIZADO
    ------------------------------------------------------------- */
 
 @media (max-width: 1100px) {
@@ -1558,23 +1558,80 @@ body {
     gap: 16px;
   }
 
-  .campo-form-grade {
-    grid-template-columns: 1fr;
+  .card-cabecalho {
+    padding: 18px 16px;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 14px;
+  }
+
+  .card-cabecalho .btn-principal {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .filtros-armarios {
+    padding: 14px 16px;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
   }
 
   .barra-busca-armario {
     max-width: none;
     width: 100%;
+    flex: 1 1 100%;
   }
 
   .grupo-filtros-direita {
     flex-direction: column;
     align-items: stretch;
     width: 100%;
+    gap: 10px;
   }
 
   .select-filtro-categoria {
     width: 100%;
+  }
+
+  .grupo-chips {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .tabela-armarios th,
+  .tabela-armarios td {
+    padding: 12px 14px;
+  }
+
+  .campo-form-grade {
+    grid-template-columns: 1fr !important;
+  }
+
+  .modal-corpo {
+    padding: 20px 16px;
+  }
+
+  .modal-cabecalho {
+    padding: 16px 20px;
+  }
+
+  .modal-acoes {
+    flex-direction: column-reverse;
+  }
+
+  .modal-acoes .btn-cancelar,
+  .modal-acoes .btn-principal {
+    width: 100%;
+    justify-content: center;
+    text-align: center;
+  }
+
+  .paginacao-servidor {
+    justify-content: center;
+    padding: 16px;
   }
 
   .toast {

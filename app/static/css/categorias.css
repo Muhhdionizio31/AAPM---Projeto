@@ -1398,10 +1398,16 @@ body.modal-aberto-body {
 }
 
 /* -------------------------------------------------------------
-   RESPONSIVIDADE
+   RESPONSIVIDADE COMPLETA E PADRONIZADA
    ------------------------------------------------------------- */
 
-@media (max-width: 900px) {
+@media (max-width: 1100px) {
+  .grade-metricas {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 720px) {
   .barra-lateral {
     transform: translateX(-100%);
   }
@@ -1410,28 +1416,120 @@ body.modal-aberto-body {
     transform: translateX(0);
   }
 
-  .barra-fechar-mobile,
-  .btn-menu-mobile {
+  .barra-fechar-mobile {
     display: block;
   }
 
-  .barra-sobreposicao.visivel {
-    display: block;
+  .btn-menu-mobile {
+    display: flex;
   }
 
   .conteudo-principal {
     margin-left: 0;
-    width: 100%;
   }
 
-  .cabecalho-pagina,
+  .cabecalho-pagina {
+    padding: 0 16px;
+  }
+
+  .cabecalho-pagina h1 {
+    font-size: 1.1rem;
+  }
+
+  .cabecalho-data {
+    display: none;
+  }
+
   .area-conteudo {
-    padding: 16px 20px;
+    padding: 20px 16px;
+  }
+
+  .grade-metricas {
+    grid-template-columns: 1fr 1fr;
   }
 
   .bloco-boas-vindas {
     flex-direction: column;
     align-items: flex-start;
+    gap: 16px;
+  }
+
+  .card-cabecalho {
+    padding: 18px 16px;
+    flex-direction: column;
+    align-items: stretch;
     gap: 14px;
+  }
+
+  .card-cabecalho .btn-principal {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .filtros-categorias,
+  .filtros-armarios {
+    padding: 14px 16px;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+
+  .barra-busca-categoria,
+  .barra-busca-armario {
+    max-width: none;
+    width: 100%;
+    flex: 1 1 100%;
+  }
+
+  .grupo-chips {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .tabela-categorias th,
+  .tabela-categorias td {
+    padding: 12px 14px;
+  }
+
+  .campo-form-grade {
+    grid-template-columns: 1fr !important;
+  }
+
+  .modal-corpo {
+    padding: 20px 16px;
+  }
+
+  .modal-cabecalho {
+    padding: 16px 20px;
+  }
+
+  .modal-acoes,
+  .acoes-modal,
+  .cat-modal-rodape {
+    flex-direction: column-reverse;
+  }
+
+  .modal-acoes .btn-cancelar,
+  .modal-acoes .btn-principal,
+  .cat-btn-cancelar,
+  .cat-btn-salvar {
+    width: 100%;
+    justify-content: center;
+    text-align: center;
+  }
+
+  .toast {
+    left: 16px;
+    right: 16px;
+    bottom: 16px;
+    max-width: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .grade-metricas {
+    grid-template-columns: 1fr;
   }
 }
