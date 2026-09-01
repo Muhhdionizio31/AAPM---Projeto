@@ -406,6 +406,71 @@ body {
   z-index: 1;
 }
 
+/* =============================================================
+   ALERTAS DE FEEDBACK (MENSAGENS BONITAS)
+   ============================================================= */
+
+.alerta-sucesso,
+.alerta-erro {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 18px;
+  border-radius: 10px;
+  font-size: 0.88rem;
+  font-weight: 700;
+  margin-bottom: 22px;
+  animation: aparecerAlerta 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.04);
+  position: relative;
+}
+
+@keyframes aparecerAlerta {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.alerta-sucesso {
+  background: #f0fdf4;
+  border: 1.5px solid #86efac;
+  color: #15803d;
+}
+
+.alerta-erro {
+  background: #fef2f2;
+  border: 1.5px solid #fca5a5;
+  color: #b91c1c;
+}
+
+.alerta-icone {
+  width: 22px;
+  height: 22px;
+  flex-shrink: 0;
+}
+
+.alerta-fechar {
+  margin-left: auto;
+  background: transparent;
+  border: none;
+  font-size: 1.3rem;
+  line-height: 1;
+  color: currentColor;
+  opacity: 0.6;
+  cursor: pointer;
+  padding: 0 4px;
+  transition: opacity 0.2s ease;
+}
+
+.alerta-fechar:hover {
+  opacity: 1;
+}
+
 /* -------------------------------------------------------------
    CARDS DE MÉTRICA
    ------------------------------------------------------------- */

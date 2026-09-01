@@ -11,7 +11,7 @@
     href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Lato:wght@300;400;700&display=swap"
     rel="stylesheet" />
 
-  <link rel="stylesheet" href="/static/css/armarios.css" />
+  <link rel="stylesheet" href="/static/css/armarios.css?v=20260901_01" />
 
 </head>
 
@@ -181,29 +181,83 @@
       {% set qp = request.query_params %}
 
       {% if qp.get('criado') == 'ok' %}
-      <div class="alerta-sucesso">Armário cadastrado com sucesso.</div>
+      <div class="alerta-sucesso">
+        <svg class="alerta-icone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+        <span>Armário cadastrado com sucesso!</span>
+        <button type="button" class="alerta-fechar" onclick="this.parentElement.remove()" aria-label="Fechar">&times;</button>
+      </div>
       {% elif qp.get('alugado') == 'ok' %}
-      <div class="alerta-sucesso">Armário alugado com sucesso.</div>
+      <div class="alerta-sucesso">
+        <svg class="alerta-icone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+        <span>Armário alugado com sucesso!</span>
+        <button type="button" class="alerta-fechar" onclick="this.parentElement.remove()" aria-label="Fechar">&times;</button>
+      </div>
       {% elif qp.get('editado') == 'ok' %}
-      <div class="alerta-sucesso">Armário atualizado com sucesso.</div>
+      <div class="alerta-sucesso">
+        <svg class="alerta-icone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+        <span>Armário atualizado com sucesso!</span>
+        <button type="button" class="alerta-fechar" onclick="this.parentElement.remove()" aria-label="Fechar">&times;</button>
+      </div>
       {% elif qp.get('liberado') == 'ok' %}
-      <div class="alerta-sucesso">Armário liberado com sucesso.</div>
+      <div class="alerta-sucesso">
+        <svg class="alerta-icone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+        <span>Armário liberado com sucesso!</span>
+        <button type="button" class="alerta-fechar" onclick="this.parentElement.remove()" aria-label="Fechar">&times;</button>
+      </div>
       {% elif qp.get('desativado') == 'ok' %}
-      <div class="alerta-sucesso">Armário desativado com sucesso.</div>
+      <div class="alerta-sucesso">
+        <svg class="alerta-icone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+        <span>Armário desativado com sucesso.</span>
+        <button type="button" class="alerta-fechar" onclick="this.parentElement.remove()" aria-label="Fechar">&times;</button>
+      </div>
       {% elif qp.get('reativado') == 'ok' %}
-      <div class="alerta-sucesso">Armário reativado com sucesso.</div>
+      <div class="alerta-sucesso">
+        <svg class="alerta-icone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+        <span>Armário reativado com sucesso!</span>
+        <button type="button" class="alerta-fechar" onclick="this.parentElement.remove()" aria-label="Fechar">&times;</button>
+      </div>
       {% elif qp.get('excluido') == 'ok' %}
-      <div class="alerta-sucesso">Armário excluído com sucesso.</div>
+      <div class="alerta-sucesso">
+        <svg class="alerta-icone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+        <span>Armário excluído definitivamente com sucesso.</span>
+        <button type="button" class="alerta-fechar" onclick="this.parentElement.remove()" aria-label="Fechar">&times;</button>
+      </div>
       {% elif qp.get('erro') == 'ja_alugado' %}
-      <div class="alerta-erro">Este armário já foi alugado por outra pessoa.</div>
+      <div class="alerta-erro">
+        <svg class="alerta-icone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        <span>Este armário já foi alugado por outra pessoa.</span>
+        <button type="button" class="alerta-fechar" onclick="this.parentElement.remove()" aria-label="Fechar">&times;</button>
+      </div>
       {% elif qp.get('erro') == 'desativar_alugado' %}
-      <div class="alerta-erro">Não é possível desativar um armário alugado. Libere-o primeiro.</div>
+      <div class="alerta-erro">
+        <svg class="alerta-icone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        <span>Não é possível desativar um armário alugado. Libere-o primeiro.</span>
+        <button type="button" class="alerta-fechar" onclick="this.parentElement.remove()" aria-label="Fechar">&times;</button>
+      </div>
       {% elif qp.get('erro') == 'excluir_alugado' %}
-      <div class="alerta-erro">Não é possível excluir um armário alugado. Libere-o primeiro.</div>
+      <div class="alerta-erro">
+        <svg class="alerta-icone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        <span>Não é possível excluir um armário alugado. Libere-o primeiro.</span>
+        <button type="button" class="alerta-fechar" onclick="this.parentElement.remove()" aria-label="Fechar">&times;</button>
+      </div>
       {% elif qp.get('erro') == 'ja_existe' or qp.get('erro') == 'numero_duplicado' %}
-      <div class="alerta-erro">Já existe um armário cadastrado com esse número.</div>
+      <div class="alerta-erro">
+        <svg class="alerta-icone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        <span>Já existe um armário cadastrado com esse número.</span>
+        <button type="button" class="alerta-fechar" onclick="this.parentElement.remove()" aria-label="Fechar">&times;</button>
+      </div>
       {% elif qp.get('erro') == 'nao_encontrado' %}
-      <div class="alerta-erro">Armário não encontrado.</div>
+      <div class="alerta-erro">
+        <svg class="alerta-icone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        <span>Armário não encontrado no sistema.</span>
+        <button type="button" class="alerta-fechar" onclick="this.parentElement.remove()" aria-label="Fechar">&times;</button>
+      </div>
+      {% elif qp.get('erro') %}
+      <div class="alerta-erro">
+        <svg class="alerta-icone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        <span>Ocorreu um erro na operação: {{ qp.get('erro') }}</span>
+        <button type="button" class="alerta-fechar" onclick="this.parentElement.remove()" aria-label="Fechar">&times;</button>
+      </div>
       {% endif %}
 
 
@@ -870,7 +924,7 @@
   </div>
 
 
-  <script src="/static/js/armarios.js?v=20260824_06"></script>
+  <script src="/static/js/armarios.js?v=20260901_01"></script>
 
 </body>
 

@@ -675,4 +675,47 @@ document.addEventListener('DOMContentLoaded', () => {
       fecharModalDetalhe();
     }
   });
+
+  /* ---------- Toasts de Feedback Automáticos via Query Params ---------- */
+  const params = new URLSearchParams(window.location.search);
+  let msgToast = null;
+  let tipoToast = 'sucesso';
+
+  if (params.get('criado') === 'ok') {
+    msgToast = 'Armário cadastrado com sucesso!';
+  } else if (params.get('alugado') === 'ok') {
+    msgToast = 'Armário alugado com sucesso!';
+  } else if (params.get('editado') === 'ok') {
+    msgToast = 'Armário atualizado com sucesso!';
+  } else if (params.get('liberado') === 'ok') {
+    msgToast = 'Armário liberado com sucesso!';
+  } else if (params.get('desativado') === 'ok') {
+    msgToast = 'Armário desativado com sucesso.';
+  } else if (params.get('reativado') === 'ok') {
+    msgToast = 'Armário reativado com sucesso!';
+  } else if (params.get('excluido') === 'ok') {
+    msgToast = 'Armário excluído definitivamente.';
+  } else if (params.get('erro') === 'ja_alugado') {
+    msgToast = 'Este armário já foi alugado por outra pessoa.';
+    tipoToast = 'erro';
+  } else if (params.get('erro') === 'desativar_alugado') {
+    msgToast = 'Não é possível desativar um armário alugado. Libere-o primeiro.';
+    tipoToast = 'erro';
+  } else if (params.get('erro') === 'excluir_alugado') {
+    msgToast = 'Não é possível excluir um armário alugado. Libere-o primeiro.';
+    tipoToast = 'erro';
+  } else if (params.get('erro') === 'ja_existe' || params.get('erro') === 'numero_duplicado') {
+    msgToast = 'Já existe um armário cadastrado com esse número.';
+    tipoToast = 'erro';
+  } else if (params.get('erro') === 'nao_encontrado') {
+    msgToast = 'Armário não encontrado no sistema.';
+    tipoToast = 'erro';
+  } else if (params.get('erro')) {
+    msgToast = 'Ocorreu um erro na operação: ' + params.get('erro');
+    tipoToast = 'erro';
+  }
+
+  if (msgToast) {
+    mostrarToast(msgToast, tipoToast);
+  }
 });
