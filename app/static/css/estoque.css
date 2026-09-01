@@ -1094,6 +1094,10 @@ body {
   display: flex !important;
 }
 
+body.modal-aberto-body {
+  overflow: hidden !important;
+}
+
 .modal-caixa {
   background: #ffffff;
   width: 100%;
