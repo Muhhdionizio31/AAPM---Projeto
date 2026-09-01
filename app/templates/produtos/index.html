@@ -11,7 +11,7 @@
     href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Lato:wght@300;400;700&display=swap"
     rel="stylesheet" />
 
-  <link rel="stylesheet" href="/static/css/estoque.css?v=3" />
+  <link rel="stylesheet" href="/static/css/estoque.css?v=20" />
 
   <style>
     /* ==========================================================
@@ -51,6 +51,24 @@
       padding-bottom: 12px !important;
       position: relative !important;
       z-index: 10000 !important;
+    }
+
+    /* Grade de variações sempre ativa e estilizada */
+    .grade-variacoes-box {
+      display: block !important;
+      background: #f8fafc;
+      border: 1.5px dashed #cbd5e1;
+      border-radius: 10px;
+      padding: 14px 16px;
+      margin-bottom: 18px;
+    }
+
+    .grade-variacoes-box h4 {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 800;
+      color: #334155;
+      margin-bottom: 8px;
     }
   </style>
 </head>
@@ -602,8 +620,8 @@
             </select>
           </div>
 
-          <!-- Grade Dinâmica de Variações -->
-          <div class="grade-variacoes-box" id="grupoGradeNovo" style="display: none;">
+          <!-- Grade Dinâmica de Variações (Sempre visível em todas as categorias) -->
+          <div class="grade-variacoes-box" id="grupoGradeNovo">
             <h4>Grade de Tamanhos & Quantidades</h4>
             <div class="container-linhas-grade" id="containerGradesNovo"></div>
             <button type="button" class="btn-adicionar-grade" onclick="adicionarLinha('containerGradesNovo', 'novoEstoque')">
@@ -719,8 +737,8 @@
             </select>
           </div>
 
-          <!-- Grade Dinâmica de Edição -->
-          <div class="grade-variacoes-box" id="grupoGradeEditar" style="display: none;">
+          <!-- Grade Dinâmica de Edição (Sempre visível em todas as categorias) -->
+          <div class="grade-variacoes-box" id="grupoGradeEditar">
             <h4>Grade de Tamanhos & Quantidades (Edição)</h4>
             <div class="container-linhas-grade" id="containerGradesEditar"></div>
             <button type="button" class="btn-adicionar-grade" onclick="adicionarLinha('containerGradesEditar', 'editarEstoque')">
@@ -854,7 +872,7 @@
   </div>
 
 
-  <script src="/static/js/produtos.js?v=4"></script>
+  <script src="/static/js/produtos.js?v=20"></script>
 
 </body>
 
