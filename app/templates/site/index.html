@@ -41,35 +41,28 @@
   </div>
 </section>
 
-
 <!-- PRODUCTS -->
 <section class="products-section">
-
   <div class="products-inner">
 
     <div class="products-top">
-
       <div class="section-header" style="text-align:left;margin:0;">
-        <h2>Produtos</h2>
-
+        <h2>Mais vendidos</h2>
         <p>
-          Conheça os produtos mais populares da nossa Loja da Associação.
+          Confira os produtos mais vendidos da nossa Loja da Associação.
         </p>
       </div>
 
       <a class="btn-catalog" href="/catalogo">
         Catálogo
       </a>
-
     </div>
-
 
     <div class="carousel-wrap">
 
       <button class="carousel-btn prev" onclick="slide(-1)" aria-label="Anterior">
         &#8249;
       </button>
-
 
       <div class="carousel" id="carousel">
 
@@ -78,44 +71,45 @@
         <div class="product-card" data-cat="{{ produto.categoria.nome|lower|trim if produto.categoria else 'outros' }}">
 
           <div class="card-img" style="
-              display:flex;
-              align-items:center;
-              justify-content:center;
-              height:160px;
-              width:100%;
-              background-color:#f9f9f9;
-              overflow:hidden;
-              padding:10px;
-              border-radius:8px 8px 0 0;
-            ">
+                 display:flex;
+                 align-items:center;
+                 justify-content:center;
+                 height:160px;
+                 width:100%;
+                 background-color:#f9f9f9;
+                 overflow:hidden;
+                 padding:10px;
+                 border-radius:8px 8px 0 0;
+               ">
 
             {% if produto.imagem_path %}
 
             <img src="{{ produto.imagem_url }}" alt="{{ produto.nome }}" style="
-                max-width:100%;
-                max-height:100%;
-                object-fit:contain;
-                width:auto;
-                height:auto;
-              " />
+                   max-width:100%;
+                   max-height:100%;
+                   object-fit:contain;
+                   width:auto;
+                   height:auto;
+                 " />
 
             {% else %}
 
             <svg class="shirt-black" viewBox="0 0 100 120" fill="none" xmlns="http://www.w3.org/2000/svg" style="
-                max-height:100%;
-                width:auto;
-                max-width:100%;
-              ">
+                   max-height:100%;
+                   width:auto;
+                   max-width:100%;
+                 ">
+
               <path d="M30 10 L10 30 L25 35 L25 110 L75 110 L75 35 L90 30 L70 10 Q60 20 50 20 Q40 20 30 10Z"
                 stroke="#555" stroke-width="1.5" fill="#333" />
 
               <rect x="38" y="48" width="24" height="10" rx="2" fill="#c8102e" />
+
             </svg>
 
             {% endif %}
 
           </div>
-
 
           <div class="card-body">
 
@@ -130,11 +124,10 @@
                 {% else %}
 
                 <span class="card-badge">
-                  Oficial
+                  Mais vendido
                 </span>
 
                 {% endif %}
-
 
                 <h3>
                   {{ produto.nome }}
@@ -143,7 +136,6 @@
                 <p>
                   {{ produto.descricao if produto.descricao else '' }}
                 </p>
-
 
                 <div class="card-footer">
 
@@ -162,7 +154,6 @@
 
       </div>
 
-
       <button class="carousel-btn next" onclick="slide(1)" aria-label="Próximo">
         &#8250;
       </button>
@@ -172,10 +163,10 @@
     <div class="carousel-dots" id="dots"></div>
 
   </div>
-
 </section>
 
-{% endblock %}
+{% endblock %}  
+
 
 {% block scripts %}
 <script src="/static/js/index.js"></script>
