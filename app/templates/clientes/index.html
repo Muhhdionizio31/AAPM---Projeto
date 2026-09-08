@@ -12,6 +12,7 @@
     rel="stylesheet" />
 
   <link rel="stylesheet" href="/static/css/clientes.css?v=6" />
+  <link rel="stylesheet" href="/static/css/paginacao-estoque.css?v=1" />
 
 </head>
 
@@ -421,7 +422,7 @@
         </div>
 
         {% if total_pages > 1 %}
-        <div class="paginacao-servidor">
+        <div class="paginacao-servidor paginacao-estoque">
           <span class="paginacao-info">Página {{ page }} de {{ total_pages }} ({{ total_filtrados }} registros)</span>
           {% if page > 1 %}
           <a class="btn-pagina" href="/clientes/?page={{ page - 1 }}&busca={{ busca }}&tipo={{ tipo }}">Anterior</a>

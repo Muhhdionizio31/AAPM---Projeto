@@ -4,12 +4,14 @@ from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
 from datetime import datetime, timedelta, timezone
 import secrets
+from typing import Optional
 
 from app.database import get_db
 from app.models.usuario import Usuario
 from app.auth import hash_senha, verificar_senha, criar_token
 from app.models.reset_token import ResetToken
 from app.services.email_service import enviar_email_redefinicao
+
 
 TOKEN_VALIDADE_MINUTOS = 15
 
@@ -64,18 +66,21 @@ def fazer_usuario(
     # Redirecionar para a tela de login
     return RedirectResponse(url="/auth/login?cadastro=successo", status_code=302)
 
-#ROTA DE LOGIN
+# ROTA DE LOGIN
 @router.post("/login")
 def login(
     request: Request,
     email: str = Form(...),
     senha: str = Form(...),
+    lembrar: Optional[str] = Form(None),
     db: Session = Depends(get_db)
 ):
     # Busca o usuário no banco pelo email
-    usuario = db.query(Usuario).filter(Usuario.email == email).first()
+    usuario = db.query(Usuario).filter(
+        Usuario.email == email
+    ).first()
 
-    # Verifica usuário E senha em passos separados para evitar
+    # Verifica usuário e senha
     senha_correta = (
         usuario is not None and
         verificar_senha(senha, usuario.senha_hash)
@@ -92,6 +97,7 @@ def login(
             status_code=401
         )
 
+    # Verifica se o usuário está ativo
     if not usuario.ativo:
         return templates.TemplateResponse(
             request,
@@ -111,20 +117,33 @@ def login(
         "id": usuario.id
     }
 
-    token = criar_token(token_data)
+    # Cria o token
+    token = criar_token(
+        token_data,
+        lembrar=(lembrar == "true")
+    )
 
-    # Cria a resposta de redirecionamento
-    response = RedirectResponse(url="/painel", status_code=302)
-    # Define o cookie com o token JWT
+    response = RedirectResponse(
+        url="/painel",
+        status_code=302
+    )
+
+    if lembrar == "true":
+        max_age = 60 * 60 * 24 * 30  # 30 dias
+    else:
+        max_age = 60 * 60            # 1 hora
+
     response.set_cookie(
         key="access_token",
         value=token,
         httponly=True,
-        max_age=3600,
+        max_age=max_age,
         samesite="lax",
         secure=True
     )
+
     return response
+
 
 
 

@@ -13,6 +13,7 @@
     rel="stylesheet" />
 
   <link rel="stylesheet" href="/static/css/vendas.css?v=6" />
+  <link rel="stylesheet" href="/static/css/paginacao-estoque.css?v=1" />
 
 </head>
 
@@ -443,7 +444,7 @@
            PAGINAÇÃO
       ====================================================== -->
       {% if total_pages and total_pages > 1 %}
-      <div class="paginacao">
+      <div class="paginacao paginacao-estoque">
         <span class="paginacao-info">Página {{ page }} de {{ total_pages }}</span>
 
         {% if page > 1 %}

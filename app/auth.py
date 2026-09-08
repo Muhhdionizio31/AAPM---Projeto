@@ -34,14 +34,31 @@ def verificar_senha(senha: str, senha_hash: str):
 
 
 # Funções de token - JWT
-def criar_token(data: dict):
+def criar_token(data: dict, lembrar: bool = False):
+
     payload = data.copy()
-    # Define o tempo de expiração do token
-    expira = datetime.now(timezone.utc) + timedelta(minutes=int(ACCESS_TOKEN_EXPIRE_MINUTES))
+
+    # Define o tempo de expiração
+    if lembrar:
+        # 30 dias
+        expira = datetime.now(timezone.utc) + timedelta(days=30)
+    else:
+        # Usa o tempo padrão definido no .env/config
+        expira = datetime.now(timezone.utc) + timedelta(
+            minutes=int(ACCESS_TOKEN_EXPIRE_MINUTES)
+        )
+
     payload.update({"exp": expira})
+
     # Gera o token JWT
-    token = jwt.encode(payload, SECRET_KEY, algorithm=ALGORITHM)
+    token = jwt.encode(
+        payload,
+        SECRET_KEY,
+        algorithm=ALGORITHM
+    )
+
     return token
+
 
 
 def decodificar_token(token: str):
