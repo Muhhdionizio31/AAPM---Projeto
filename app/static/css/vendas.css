@@ -502,7 +502,7 @@ body {
 .card-metrica.card-faturamento::before { background: #3b82f6; }
 .card-metrica.card-vendas-concluidas::before { background: #10b981; }
 .card-metrica.card-clientes-atendidos::before { background: #7c3aed; }
-.card-metrica.card-ticket-medio::before { background: var(--vermelho); }
+.card-metrica.card-media-vendas::before { background: var(--vermelho); }
 
 .cm-topo {
   display: flex;
@@ -1569,12 +1569,12 @@ body.modal-aberto-body {
    ------------------------------------------------------------- */
 
 .rodape-admin {
-  background: var(--branco);
-  border-top: 1px solid var(--cinza-medio);
-  padding: 14px 32px;
   text-align: center;
+  padding: 24px 36px;
   font-size: 0.78rem;
-  color: #aaa;
+  color: #888888;
+  border-top: 1px solid var(--cinza-medio);
+  background: var(--branco);
 }
 
 /* -------------------------------------------------------------
