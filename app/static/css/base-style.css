@@ -19,19 +19,24 @@
    --radius: 8px;
    --shadow: 0 4px 24px rgba(2, 2, 2, 0.1);
    --transition: 0.25s ease;
+   --gray-light: #ececec;
+   --gray: #666666;
+   --dark: #111111;
+   --font-head: 'Montserrat', sans-serif;
+   --font-body: 'Lato', sans-serif;
  }
 
- html {
-   scroll-behavior: smooth;
- }
+html {
+  scroll-behavior: smooth;
+  overflow-x: hidden;
+}
 
- body {
-   font-family: 'Lato', sans-serif;
-   color: var(--black);
-   background: var(--white);
-   overflow-x: hidden;
- }
-
+body {
+  font-family: 'Lato', sans-serif;
+  color: var(--black);
+  background: var(--white);
+  overflow-x: clip;   /* clip, e não hidden, para não quebrar o nav sticky */
+}
 
  /* ── NAVBAR ── */
  nav {
@@ -170,47 +175,6 @@
    margin-right: 800px;
  }
 
- /* ── RESPONSIVE ── */
- @media (max-width: 800px) {
-   .hero {
-     grid-template-columns: 1fr;
-     padding: 32px 24px;
-     margin: 20px 16px;
-   }
-
-   .hero-img {
-     max-height: 200px;
-   }
-
-   .product-card {
-     flex: 0 0 calc(50% - 10px);
-   }
-
-   nav {
-     padding: 0 16px;
-   }
-
-   .nav-links {
-     gap: 4px;
-   }
-
-   .nav-links a {
-     font-size: 0.82rem;
-     padding: 5px 10px;
-   }
-
-   footer {
-     flex-direction: column;
-     align-items: flex-start;
-   }
- }
-
- @media (max-width: 480px) {
-   .product-card {
-     flex: 0 0 100%;
-   }
- }
-
  /* Placeholder shirt image (SVG inline) */
  .shirt-placeholder {
    width: 100%;
@@ -225,3 +189,100 @@
    width: 80px;
    opacity: 0.7;
  }
+
+/* ══════════════════════════════════════════
+   RESPONSIVO — BASE (menu, rodapé, imagens)
+   ══════════════════════════════════════════ */
+img { max-width: 100%; height: auto; }
+
+/* botão hambúrguer (escondido no desktop) */
+.nav-toggle {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+  width: 44px;
+  height: 44px;
+  padding: 10px;
+  background: none;
+  border: 0;
+  cursor: pointer;
+}
+.nav-toggle span {
+  display: block;
+  width: 100%;
+  height: 3px;
+  border-radius: 2px;
+  background: var(--black);
+  transition: transform var(--transition), opacity var(--transition);
+}
+.nav-toggle[aria-expanded="true"] span:nth-child(1) { transform: translateY(8px) rotate(45deg); }
+.nav-toggle[aria-expanded="true"] span:nth-child(2) { opacity: 0; }
+.nav-toggle[aria-expanded="true"] span:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
+
+@media (max-width: 768px) {
+  /* a barra passa a poder "quebrar linha" quando o menu abre */
+  nav {
+    padding: 0 16px;
+    height: auto;
+    min-height: 64px;
+    flex-wrap: wrap;
+    align-content: flex-start;
+    column-gap: 8px;
+  }
+
+  .nav-logo { order: 1; height: 64px; min-width: 0; max-width: 150px; }
+  .nav-toggle { display: flex; order: 3; }
+
+  /* o <ul> some como caixa; os <li> viram itens da própria barra */
+  .nav-links { display: contents; }
+
+  /* botão Sou admin: sempre visível, ao lado do hambúrguer */
+  .nav-links li:has(.btn-admin) {
+    order: 2;
+    margin-left: auto;
+    display: block;
+  }
+  .nav-links .btn-admin {
+    display: inline-block;
+    margin: 0;
+    padding: 8px 14px;
+    font-size: 0.85rem;
+    white-space: nowrap;
+    text-align: center;
+  }
+
+  /* demais links: escondidos até abrir o menu, ocupando a linha toda embaixo */
+  .nav-links li:not(:has(.btn-admin)) {
+    display: none;
+    order: 4;
+    flex: 0 0 100%;
+  }
+  .nav-links.open li:not(:has(.btn-admin)) {
+    display: block;
+    border-bottom: 1px solid var(--gray-light);
+  }
+  .nav-links.open li:not(:has(.btn-admin)):last-child { border-bottom: 0; margin-bottom: 8px; }
+  .nav-links li:not(:has(.btn-admin)) a {
+    display: block;
+    padding: 12px 14px;
+    font-size: 0.95rem;
+  }
+
+  .footer-nav { padding: 24px 16px; gap: 10px 20px; }
+  .footer-nav span { display: none; }
+
+  footer {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 20px 16px;
+  }
+}
+
+/* telas bem pequenas: garante que logo + botão + hambúrguer caibam */
+@media (max-width: 380px) {
+  nav { padding: 0 12px; column-gap: 6px; }
+  .nav-logo { max-width: 110px; }
+  .nav-links .btn-admin { padding: 7px 10px; font-size: 0.8rem; }
+}

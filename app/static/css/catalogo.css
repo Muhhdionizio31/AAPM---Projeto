@@ -1,4 +1,4 @@
- :root {
+:root {
             --vermelho: #c8102e;
             --vermelho-escuro: #a00d25;
             --preto: #111111;
@@ -479,4 +479,34 @@
   .search-input {
     width: 100%;
   }
+}
+
+/* ══════════════════════════════════════════
+   RESPONSIVO — CATÁLOGO
+   ══════════════════════════════════════════ */
+.category-select-wrapper { display: flex; align-items: center; gap: 10px; }
+.paginacao { flex-wrap: wrap; }
+
+@media (max-width: 900px) {
+  .page-header { padding: 36px 24px 28px; }
+  .filters-bar { padding: 18px 24px; }
+  .catalog-section { padding: 0 24px 60px; }
+}
+
+@media (max-width: 700px) {
+  .filters-bar { flex-direction: column; align-items: stretch; gap: 12px; }
+  .category-select-wrapper { width: 100%; }
+  .category-select-wrapper select { flex: 1; min-width: 0; padding: 9px 12px; }
+  .search-input { padding: 10px 16px 10px 38px; }
+
+  .catalog-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+  .card-img { padding: 16px; }
+  .card-body { padding: 12px; }
+  .card-body h3 { font-size: 0.88rem; }
+  .card-footer { flex-direction: column; align-items: flex-start; gap: 10px; }
+  .btn-card { width: 100%; justify-content: center; padding: 9px 12px; }
+}
+
+@media (max-width: 360px) {
+  .catalog-grid { grid-template-columns: 1fr; }
 }
