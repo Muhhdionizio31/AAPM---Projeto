@@ -382,3 +382,70 @@
   transform: scale(1.3);
 
 }
+
+/* ── FAIXA VERMELHA INFINITA (TICKER) ── */
+.ticker-strip {
+  width: 100%;
+  background: linear-gradient(90deg, #b30d27 0%, var(--red) 50%, #b30d27 100%);
+  color: var(--white);
+  padding: 14px 0;
+  overflow: hidden;
+  box-shadow: 0 4px 18px rgba(200, 16, 46, 0.28);
+  margin: 35px 0 15px 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.15);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+  user-select: none;
+}
+
+.ticker-track {
+  display: flex;
+  width: max-content;
+  animation: ticker-scroll 30s linear infinite;
+}
+
+/* Pausa suavemente ao passar o mouse */
+.ticker-track:hover {
+  animation-play-state: paused;
+}
+
+.ticker-content {
+  display: flex;
+  align-items: center;
+  gap: 36px;
+  padding-right: 36px;
+  white-space: nowrap;
+}
+
+.ticker-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+}
+
+.ticker-item svg {
+  width: 20px;
+  height: 20px;
+  fill: #ffffff;
+  opacity: 0.95;
+  flex-shrink: 0;
+}
+
+.ticker-bullet {
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 0.9rem;
+}
+
+/* Animação que desliza metade da largura e reinicia sem saltos */
+@keyframes ticker-scroll {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
