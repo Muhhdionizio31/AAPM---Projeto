@@ -4,7 +4,7 @@
 
 {% block css %}
 <link rel="stylesheet" href="/static/css/esqueci_senha.css" />
-<link rel="stylesheet" href="/static/css/login.css" />
+<link rel="stylesheet" href="/static/css/login.css?v=2" />
 {% endblock %}
 
 {% block conteudo %}
@@ -147,8 +147,51 @@
 
         </div>
     </dialog>
+
+    <!-- OVERLAY DE CARREGAMENTO PERSONALIZADO (SENAI / AAPM) -->
+    <div id="login-loading-overlay" class="login-loading-overlay" aria-hidden="true">
+        <div class="loading-modal-card">
+            <div class="loading-top-stripe"></div>
+
+            <div class="loading-logo-wrap">
+                <img src="/static/uploads/logo-aapm.png" alt="AAPM SENAI" class="loading-logo">
+            </div>
+            
+            <div class="loading-status-icon">
+                <div class="senai-spinner" id="loading-spinner">
+                    <div class="spinner-ring"></div>
+                    <div class="spinner-core">
+                        <svg viewBox="0 0 24 24" class="lock-icon">
+                            <rect x="5" y="11" width="14" height="10" rx="2" />
+                            <path d="M8 11V7a4 4 0 0 1 8 0v4" />
+                        </svg>
+                    </div>
+                </div>
+                
+                <div class="success-icon" id="loading-success-icon">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M5 13l4 4L19 7" />
+                    </svg>
+                </div>
+            </div>
+
+            <h3 class="loading-title" id="loading-title">Autenticando Administrador</h3>
+            <p class="loading-subtitle" id="loading-subtitle">Verificando credenciais no sistema...</p>
+
+            <div class="loading-progress-track">
+                <div class="loading-progress-bar" id="loading-progress-bar"></div>
+            </div>
+
+            <div class="loading-footer-badge">
+                <span class="pulse-dot"></span>
+                <span>Ambiente Seguro • SENAI Matarazzo</span>
+            </div>
+        </div>
+    </div>
 </div>
-{% block js %}
-<script src="/static/js/esqueci_senha.js"></script>
 {% endblock %}
+
+{% block scripts %}
+<script src="/static/js/esqueci_senha.js"></script>
+<script src="/static/js/login.js?v=1"></script>
 {% endblock %}

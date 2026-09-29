@@ -473,3 +473,237 @@ button.btn-esqueci:focus-visible {
   .login-card { padding: 28px 20px 24px; }
   .form-extras { flex-wrap: wrap !important; }
 }
+
+/* ══════════════════════════════════════════
+   OVERLAY DE CARREGAMENTO PERSONALIZADO (LOGIN)
+   ══════════════════════════════════════════ */
+.login-loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(17, 17, 17, 0.84);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 99999;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.login-loading-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.loading-modal-card {
+    background: #ffffff;
+    width: 90%;
+    max-width: 380px;
+    border-radius: 18px;
+    padding: 38px 32px 30px;
+    text-align: center;
+    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35);
+    position: relative;
+    overflow: hidden;
+    transform: scale(0.92);
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.login-loading-overlay.active .loading-modal-card {
+    transform: scale(1);
+}
+
+.loading-top-stripe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #a00d25 0%, var(--red) 50%, #e52d48 100%);
+}
+
+.loading-logo-wrap {
+    margin-bottom: 22px;
+}
+
+.loading-logo {
+    height: 44px;
+    width: auto;
+    object-fit: contain;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.08));
+}
+
+.loading-status-icon {
+    position: relative;
+    width: 70px;
+    height: 70px;
+    margin: 0 auto 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Spinner Moderno SENAI */
+.senai-spinner {
+    position: relative;
+    width: 66px;
+    height: 66px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.spinner-ring {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    border: 3.5px solid #f0f0f0;
+    border-top-color: var(--red);
+    border-right-color: #e52d48;
+    animation: spinner-rotate 0.85s linear infinite;
+}
+
+.spinner-core {
+    position: absolute;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: #fff5f6;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: pulse-core 1.8s ease-in-out infinite;
+}
+
+.lock-icon {
+    width: 17px;
+    height: 17px;
+    fill: none;
+    stroke: var(--red);
+    stroke-width: 2.2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+/* Ícone de Sucesso */
+.success-icon {
+    display: none;
+    width: 66px;
+    height: 66px;
+    border-radius: 50%;
+    background: #10b981;
+    color: #ffffff;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 20px rgba(16, 185, 129, 0.35);
+    animation: popIn 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+.success-icon svg {
+    width: 32px;
+    height: 32px;
+    fill: none;
+    stroke: #ffffff;
+    stroke-width: 3;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.loading-title {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 1.15rem;
+    font-weight: 800;
+    color: var(--black);
+    margin-bottom: 6px;
+    letter-spacing: -0.2px;
+}
+
+.loading-subtitle {
+    font-family: 'Lato', sans-serif;
+    font-size: 0.88rem;
+    color: var(--text-gray);
+    margin-bottom: 22px;
+    line-height: 1.4;
+}
+
+/* Barra de progresso */
+.loading-progress-track {
+    width: 100%;
+    height: 5px;
+    background: #f0f0f0;
+    border-radius: 999px;
+    overflow: hidden;
+    position: relative;
+    margin-bottom: 20px;
+}
+
+.loading-progress-bar {
+    height: 100%;
+    width: 30%;
+    background: linear-gradient(90deg, #a00d25, var(--red), #ff4d6d);
+    border-radius: 999px;
+    animation: indeterminateProgress 1.4s ease-in-out infinite;
+    transition: width 0.3s ease;
+}
+
+.loading-progress-bar.finished {
+    animation: none;
+    width: 100% !important;
+    background: #10b981;
+}
+
+/* Badge no rodapé do modal */
+.loading-footer-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: #fafafa;
+    border: 1px solid #ebebeb;
+    padding: 6px 14px;
+    border-radius: 999px;
+    font-size: 0.76rem;
+    color: #666;
+    font-weight: 600;
+}
+
+.pulse-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--red);
+    box-shadow: 0 0 0 0 rgba(200, 16, 46, 0.4);
+    animation: pulse-ring 1.5s infinite;
+}
+
+/* Keyframes */
+@keyframes spinner-rotate {
+    to { transform: rotate(360deg); }
+}
+
+@keyframes pulse-core {
+    0%, 100% { transform: scale(1); opacity: 0.85; }
+    50% { transform: scale(1.1); opacity: 1; }
+}
+
+@keyframes pulse-ring {
+    0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(200, 16, 46, 0.6); }
+    70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(200, 16, 46, 0); }
+    100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(200, 16, 46, 0); }
+}
+
+@keyframes indeterminateProgress {
+    0% { transform: translateX(-100%); width: 25%; }
+    50% { width: 55%; }
+    100% { transform: translateX(400%); width: 30%; }
+}
+
+@keyframes popIn {
+    0% { transform: scale(0.4); opacity: 0; }
+    100% { transform: scale(1); opacity: 1; }
+}
