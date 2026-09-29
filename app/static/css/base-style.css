@@ -9,16 +9,19 @@
  :root {
    --red: #c8102e;
    --dark-red: #a00d25;
+   --light-red: #fff1f2;
    --black: #111111;
    --white: #ffffff;
-   --light-gray: #f8f8f8;
-   --mid-gray: #e0e0e0;
-   --text-gray: #444444;
+   --light-gray: #f8fafc;
+   --mid-gray: #e2e8f0;
+   --text-gray: #4b5563;
    --green-wa: #25D366;
    --green-wa-dark: #1da851;
-   --radius: 8px;
-   --shadow: 0 4px 24px rgba(2, 2, 2, 0.1);
-   --transition: 0.25s ease;
+   --radius: 10px;
+   --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.05);
+   --shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.06), 0 4px 10px -2px rgba(0, 0, 0, 0.03);
+   --shadow-lg: 0 20px 40px -10px rgba(0, 0, 0, 0.1);
+   --transition: 0.25s cubic-bezier(0.16, 1, 0.3, 1);
    --gray-light: #ececec;
    --gray: #666666;
    --dark: #111111;
@@ -32,35 +35,67 @@ html {
 }
 
 body {
-  font-family: 'Lato', sans-serif;
+  font-family: var(--font-body);
   color: var(--black);
   background: var(--white);
   overflow-x: clip;   /* clip, e não hidden, para não quebrar o nav sticky */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+::selection {
+  background: #fee2e2;
+  color: var(--dark-red);
+}
+
+/* Scrollbar customizada moderna */
+::-webkit-scrollbar {
+  width: 9px;
+  height: 9px;
+}
+::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--red);
 }
 
  /* ── NAVBAR ── */
  nav {
    position: sticky;
    top: 0;
-   z-index: 100;
-   background: var(--white);
-   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+   z-index: 1000;
+   background: rgba(255, 255, 255, 0.94);
+   backdrop-filter: blur(14px);
+   -webkit-backdrop-filter: blur(14px);
+   border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
    display: flex;
    align-items: center;
    justify-content: space-between;
-   padding: 0 32px;
-   height: 64px;
+   padding: 0 36px;
+   height: 68px;
+   transition: all var(--transition);
 }
 
 .nav-logo {
     display: flex;
     align-items: center;
     height: 100%;       
-    max-width: 150px; 
+    max-width: 155px; 
+    transition: transform var(--transition);
+}
+
+.nav-logo:hover {
+    transform: scale(1.02);
 }
 
 .img-logo {
-    max-height: 40px;  
+    max-height: 42px;  
     width: 100%;        
     object-fit: contain;
     display: block;
@@ -69,7 +104,7 @@ body {
  .nav-links {
    display: flex;
    align-items: center;
-   gap: 8px;
+   gap: 10px;
    list-style: none;
  }
 
@@ -78,40 +113,50 @@ body {
    color: var(--text-gray);
    font-size: 0.92rem;
    font-weight: 600;
-   padding: 6px 14px;
-   border-radius: 4px;
-   transition: color var(--transition), background var(--transition);
+   padding: 8px 16px;
+   border-radius: 999px;
+   transition: all var(--transition);
+   position: relative;
  }
 
  .nav-links a:hover {
    color: var(--red);
-   background: #fef2f4;
+   background: #fff1f2;
  }
 
  .nav-links .btn-admin {
-   background: var(--red);
+   background: linear-gradient(135deg, var(--red) 0%, #b30d27 100%);
    color: var(--white) !important;
-   border-radius: 6px;
-   padding: 6px 16px;
-   transition: background var(--transition);
+   border-radius: 999px;
+   padding: 8px 20px;
+   font-family: var(--font-head);
+   font-weight: 700;
+   font-size: 0.88rem;
+   letter-spacing: 0.3px;
+   box-shadow: 0 4px 14px rgba(200, 16, 46, 0.28);
+   transition: all var(--transition);
  }
 
  .nav-links .btn-admin:hover {
-   background: var(--dark-red);
+   background: linear-gradient(135deg, #b30d27 0%, #900a1e 100%);
+   transform: translateY(-2px);
+   box-shadow: 0 6px 20px rgba(200, 16, 46, 0.38);
  }
 
  /* ── FOOTER NAV ── */
  .footer-nav {
-   background: var(--black);
-   padding: 28px 32px;
+   background: #0f172a;
+   padding: 24px 32px;
    display: flex;
    justify-content: center;
-   gap: 32px;
+   align-items: center;
+   gap: 28px;
    flex-wrap: wrap;
+   border-top: 1px solid rgba(255, 255, 255, 0.08);
  }
 
  .footer-nav a {
-   color: #bbb;
+   color: #94a3b8;
    text-decoration: none;
    font-size: 0.88rem;
    font-weight: 600;
@@ -123,25 +168,27 @@ body {
  }
 
  .footer-nav span {
-   color: #555;
+   color: #334155;
  }
 
  /* ── FOOTER ── */
  footer {
-   background: var(--red);
+   background: linear-gradient(135deg, #c8102e 0%, #9e0c24 100%);
    color: var(--white);
    display: flex;
    align-items: center;
    justify-content: space-between;
-   padding: 20px 40px;
+   padding: 22px 40px;
    flex-wrap: wrap;
    gap: 16px;
+   box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.06);
  }
 
  .footer-brand {
-   font-family: 'Montserrat', sans-serif;
+   font-family: var(--font-head);
    font-weight: 800;
-   font-size: 1.2rem;
+   font-size: 1.15rem;
+   letter-spacing: -0.2px;
  }
 
  .footer-brand small {
@@ -149,7 +196,7 @@ body {
    font-size: 0.72rem;
    font-weight: 400;
    letter-spacing: 2px;
-   opacity: 0.8;
+   opacity: 0.85;
  }
 
  .footer-links {
@@ -159,7 +206,7 @@ body {
  }
 
  .footer-links a {
-   color: rgba(255, 255, 255, 0.85);
+   color: rgba(255, 255, 255, 0.88);
    text-decoration: none;
    font-size: 0.82rem;
    transition: color var(--transition);
@@ -170,9 +217,9 @@ body {
  }
 
  .footer-copy {
-   font-size: 0.78rem;
-   opacity: 0.75;
-   margin-right: 800px;
+   font-size: 0.82rem;
+   opacity: 0.85;
+   margin-right: 0;
  }
 
  /* Placeholder shirt image (SVG inline) */
