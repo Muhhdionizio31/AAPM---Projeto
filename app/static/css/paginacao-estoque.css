@@ -1,0 +1,56 @@
+/* Paginação reutilizada com a aparência da tela de Estoque. */
+.paginacao-estoque {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  padding: 20px 0 24px;
+  border-top: 1px solid #f3f4f6;
+}
+
+.paginacao-estoque .paginacao-info {
+  color: #db0707;
+  font-size: 0.84rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+.paginacao-estoque .btn-pagina,
+.paginacao-estoque .paginacao-btn {
+  min-width: 34px;
+  height: 34px;
+  padding: 0 12px;
+  border: 1.5px solid #e5e7eb;
+  border-radius: 7px;
+  background: #fff;
+  color: #4b5563;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.paginacao-estoque .btn-pagina:hover:not(.desabilitado),
+.paginacao-estoque .paginacao-btn:hover:not(.desabilitado) {
+  border-color: #c8102e;
+  color: #c8102e;
+}
+
+.paginacao-estoque .btn-pagina.desabilitado,
+.paginacao-estoque .paginacao-btn.desabilitado {
+  opacity: 0.4;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+@media (max-width: 700px) {
+  .paginacao-estoque {
+    justify-content: center;
+    padding: 16px;
+  }
+}
