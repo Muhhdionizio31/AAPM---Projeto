@@ -59,16 +59,19 @@ def home(
     db: Session = Depends(get_db)
 ):
     try:
-        # Busca 12 produtos aleatórios que estejam ativos (.ativa == True)
-        # func.random() funciona no SQLite e PostgreSQL. (Se for MySQL, use func.rand())
+# Busca os 10 produtos mais vendidos
         produtos_carrossel = (
-            db.query(Produto)
-            .filter(Produto.ativa == True)
-            .options(joinedload(Produto.categoria))
-            .order_by(func.random()) 
-            .limit(10)
-            .all()
+        db.query(Produto)
+        .outerjoin(ItemVenda, ItemVenda.produto_id == Produto.id)
+        .filter(Produto.ativa == True)
+        .options(joinedload(Produto.categoria))
+        .group_by(Produto.id)
+        .order_by(
+        func.coalesce(func.sum(ItemVenda.quantidade), 0).desc()
         )
+        .limit(10)
+        .all()
+)
     except Exception as e:
         print(f"Erro ao buscar produtos aleatórios: {e}")
         produtos_carrossel = []
@@ -295,23 +298,4 @@ def api_vendas_mensais(db: Session = Depends(get_db)):
     for d in dados:
         if d.mes:
             lista[int(float(d.mes)) - 1] = d.total
-    return {"vendas": lista}
-
-@app.get("/api/vendas-mensais")
-def api_vendas_mensais(db: Session = Depends(get_db)):
-    ano_atual = datetime.now().year
-
-    dados = db.query(
-        func.extract('month', Venda.criado_em).label('mes'),
-        func.count(Venda.id).label('total')
-    ).filter(
-        func.extract('year', Venda.criado_em) == ano_atual
-    ).group_by('mes').all()
-
-    lista = [0] * 12
-
-    for d in dados:
-        if d.mes:
-            lista[int(float(d.mes)) - 1] = d.total
-
     return {"vendas": lista}

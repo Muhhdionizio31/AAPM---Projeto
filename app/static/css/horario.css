@@ -1,4 +1,4 @@
- /* ── PAGE HEADER ── */
+/* ── PAGE HEADER ── */
  .page-header {
      background: var(--white);
      padding: 48px 40px 40px;
@@ -383,3 +383,30 @@
      font-family: var(--font-head);
      font-weight: 700;
  }
+
+/* ══════════════════════════════════════════
+   RESPONSIVO — HORÁRIO
+   ══════════════════════════════════════════ */
+@media (max-width: 900px) {
+  .page-header { padding: 36px 24px 28px; }
+  .page-header-inner { align-items: flex-start; }
+
+  .content {
+    grid-template-columns: 1fr;
+    margin: 28px auto;
+    padding: 0 24px 60px;
+    gap: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .page-header { padding: 28px 16px 24px; }
+  .content { padding: 0 16px 48px; }
+
+  .card-header { padding: 16px; }
+  .day-row { flex-direction: column; align-items: flex-start; gap: 4px; padding: 12px 16px; }
+  .day-row.today { padding-left: 13px; }
+  .day-name { width: auto; }
+  .info-card { padding: 18px; }
+  .info-row span { overflow-wrap: anywhere; }
+}

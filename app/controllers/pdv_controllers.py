@@ -9,6 +9,7 @@ import json
 
 from app.database import get_db
 from app.models.venda import Venda, ItemVenda
+from app.models.produto_variacao import ProdutoVariacao
 from app.models.produto import Produto
 from app.models.cliente import Cliente
 from app.auth import get_usuario_logado
@@ -165,13 +166,23 @@ def tela_pdv(
     )
 
     produtos_pdv = [
-        {
-            "id": produto.id,
-            "nome": produto.nome,
-            "preco": float(produto.preco or 0),
-            "estoque": int(produto.estoque_atual or 0),
-        }
-        for produto in produtos
+    {
+        "id": produto.id,
+        "nome": produto.nome,
+        "preco": float(produto.preco or 0),
+        "estoque": int(produto.estoque_atual or 0),
+
+        "variacoes": [
+            {
+                "id": variacao.id,
+                "tamanho": variacao.tamanho,
+                "estoque": int(variacao.estoque_atual or 0),
+            }
+            for variacao in produto.variacoes
+            if variacao.ativa
+        ],
+    }
+    for produto in produtos
     ]
 
     venda_criada = request.query_params.get("venda_id")
@@ -211,6 +222,7 @@ def finalizar_venda(
 ):
     try:
         itens = json.loads(carrinho_json)
+
     except (json.JSONDecodeError, ValueError):
         return RedirectResponse(
             url="/pdv/?erro=json",
@@ -227,6 +239,7 @@ def finalizar_venda(
     desconto_percentual = 0.0
 
     if cliente_id:
+
         cliente = (
             db.query(Cliente)
             .filter(
@@ -244,10 +257,28 @@ def finalizar_venda(
 
     try:
 
+        # ==========================================
+        # VALIDAR PRODUTOS
+        # ==========================================
+
         for item in itens:
 
-            produto_id = int(item["produto_id"])
-            quantidade = int(item["quantidade"])
+            produto_id = int(
+                item["produto_id"]
+            )
+
+            quantidade = int(
+                item["quantidade"]
+            )
+
+            variacao_id = item.get(
+                "variacao_id"
+            )
+
+            if variacao_id:
+                variacao_id = int(
+                    variacao_id
+                )
 
             produto = (
                 db.query(Produto)
@@ -260,35 +291,115 @@ def finalizar_venda(
             )
 
             if not produto:
+
                 return RedirectResponse(
-                    url=f"/pdv/?erro=produto_inexistente&id={produto_id}",
+                    url=(
+                        f"/pdv/?erro="
+                        f"produto_inexistente"
+                        f"&id={produto_id}"
+                    ),
                     status_code=302
                 )
 
             if quantidade <= 0:
+
                 return RedirectResponse(
                     url="/pdv/?erro=quantidade",
                     status_code=302
                 )
 
-            if produto.estoque_atual < quantidade:
-                return RedirectResponse(
-                    url=f"/pdv/?erro=estoque&produto={produto.nome}",
-                    status_code=302
+            variacao = None
+
+            # ======================================
+            # PRODUTO COM VARIAÇÃO
+            # ======================================
+
+            if variacao_id:
+
+                variacao = (
+                    db.query(ProdutoVariacao)
+                    .filter(
+                        ProdutoVariacao.id == variacao_id,
+                        ProdutoVariacao.produto_id == produto.id,
+                        ProdutoVariacao.ativa == True
+                    )
+                    .with_for_update()
+                    .first()
                 )
 
-            preco = float(produto.preco or 0)
+                if not variacao:
 
-            subtotal = preco * quantidade
+                    return RedirectResponse(
+                        url=(
+                            "/pdv/?erro="
+                            "variacao_inexistente"
+                        ),
+                        status_code=302
+                    )
+
+                if (
+                    variacao.estoque_atual
+                    < quantidade
+                ):
+
+                    return RedirectResponse(
+                        url=(
+                            f"/pdv/?erro=estoque"
+                            f"&produto={produto.nome}"
+                            f"&variacao={variacao.tamanho}"
+                        ),
+                        status_code=302
+                    )
+
+            # ======================================
+            # PRODUTO SEM VARIAÇÃO
+            # ======================================
+
+            else:
+
+                if (
+                    produto.estoque_atual
+                    < quantidade
+                ):
+
+                    return RedirectResponse(
+                        url=(
+                            f"/pdv/?erro=estoque"
+                            f"&produto={produto.nome}"
+                        ),
+                        status_code=302
+                    )
+
+            # ======================================
+            # PREÇO VEM DO BANCO
+            # ======================================
+
+            preco = float(
+                produto.preco or 0
+            )
+
+            subtotal = (
+                preco * quantidade
+            )
 
             total_bruto += subtotal
 
             itens_validados.append({
+
                 "produto": produto,
+
+                "variacao": variacao,
+
                 "quantidade": quantidade,
+
                 "preco": preco,
-                "produto_nome": produto.nome,
+
+                "produto_nome": produto.nome
             })
+
+        # ==========================================
+        # DESCONTO
+        # ==========================================
 
         desconto_valor = (
             total_bruto *
@@ -300,6 +411,10 @@ def finalizar_venda(
             desconto_valor
         )
 
+        # ==========================================
+        # USUÁRIO
+        # ==========================================
+
         usuario_id = None
 
         if isinstance(usuario, dict):
@@ -308,40 +423,142 @@ def finalizar_venda(
         elif hasattr(usuario, "id"):
             usuario_id = usuario.id
 
+        # ==========================================
+        # CRIAR VENDA
+        # ==========================================
+
         venda = Venda(
             cliente_id=cliente_id or None,
             usuario_id=usuario_id,
             desconto_percentual=desconto_percentual,
-            total_bruto=round(total_bruto, 2),
-            total_liquido=round(total_liquido, 2),
-            observacao=observacao or None,
+            total_bruto=round(
+                total_bruto,
+                2
+            ),
+            total_liquido=round(
+                total_liquido,
+                2
+            ),
+            observacao=observacao or None
         )
 
         db.add(venda)
 
-        # Gera o ID da venda
         db.flush()
+
+        # ==========================================
+        # ITENS DA VENDA
+        # ==========================================
 
         for item in itens_validados:
 
+            produto = item["produto"]
+
+            variacao = item["variacao"]
+
+            quantidade = item["quantidade"]
+
             item_venda = ItemVenda(
+
                 venda_id=venda.id,
-                produto_id=item["produto"].id,
-                produto_nome=item["produto_nome"],
-                quantidade=item["quantidade"],
-                preco_unitario=item["preco"],
+
+                produto_id=produto.id,
+
+                produto_nome=produto.nome,
+
+                quantidade=quantidade,
+
+                preco_unitario=item["preco"]
             )
+
+            # Se ItemVenda possuir variacao_id
+            if variacao:
+                item_venda.variacao_id = (
+                    variacao.id
+                )
 
             db.add(item_venda)
 
-            item["produto"].estoque_atual -= item["quantidade"]
+            # ======================================
+            # BAIXAR ESTOQUE
+            # ======================================
+
+            if variacao:
+
+                # Baixa P/M/G
+                variacao.estoque_atual -= (
+                    quantidade
+                )
+
+            else:
+
+                # Produto normal
+                produto.estoque_atual -= (
+                    quantidade
+                )
+
+        # ==========================================
+        # ATUALIZAR ESTOQUE TOTAL
+        # ==========================================
+
+        produtos_com_variacao = set()
+
+        for item in itens_validados:
+
+            if item["variacao"]:
+
+                produtos_com_variacao.add(
+                    item["produto"].id
+                )
+
+        for produto_id in produtos_com_variacao:
+
+            estoque_total = (
+                db.query(
+                    func.coalesce(
+                        func.sum(
+                            ProdutoVariacao.estoque_atual
+                        ),
+                        0
+                    )
+                )
+                .filter(
+                    ProdutoVariacao.produto_id
+                    == produto_id,
+
+                    ProdutoVariacao.ativa
+                    == True
+                )
+                .scalar()
+            )
+
+            produto = (
+                db.query(Produto)
+                .filter(
+                    Produto.id == produto_id
+                )
+                .first()
+            )
+
+            if produto:
+
+                produto.estoque_atual = int(
+                    estoque_total or 0
+                )
+
+        # ==========================================
+        # COMMIT
+        # ==========================================
 
         db.commit()
 
         venda_id = venda.id
 
         return RedirectResponse(
-            url=f"/pdv/?criado=ok&venda_id={venda_id}",
+            url=(
+                f"/pdv/?criado=ok"
+                f"&venda_id={venda_id}"
+            ),
             status_code=302
         )
 
@@ -349,14 +566,16 @@ def finalizar_venda(
 
         db.rollback()
 
-        print("ERRO AO FINALIZAR VENDA:")
+        print(
+            "ERRO AO FINALIZAR VENDA:"
+        )
+
         print(e)
 
         return RedirectResponse(
             url="/pdv/?erro=interno",
             status_code=302
         )
-
 
 # ============================================================
 # COMPROVANTE EM JSON

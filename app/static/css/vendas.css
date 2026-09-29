@@ -1,6 +1,9 @@
-/* ============================================================
-   RESET
-============================================================ */
+/* =============================================================
+   VENDAS.CSS (PDV)
+   Folha de estilo completa e independente da página de
+   Vendas e Frente de Caixa (PDV) — AAPM SENAI Francisco Matarazzo.
+   100% padronizada com a mesma arquitetura visual de armarios.css.
+   ============================================================= */
 
 *,
 *::before,
@@ -10,86 +13,61 @@
   padding: 0;
 }
 
+:root {
+  --vermelho: #c8102e;
+  --vermelho-escuro: #a00d25;
+  --preto: #111111;
+  --branco: #ffffff;
+  --cinza-claro: #f5f5f5;
+  --cinza-medio: #e0e0e0;
+  --cinza-texto: #444444;
+  --sombra: 0 4px 24px rgba(0, 0, 0, 0.10);
+  --transicao: 0.22s ease;
+  --largura-barra: 220px;
+}
+
 html {
   scroll-behavior: smooth;
 }
 
 body {
   font-family: 'Lato', sans-serif;
-  color: #111111;
-  background: #f4f5f7;
+  color: var(--preto);
+  background: var(--cinza-claro);
   overflow-x: hidden;
   min-height: 100vh;
+  display: flex;
 }
 
+@keyframes aparecer {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
 
-/* ============================================================
-   VARIÁVEIS
-============================================================ */
-
-:root {
-  --vermelho: #c8102e;
-  --vermelho-escuro: #a30d25;
-  --vermelho-hover: #b20e29;
-
-  --preto: #111111;
-  --preto-2: #181818;
-
-  --branco: #ffffff;
-
-  --cinza-claro: #f5f6f8;
-  --cinza-medio: #e3e5e8;
-  --cinza-borda: #eaebed;
-  --cinza-texto: #4b5563;
-  --cinza-suave: #8a8f98;
-
-  --verde: #16a34a;
-  --verde-claro: #dcfce7;
-
-  --amarelo: #d97706;
-  --amarelo-claro: #fef3c7;
-
-  --azul: #2563eb;
-  --azul-claro: #dbeafe;
-
-  --sombra: 0 8px 30px rgba(0, 0, 0, 0.08);
-  --sombra-forte: 0 20px 60px rgba(0, 0, 0, 0.20);
-
-  --transicao: 0.22s ease;
-
-  --largura-barra: 220px;
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
-
-/* ============================================================
+/* -------------------------------------------------------------
    BARRA LATERAL
-============================================================ */
+   ------------------------------------------------------------- */
 
 .barra-lateral {
   width: var(--largura-barra);
   min-height: 100vh;
-
-  background: linear-gradient(180deg,
-      #101010 0%,
-      #090909 100%);
-
+  background: var(--preto);
   display: flex;
   flex-direction: column;
-
   position: fixed;
   left: 0;
   top: 0;
   bottom: 0;
-
-  z-index: 200;
-
-  box-shadow: 4px 0 20px rgba(0, 0, 0, 0.08);
+  z-index: 300;
+  transition: transform var(--transicao);
 }
-
-
-/* ============================================================
-   LOGO
-============================================================ */
 
 .barra-logo {
   --largura-logo: 62px;
@@ -98,10 +76,8 @@ body {
   display: flex;
   align-items: center;
   gap: 8px;
-
-  padding: 23px 24px 19px;
-
-  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+  padding: 22px 24px 18px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .barra-logo-senai,
@@ -116,73 +92,67 @@ body {
 .barra-logo-separador {
   width: 2px;
   height: 18px;
-
   background: var(--vermelho);
   border-radius: 2px;
 }
 
-/* ============================================================
-   MENU
-============================================================ */
+.barra-fechar-mobile {
+  display: none;
+  margin-left: auto;
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.5);
+  cursor: pointer;
+  padding: 4px;
+}
+
+.barra-fechar-mobile svg {
+  width: 18px;
+  height: 18px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+}
 
 .barra-menu-titulo {
-  font-size: 0.67rem;
-  font-weight: 800;
+  font-size: 0.68rem;
+  font-weight: 700;
   letter-spacing: 2px;
-
-  color: rgba(255, 255, 255, 0.28);
-
+  color: rgba(255, 255, 255, 0.3);
   text-transform: uppercase;
-
-  padding: 21px 24px 9px;
+  padding: 20px 24px 8px;
 }
 
 .barra-nav {
   list-style: none;
   padding: 0 12px;
   flex: 1;
+  overflow-y: auto;
 }
 
 .barra-nav li a {
   display: flex;
   align-items: center;
   gap: 12px;
-
   text-decoration: none;
-
-  color: rgba(255, 255, 255, 0.58);
-
+  color: rgba(255, 255, 255, 0.6);
   font-size: 0.88rem;
   font-weight: 600;
-
   padding: 10px 14px;
-
-  border-radius: 9px;
-
-  margin-bottom: 3px;
-
-  transition:
-    color var(--transicao),
-    background var(--transicao),
-    transform var(--transicao);
+  border-radius: 8px;
+  margin-bottom: 2px;
+  transition: color var(--transicao), background var(--transicao);
 }
 
 .barra-nav li a:hover {
-  color: #fff;
-
+  color: var(--branco);
   background: rgba(255, 255, 255, 0.06);
-
-  transform: translateX(2px);
 }
 
 .barra-nav li a.ativo {
-  color: #fff;
-
-  background: linear-gradient(135deg,
-      #d31333,
-      #b20e29);
-
-  box-shadow: 0 5px 14px rgba(200, 16, 46, 0.22);
+  color: var(--branco);
+  background: var(--vermelho);
 }
 
 .barra-nav li a.ativo:hover {
@@ -192,30 +162,18 @@ body {
 .barra-nav li a svg {
   width: 17px;
   height: 17px;
-
   flex-shrink: 0;
-
   fill: none;
   stroke: currentColor;
-
   stroke-width: 2;
-
   stroke-linecap: round;
   stroke-linejoin: round;
 }
 
-
-/* ============================================================
-   USUÁRIO
-============================================================ */
-
 .barra-rodape {
-  border-top: 1px solid rgba(255, 255, 255, 0.07);
-
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
   padding: 16px 14px;
-
   display: flex;
-
   align-items: center;
   justify-content: space-between;
 }
@@ -224,45 +182,38 @@ body {
   display: flex;
   align-items: center;
   gap: 10px;
+  min-width: 0;
 }
 
 .avatar-usuario {
-  width: 35px;
-  height: 35px;
-
+  width: 34px;
+  height: 34px;
   border-radius: 50%;
-
-  background: linear-gradient(135deg,
-      #d31333,
-      #a30d25);
-
+  background: var(--vermelho);
+  color: var(--branco);
   display: flex;
-
   align-items: center;
   justify-content: center;
-
   font-family: 'Montserrat', sans-serif;
-
   font-weight: 800;
   font-size: 0.8rem;
-
-  color: #fff;
-
   flex-shrink: 0;
-
-  box-shadow: 0 4px 10px rgba(200, 16, 46, 0.2);
 }
 
 .info-usuario {
   display: flex;
   flex-direction: column;
+  min-width: 0;
 }
 
 .info-usuario strong {
   font-size: 0.82rem;
-  color: #fff;
+  color: var(--branco);
   font-weight: 700;
   line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .info-usuario small {
@@ -273,1538 +224,1388 @@ body {
 .btn-sair {
   background: none;
   border: none;
-
   cursor: pointer;
-
   color: rgba(255, 255, 255, 0.4);
-
   font-size: 0.78rem;
   font-weight: 700;
-
   font-family: 'Lato', sans-serif;
-
-  padding: 5px 8px;
-  border-radius: 5px;
-
-  transition: all var(--transicao);
+  padding: 4px 8px;
+  border-radius: 4px;
+  transition: color var(--transicao), background var(--transicao);
+  flex-shrink: 0;
 }
 
 .btn-sair:hover {
-  color: #fff;
+  color: var(--branco);
   background: rgba(255, 255, 255, 0.08);
 }
 
+/* Sobreposição escura quando a barra abre no mobile */
+.barra-sobreposicao {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(17, 17, 17, 0.5);
+  z-index: 250;
+}
 
-/* ============================================================
+.barra-sobreposicao.visivel {
+  display: block;
+}
+
+/* -------------------------------------------------------------
    CONTEÚDO PRINCIPAL
-============================================================ */
+   ------------------------------------------------------------- */
 
 .conteudo-principal {
   margin-left: var(--largura-barra);
-
   flex: 1;
-
   display: flex;
   flex-direction: column;
-
   min-height: 100vh;
+  min-width: 0;
 }
 
-
-/* ============================================================
-   CABEÇALHO
-============================================================ */
-
 .cabecalho-pagina {
-  background: rgba(255, 255, 255, 0.96);
-
-  border-bottom: 1px solid var(--cinza-borda);
-
+  background: var(--branco);
+  border-bottom: 1px solid var(--cinza-medio);
   padding: 0 32px;
-
-  height: 68px;
-
+  height: 64px;
   display: flex;
-
   align-items: center;
   justify-content: space-between;
-
   position: sticky;
-
   top: 0;
-
   z-index: 100;
+  gap: 16px;
+}
 
-  backdrop-filter: blur(10px);
+.cabecalho-titulo {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-width: 0;
 }
 
 .cabecalho-pagina h1 {
   font-family: 'Montserrat', sans-serif;
-
-  font-size: 1.35rem;
+  font-size: 1.3rem;
   font-weight: 800;
+  color: var(--preto);
+  white-space: nowrap;
+}
 
-  color: #111;
-
-  letter-spacing: -0.4px;
+.cabecalho-data {
+  font-size: 0.82rem;
+  color: #999;
+  font-weight: 600;
+  white-space: nowrap;
+  text-transform: capitalize;
 }
 
 .acoes-cabecalho {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 14px;
 }
-
-
-/* ============================================================
-   FILTRO DATA
-============================================================ */
 
 .filtro-data {
   display: flex;
-
   align-items: center;
-  gap: 8px;
-
-  border: 1px solid var(--cinza-medio);
-
-  border-radius: 9px;
-
-  padding: 7px 12px;
-
-  background: #fff;
-
-  transition: all var(--transicao);
-}
-
-.filtro-data:hover {
-  border-color: #c8cbd0;
+  background: #ffffff;
+  border: 1.5px solid var(--cinza-medio);
+  border-radius: 8px;
+  padding: 0 10px;
+  height: 38px;
+  gap: 6px;
+  transition: border-color var(--transicao);
 }
 
 .filtro-data:focus-within {
   border-color: var(--vermelho);
-
-  box-shadow:
-    0 0 0 3px rgba(200, 16, 46, 0.08);
 }
 
 .filtro-data svg {
-  width: 15px;
-  height: 15px;
-
-  fill: none;
-
-  stroke: #8b919a;
-
+  width: 16px;
+  height: 16px;
+  stroke: #888;
   stroke-width: 2;
+  fill: none;
+}
 
-  stroke-linecap: round;
+.filtro-data input[type="month"] {
+  border: none;
+  background: transparent;
+  font-family: 'Lato', sans-serif;
+  font-size: 0.84rem;
+  font-weight: 700;
+  color: var(--preto);
+  outline: none;
+  cursor: pointer;
+}
 
+.btn-menu-mobile {
+  display: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 6px;
+  color: var(--preto);
   flex-shrink: 0;
 }
 
-.filtro-data input {
-  border: none;
-  outline: none;
-
-  font-family: 'Lato', sans-serif;
-
-  font-size: 0.84rem;
-
-  color: #222;
-
-  background: transparent;
-
-  width: 130px;
-}
-
-
-/* ============================================================
-   BOTÃO NOVA VENDA
-============================================================ */
-
-.btn-novo {
-  display: inline-flex;
-
-  align-items: center;
-  gap: 7px;
-
-  background: linear-gradient(135deg,
-      #d31333,
-      #b20e29);
-
-  color: #fff;
-
-  border: none;
-
-  font-family: 'Montserrat', sans-serif;
-
-  font-weight: 700;
-  font-size: 0.82rem;
-
-  padding: 9px 17px;
-
-  border-radius: 9px;
-
-  cursor: pointer;
-
-  transition: all var(--transicao);
-
-  text-decoration: none;
-
-  box-shadow:
-    0 5px 14px rgba(200, 16, 46, 0.2);
-}
-
-.btn-novo:hover {
-  background: linear-gradient(135deg,
-      #b20e29,
-      #920b20);
-
-  transform: translateY(-1px);
-
-  box-shadow:
-    0 7px 18px rgba(200, 16, 46, 0.27);
-}
-
-.btn-novo svg {
-  width: 14px;
-  height: 14px;
-
+.btn-menu-mobile svg {
+  width: 22px;
+  height: 22px;
   fill: none;
   stroke: currentColor;
-
-  stroke-width: 2.5;
-
+  stroke-width: 2;
   stroke-linecap: round;
 }
 
-
-/* ============================================================
+/* -------------------------------------------------------------
    ÁREA DE CONTEÚDO
-============================================================ */
+   ------------------------------------------------------------- */
 
 .area-conteudo {
-  padding: 30px 32px;
+  padding: 28px 32px;
   flex: 1;
+  min-width: 0;
 }
 
+/* -------------------------------------------------------------
+   BOAS-VINDAS / HERO
+   ------------------------------------------------------------- */
 
-/* ============================================================
-   CARDS DE RESUMO
-============================================================ */
-
-.grade-resumo {
-  display: grid;
-
-  grid-template-columns: repeat(3, 1fr);
-
-  gap: 16px;
-
-  margin-bottom: 28px;
-}
-
-.cartao-resumo {
-  background: #fff;
-
+.bloco-boas-vindas {
+  background: var(--preto);
   border-radius: 14px;
-
-  padding: 20px 22px;
-
-  box-shadow:
-    0 2px 10px rgba(0, 0, 0, 0.04);
-
-  border: 1px solid rgba(0, 0, 0, 0.04);
-
-  border-left: 4px solid transparent;
-
-  transition:
-    transform var(--transicao),
-    box-shadow var(--transicao);
-}
-
-.cartao-resumo:hover {
-  transform: translateY(-3px);
-
-  box-shadow:
-    0 10px 25px rgba(0, 0, 0, 0.08);
-}
-
-.cartao-resumo.vermelho {
-  border-left-color: var(--vermelho);
-}
-
-.cartao-resumo.verde {
-  border-left-color: var(--verde);
-}
-
-.cartao-resumo.azul {
-  border-left-color: var(--azul);
-}
-
-.resumo-icone {
-  width: 39px;
-  height: 39px;
-
-  border-radius: 10px;
-
+  padding: 28px 32px;
   display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 28px;
+  position: relative;
+  overflow: hidden;
+  gap: 20px;
+}
 
+.bloco-boas-vindas::before {
+  content: '';
+  position: absolute;
+  top: -40px;
+  right: -40px;
+  width: 200px;
+  height: 200px;
+  background: var(--vermelho);
+  border-radius: 50%;
+  opacity: 0.12;
+}
+
+.bloco-boas-vindas::after {
+  content: '';
+  position: absolute;
+  bottom: -60px;
+  right: 80px;
+  width: 140px;
+  height: 140px;
+  background: var(--vermelho);
+  border-radius: 50%;
+  opacity: 0.08;
+}
+
+.bv-texto h2 {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: var(--branco);
+  margin-bottom: 6px;
+}
+
+.bv-texto h2 span {
+  color: var(--vermelho);
+}
+
+.bv-texto p {
+  font-size: 0.88rem;
+  color: rgba(255, 255, 255, 0.5);
+  max-width: 520px;
+  line-height: 1.4;
+}
+
+.bv-badge {
+  background: var(--vermelho);
+  color: var(--branco);
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 800;
+  font-size: 0.75rem;
+  padding: 8px 18px;
+  border-radius: 8px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  white-space: nowrap;
+  z-index: 1;
+}
+
+/* -------------------------------------------------------------
+   CARDS DE MÉTRICA (KPIs)
+   ------------------------------------------------------------- */
+
+.grade-metricas {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-bottom: 26px;
+}
+
+@media (max-width: 1100px) {
+  .grade-metricas {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .grade-metricas {
+    grid-template-columns: 1fr;
+  }
+}
+
+.card-metrica {
+  background: var(--branco);
+  border-radius: 12px;
+  padding: 20px 22px;
+  border: 1px solid #eef0f3;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  animation: aparecer 0.35s ease both;
+  position: relative;
+  overflow: hidden;
+}
+
+.card-metrica::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: transparent;
+  transition: background 0.25s ease;
+}
+
+.card-metrica:hover {
+  border-color: #d1d5db;
+  transform: translateY(-3px);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.07);
+}
+
+.card-metrica.card-faturamento::before { background: #3b82f6; }
+.card-metrica.card-vendas-concluidas::before { background: #10b981; }
+.card-metrica.card-clientes-atendidos::before { background: #7c3aed; }
+.card-metrica.card-media-vendas::before { background: var(--vermelho); }
+
+.cm-topo {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.cm-label {
+  font-size: 0.74rem;
+  font-weight: 700;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 0.7px;
+}
+
+.cm-icone {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  display: flex;
   align-items: center;
   justify-content: center;
-
-  margin-bottom: 14px;
+  transition: transform 0.2s ease;
 }
 
-.resumo-icone svg {
+.card-metrica:hover .cm-icone {
+  transform: scale(1.08);
+}
+
+.cm-icone svg {
   width: 18px;
   height: 18px;
-
   fill: none;
   stroke: currentColor;
-
   stroke-width: 2;
-
   stroke-linecap: round;
   stroke-linejoin: round;
 }
 
-.cartao-resumo.vermelho .resumo-icone {
-  background: #fff0f2;
-  color: var(--vermelho);
-}
+.cm-icone.azul { background: #eff6ff; color: #2563eb; }
+.cm-icone.verde { background: #ecfdf5; color: #059669; }
+.cm-icone.roxo { background: #f5f3ff; color: #7c3aed; }
+.cm-icone.laranja { background: #fff7ed; color: #ea580c; }
+.cm-icone.vermelho { background: #fef2f2; color: #dc2626; }
+.cm-icone.cinza { background: #f1f5f9; color: #475569; }
 
-.cartao-resumo.verde .resumo-icone {
-  background: var(--verde-claro);
-  color: var(--verde);
-}
-
-.cartao-resumo.azul .resumo-icone {
-  background: var(--azul-claro);
-  color: var(--azul);
-}
-
-.resumo-rotulo {
-  font-size: 0.72rem;
-
-  font-weight: 800;
-
-  letter-spacing: 0.6px;
-
-  color: #92979f;
-
-  margin-bottom: 5px;
-
-  text-transform: uppercase;
-}
-
-.resumo-valor {
+.cm-valor {
   font-family: 'Montserrat', sans-serif;
-
-  font-size: 1.55rem;
-
+  font-size: 1.85rem;
   font-weight: 800;
-
-  color: #111;
-
-  line-height: 1;
-
-  margin-bottom: 7px;
+  color: #111827;
+  line-height: 1.1;
+  margin-bottom: 6px;
 }
 
-.resumo-variacao {
-  font-size: 0.74rem;
-
-  font-weight: 700;
-
+.cm-variacao {
+  font-size: 0.76rem;
+  font-weight: 600;
+  color: #6b7280;
   display: flex;
-
   align-items: center;
-  gap: 3px;
+  gap: 6px;
 }
 
-.resumo-variacao.subiu {
-  color: var(--verde);
-}
+.cm-variacao.positivo { color: #059669; font-weight: 700; }
+.cm-variacao.disponivel { color: #059669; font-weight: 700; }
 
-
-/* ============================================================
-   LAYOUT INFERIOR
-============================================================ */
+/* -------------------------------------------------------------
+   LAYOUT INFERIOR (TABELA + MAIS VENDIDOS)
+   ------------------------------------------------------------- */
 
 .layout-inferior {
   display: grid;
-
-  grid-template-columns: minmax(0, 1fr) 300px;
-
+  grid-template-columns: 1fr 340px;
   gap: 20px;
-
   align-items: start;
 }
 
+@media (max-width: 1180px) {
+  .layout-inferior {
+    grid-template-columns: 1fr;
+  }
+}
 
-/* ============================================================
-   PAINÉIS
-============================================================ */
-
-.painel {
-  background: #fff;
-
+.painel,
+.vendas-card {
+  background: var(--branco);
   border-radius: 14px;
-
-  border: 1px solid rgba(0, 0, 0, 0.04);
-
-  box-shadow:
-    0 2px 10px rgba(0, 0, 0, 0.04);
-
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  border: 1px solid #eef0f3;
   overflow: hidden;
 }
 
 .painel-cabecalho {
+  padding: 22px 28px;
   display: flex;
-
   align-items: center;
   justify-content: space-between;
-
-  padding: 18px 22px;
-
-  border-bottom: 1px solid var(--cinza-borda);
+  border-bottom: 1px solid #f3f4f6;
+  gap: 16px;
+  flex-wrap: wrap;
 }
 
 .painel-titulo {
   font-family: 'Montserrat', sans-serif;
-
-  font-size: 0.95rem;
-
+  font-size: 1.12rem;
   font-weight: 800;
-
-  color: #111;
+  color: #111827;
+  margin-bottom: 2px;
+  display: block;
 }
 
+.painel-subtitulo {
+  font-size: 0.84rem;
+  color: #6b7280;
+  display: block;
+}
 
-/* ============================================================
-   BUSCA
-============================================================ */
+.btn-principal,
+.btn-novo {
+  background: linear-gradient(135deg, #c8102e 0%, #a00d25 100%);
+  color: #ffffff;
+  border: none;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 700;
+  font-size: 0.85rem;
+  padding: 10px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 4px 14px rgba(200, 16, 46, 0.28);
+  transition: all 0.2s ease;
+  text-decoration: none;
+}
 
+.btn-principal:hover,
+.btn-novo:hover {
+  background: linear-gradient(135deg, #a00d25 0%, #800a1d 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 18px rgba(200, 16, 46, 0.38);
+}
+
+.btn-principal svg,
+.btn-novo svg {
+  width: 16px;
+  height: 16px;
+  stroke: currentColor;
+  stroke-width: 2.2;
+  fill: none;
+}
+
+/* BUSCA NA TABELA */
 .barra-busca-tabela {
   display: flex;
-
   align-items: center;
-
-  border: 1px solid var(--cinza-medio);
-
+  background: #ffffff;
+  border: 1.5px solid #e5e7eb;
   border-radius: 8px;
-
   overflow: hidden;
-
-  transition: all var(--transicao);
+  transition: all 0.2s ease;
+  min-width: 240px;
+  height: 38px;
+  padding: 0 10px;
+  gap: 6px;
 }
 
 .barra-busca-tabela:focus-within {
   border-color: var(--vermelho);
-
-  box-shadow:
-    0 0 0 3px rgba(200, 16, 46, 0.07);
+  box-shadow: 0 0 0 3px rgba(200, 16, 46, 0.1);
 }
 
 .barra-busca-tabela input {
   border: none;
   outline: none;
-
-  padding: 7px 12px;
-
   font-family: 'Lato', sans-serif;
-
-  font-size: 0.83rem;
-
-  color: #111;
-
-  width: 180px;
-
-  background: #fff;
+  font-size: 0.88rem;
+  color: #111827;
+  background: transparent;
+  width: 100%;
 }
 
 .btn-buscar-tabela {
-  background: var(--vermelho);
-
+  background: none;
   border: none;
-
-  padding: 7px 11px;
-
   cursor: pointer;
-
   display: flex;
-
   align-items: center;
+  color: #9ca3af;
 }
 
 .btn-buscar-tabela svg {
-  width: 14px;
-  height: 14px;
-
+  width: 16px;
+  height: 16px;
+  stroke: currentColor;
+  stroke-width: 2;
   fill: none;
-
-  stroke: #fff;
-
-  stroke-width: 2.5;
-
-  stroke-linecap: round;
 }
 
+/* -------------------------------------------------------------
+   TABELA DE VENDAS
+   ------------------------------------------------------------- */
 
-/* ============================================================
-   TABELA
-============================================================ */
+.tabela-container {
+  overflow-x: auto;
+}
 
 .tabela-vendas {
   width: 100%;
   border-collapse: collapse;
-}
-
-.tabela-vendas thead th {
-  background: #f8f9fa;
-
-  padding: 11px 16px;
-
   text-align: left;
+}
 
-  font-family: 'Montserrat', sans-serif;
-
-  font-size: 0.7rem;
-
+.tabela-vendas th {
+  background: #f9fafb;
+  color: #6b7280;
+  font-size: 0.72rem;
   font-weight: 800;
-
-  color: #8b9098;
-
-  letter-spacing: 0.8px;
-
   text-transform: uppercase;
-
-  white-space: nowrap;
+  letter-spacing: 0.6px;
+  padding: 14px 24px;
+  border-bottom: 1px solid #eef0f3;
 }
 
-.tabela-vendas tbody tr {
-  border-bottom: 1px solid #f0f1f2;
-}
-
-.tabela-vendas tbody tr:hover {
-  background: #fafafa;
-}
-
-.tabela-vendas tbody td {
-  padding: 14px 16px;
-
-  font-size: 0.86rem;
-
-  color: var(--cinza-texto);
-
+.tabela-vendas td {
+  padding: 15px 24px;
+  border-bottom: 1px solid #f3f4f6;
+  font-size: 0.88rem;
+  color: #374151;
   vertical-align: middle;
 }
 
-.btn-ver {
-  font-size: 1rem;
+.tabela-vendas tr:hover td {
+  background: #fbfcfd;
 }
 
+.codigo-badge {
+  display: inline-flex;
+  align-items: center;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 800;
+  font-size: 0.82rem;
+  color: #111827;
+  background: #f3f4f6;
+  padding: 4px 9px;
+  border-radius: 6px;
+  border: 1px solid #e5e7eb;
+}
 
-/* ============================================================
-   RODAPÉ TABELA
-============================================================ */
+.celula-cliente {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.chip-associado {
+  background: #fef3c7;
+  color: #92400e;
+  font-weight: 700;
+  font-size: 0.72rem;
+  padding: 3px 8px;
+  border-radius: 20px;
+  border: 1px solid #fde68a;
+}
+
+.badge-desconto {
+  display: inline-block;
+  background: #ecfdf5;
+  color: #059669;
+  border: 1px solid #a7f3d0;
+  font-weight: 800;
+  font-size: 0.74rem;
+  padding: 3px 8px;
+  border-radius: 6px;
+}
+
+.badge-sem-desconto {
+  display: inline-block;
+  background: #f1f5f9;
+  color: #64748b;
+  border: 1px solid #cbd5e1;
+  font-weight: 600;
+  font-size: 0.74rem;
+  padding: 3px 8px;
+  border-radius: 6px;
+}
+
+.texto-verde {
+  color: #059669;
+  font-weight: 800;
+}
+
+.btn-acao-comprovante {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  color: #2563eb;
+  font-family: 'Lato', sans-serif;
+  font-weight: 700;
+  font-size: 0.76rem;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.15s ease;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+}
+
+.btn-acao-comprovante:hover {
+  background: #2563eb;
+  color: #ffffff;
+  transform: translateY(-1px);
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.08);
+}
+
+.btn-acao-comprovante svg {
+  width: 13px;
+  height: 13px;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.linha-vazia td {
+  padding: 48px 16px;
+  text-align: center;
+  color: #999;
+}
+
+.icone-vazio svg {
+  width: 36px;
+  height: 36px;
+  stroke: #ddd;
+  fill: none;
+  stroke-width: 1.6;
+  margin-bottom: 8px;
+}
 
 .rodape-tabela {
-  padding: 14px 20px;
-
-  border-top: 1px solid var(--cinza-borda);
+  padding: 16px 24px;
+  font-size: 0.82rem;
+  color: #6b7280;
+  font-weight: 600;
+  border-top: 1px solid #f3f4f6;
+  background: #fafbfc;
 }
 
-.rodape-tabela span {
-  font-size: 0.8rem;
-  color: #aaa;
+/* -------------------------------------------------------------
+   PAINEL LATERAL: MAIS VENDIDOS
+   ------------------------------------------------------------- */
+
+.painel-lateral .painel-top {
+  border-radius: 14px;
 }
 
-.paginacao {
+.item-top-simples {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 14px;
+  background: #fafbfc;
+  border: 1px solid #eef0f3;
+  border-radius: 8px;
+  margin: 10px 18px;
+  gap: 8px;
+  transition: all 0.18s ease;
+}
+
+.item-top-simples:hover {
+  background: #ffffff;
+  border-color: #d1d5db;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.item-top-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.item-top-posicao {
+  font-weight: 800;
+  font-size: 0.76rem;
+  color: var(--vermelho);
+  background: #fef2f2;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 12px;
-  padding: 16px 20px;
-  border-top: 1px solid var(--cinza-borda);
+  flex-shrink: 0;
+}
+
+.item-top-nome {
+  font-weight: 700;
+  color: #111827;
+  font-size: 0.85rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.item-top-qtd {
+  font-weight: 800;
+  color: #059669;
+  font-size: 0.82rem;
+  flex-shrink: 0;
+}
+
+.sem-dados {
+  padding: 36px 16px;
+  text-align: center;
+  color: #bbb;
+}
+
+.sem-dados svg {
+  width: 32px;
+  height: 32px;
+  stroke: #ddd;
+  fill: none;
+  stroke-width: 1.6;
+  margin-bottom: 6px;
+}
+
+/* -------------------------------------------------------------
+   PAGINAÇÃO
+   ------------------------------------------------------------- */
+
+.paginacao {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  padding: 24px 0;
+}
+
+.paginacao-info {
+  color: var(--cinza-texto);
+  font-size: 0.82rem;
+  font-weight: 600;
+  margin-right: 4px;
 }
 
 .paginacao-btn {
-  padding: 8px 12px;
-  border: 1px solid var(--cinza-borda);
-  border-radius: 6px;
-  color: var(--cinza-texto);
+  min-width: 34px;
+  height: 34px;
+  padding: 0 12px;
+  border-radius: 7px;
+  border: 1.5px solid var(--cinza-medio);
+  background: var(--branco);
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 700;
   font-size: 0.82rem;
+  color: var(--cinza-texto);
   text-decoration: none;
+  cursor: pointer;
+  transition: all var(--transicao);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.paginacao-btn:hover {
+.paginacao-btn:hover:not(.desabilitado) {
   border-color: var(--vermelho);
   color: var(--vermelho);
 }
 
 .paginacao-btn.desabilitado {
+  opacity: 0.4;
   cursor: not-allowed;
-  opacity: 0.5;
+  pointer-events: none;
 }
 
-.paginacao-info {
-  color: #777;
-  font-size: 0.82rem;
-}
+/* -------------------------------------------------------------
+   MODAIS E SOBREPOSIÇÃO
+   ------------------------------------------------------------- */
 
-
-/* ============================================================
-   MAIS VENDIDOS
-============================================================ */
-
-.item-top-simples {
-  display: flex;
-  justify-content: space-between;
-
-  margin: 10px 16px;
-
-  font-size: 0.9rem;
-}
-
-.sem-dados {
-  color: #999;
-
-  font-size: 0.85rem;
-
-  text-align: center;
-
-  padding: 15px;
-}
-
-
-/* ============================================================
-   MODAIS
-============================================================ */
-
+.modal-sobreposicao,
 .sobreposicao-modal {
-  display: none;
-
-  position: fixed;
-
-  inset: 0;
-
-  background: rgba(8, 8, 8, 0.68);
-
-  backdrop-filter: blur(5px);
-
-  z-index: 500;
-
-  align-items: center;
-  justify-content: center;
-
-  padding: 20px;
+  display: none !important;
+  position: fixed !important;
+  inset: 0 !important;
+  background: rgba(15, 23, 42, 0.65) !important;
+  backdrop-filter: blur(8px) !important;
+  -webkit-backdrop-filter: blur(8px) !important;
+  z-index: 1000 !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 16px !important;
 }
 
+.modal-sobreposicao.visivel,
+.modal-sobreposicao.aberto,
+.sobreposicao-modal.visivel,
 .sobreposicao-modal.aberto {
-  display: flex;
+  display: flex !important;
 }
 
+body.modal-aberto-body {
+  overflow: hidden;
+}
 
-/* ============================================================
-   MODAL PADRÃO
-============================================================ */
-
+.modal-caixa,
 .modal {
-  background: #fff;
+  background: #ffffff !important;
+  width: 100% !important;
+  max-width: 620px !important;
+  max-height: 90vh !important;
+  overflow-y: auto !important;
+  border-radius: 16px !important;
+  box-shadow: 0 25px 65px rgba(0, 0, 0, 0.28) !important;
+  animation: modalEntrar 0.22s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  position: relative !important;
+  z-index: 1001 !important;
+}
 
-  border-radius: 18px;
-
-  padding: 30px 34px;
-
-  width: 100%;
-
-  max-width: 680px;
-
-  box-shadow:
-    0 30px 80px rgba(0, 0, 0, 0.28);
-
-  max-height: 90vh;
-
-  overflow-y: auto;
+@keyframes modalEntrar {
+  from { opacity: 0; transform: translateY(-12px) scale(0.97); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
 }
 
 .modal-cabecalho {
   display: flex;
-
   align-items: center;
   justify-content: space-between;
+  gap: 14px;
+  padding: 22px 28px;
+  border-bottom: 1px solid #f1f5f9;
+  background: #fafbfc;
+  border-top-left-radius: 16px;
+  border-top-right-radius: 16px;
+}
 
-  margin-bottom: 24px;
+.modal-cabecalho-esquerda {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-width: 0;
+}
+
+.modal-cabecalho-icone {
+  width: 42px;
+  height: 42px;
+  border-radius: 10px;
+  background: #fef2f2;
+  color: var(--vermelho);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.modal-cabecalho-icone.azul {
+  background: #eff6ff;
+  color: #2563eb;
+}
+
+.modal-cabecalho-icone svg {
+  width: 20px;
+  height: 20px;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
 }
 
 .modal-cabecalho h2 {
+  margin: 0;
   font-family: 'Montserrat', sans-serif;
-
   font-size: 1.15rem;
-
   font-weight: 800;
-
-  color: #111;
+  color: #111827;
 }
 
-.btn-fechar-modal {
+.modal-cabecalho span {
+  font-size: 0.82rem;
+  color: #6b7280;
+  display: block;
+  margin-top: 2px;
+}
+
+.btn-fechar-modal,
+.modal-fechar {
   background: #f3f4f6;
-
   border: none;
-
-  width: 34px;
-  height: 34px;
-
-  border-radius: 9px;
-
   cursor: pointer;
-
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  color: #6b7280;
   display: flex;
-
   align-items: center;
   justify-content: center;
-
-  color: #555;
-
-  font-size: 1.1rem;
+  transition: all 0.15s ease;
 }
 
-
-/* ============================================================
-   FORMULÁRIO
-============================================================ */
-
-.form-group {
-  margin-bottom: 16px;
+.btn-fechar-modal:hover,
+.modal-fechar:hover {
+  background: #e5e7eb;
+  color: #111827;
 }
 
-.form-group label {
-  display: block;
-
-  font-size: 0.8rem;
-
-  font-weight: 700;
-
-  color: #111;
-
-  margin-bottom: 6px;
+.btn-fechar-modal svg,
+.modal-fechar svg {
+  width: 18px;
+  height: 18px;
+  stroke: currentColor;
+  stroke-width: 2;
 }
 
-.form-group input,
-.form-group select {
-  width: 100%;
-
-  padding: 10px 14px;
-
-  border: 1px solid var(--cinza-medio);
-
-  border-radius: 9px;
-
-  font-family: 'Lato', sans-serif;
-
-  font-size: 0.92rem;
-
-  color: #111;
-
-  outline: none;
-
-  background: #fff;
+.modal-corpo {
+  padding: 24px 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 }
 
 .form-linha {
   display: grid;
-
-  grid-template-columns: 1fr 1fr;
-
-  gap: 12px;
+  grid-template-columns: 2fr 1fr;
+  gap: 14px;
 }
 
+.form-group,
+.campo-form {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
 
-/* ============================================================
-   ITENS DA VENDA
-============================================================ */
+.form-group-full {
+  grid-column: 1 / -1;
+}
 
+.form-group label,
+.campo-form label {
+  font-size: 0.76rem;
+  font-weight: 700;
+  color: #374151;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.form-group select,
+.form-group input,
+.campo-form input,
+.campo-form select {
+  width: 100%;
+  padding: 10px 14px;
+  border: 1.5px solid #d1d5db;
+  border-radius: 8px;
+  font-family: 'Lato', sans-serif;
+  font-size: 0.9rem;
+  color: #111827;
+  outline: none;
+  background: #ffffff;
+  transition: all 0.2s ease;
+}
+
+.form-group select:focus,
+.form-group input:focus,
+.campo-form input:focus,
+.campo-form select:focus {
+  border-color: var(--vermelho);
+  box-shadow: 0 0 0 3px rgba(200, 16, 46, 0.1);
+}
+
+/* SEÇÃO DE ITENS DO CARRINHO */
 .secao-itens {
-  border: 1px solid var(--cinza-medio);
-
-  border-radius: 11px;
-
-  overflow: hidden;
-
-  margin-bottom: 16px;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  background: #fafbfc;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
 .secao-itens-cabecalho {
-  background: #f7f8f9;
-
-  padding: 11px 14px;
-
   display: flex;
-
   align-items: center;
   justify-content: space-between;
-
-  gap: 12px;
-
-  border-bottom: 1px solid var(--cinza-borda);
-}
-
-.secao-itens-cabecalho>span {
-  font-size: 0.85rem;
-
+  font-family: 'Montserrat', sans-serif;
   font-weight: 700;
-
-  color: #444;
-
-  white-space: nowrap;
+  font-size: 0.84rem;
+  color: #111827;
 }
-
-
-/* ============================================================
-   BOTÃO ADICIONAR ITEM — CORRIGIDO
-============================================================ */
 
 .btn-add-item {
-  display: inline-flex;
-
-  align-items: center;
-  justify-content: center;
-
-  gap: 6px;
-
-  background: var(--vermelho);
-
-  color: #fff;
-
-  border: none;
-
-  border-radius: 7px;
-
-  padding: 8px 12px;
-
-  min-height: 36px;
-
-  font-family: 'Lato', sans-serif;
-
-  font-size: 0.78rem;
-
+  background: #ecfdf5;
+  color: #059669;
+  border: 1px solid #a7f3d0;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.76rem;
   font-weight: 700;
-
+  padding: 5px 10px;
+  border-radius: 6px;
   cursor: pointer;
-
-  white-space: nowrap;
-
-  flex-shrink: 0;
-
-  transition: all var(--transicao);
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  transition: all 0.15s ease;
 }
 
 .btn-add-item:hover {
-  background: var(--vermelho-escuro);
-
-  transform: translateY(-1px);
+  background: #059669;
+  color: #ffffff;
 }
 
-
-/* ISSO ERA O PRINCIPAL PROBLEMA:
-   DEFINE O TAMANHO DO SVG */
 .btn-add-item svg {
   width: 14px;
-
   height: 14px;
-
-  min-width: 14px;
-
-  min-height: 14px;
-
-  fill: none;
-
   stroke: currentColor;
-
-  stroke-width: 2.5;
-
-  stroke-linecap: round;
-
-  stroke-linejoin: round;
-
-  flex-shrink: 0;
+  stroke-width: 2.2;
 }
-
 
 .lista-itens-modal {
-  padding: 9px;
-
   display: flex;
-
   flex-direction: column;
-
-  gap: 7px;
-}
-
-.item-modal-linha {
-  display: grid;
-
-  grid-template-columns:
-    minmax(0, 1fr) 78px 104px 32px;
-
   gap: 8px;
-
-  align-items: center;
 }
 
-.item-modal-linha select,
-.item-modal-linha input {
-  width: 100%;
-
-  min-width: 0;
-
-  padding: 7px 10px;
-
-  border: 1px solid var(--cinza-medio);
-
-  border-radius: 7px;
-
-  font-family: 'Lato', sans-serif;
-
-  font-size: 0.82rem;
-
-  outline: none;
-}
-
-.btn-remover-item {
-  width: 32px;
-
-  height: 32px;
-
-  border-radius: 7px;
-
-  border: none;
-
-  background: #fff0f2;
-
-  color: var(--vermelho);
-
-  cursor: pointer;
-}
-
-/* ============================================================
-   TOTAL DA VENDA
-============================================================ */
-
-.total-modal {
-  background: linear-gradient(135deg,
-      #f7f8fa,
-      #f1f2f4);
-
-  border: 1px solid #e7e8ea;
-
-  border-radius: 10px;
-
-  padding: 13px 15px;
-
+.linha-item-modal {
   display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #ffffff;
+  padding: 8px 10px;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+}
 
+.linha-item-modal select,
+.linha-item-modal input {
+  padding: 8px 10px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 0.84rem;
+  outline: none;
+  font-family: 'Lato', sans-serif;
+}
+
+.btn-remover {
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  color: var(--vermelho);
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 800;
+  font-size: 0.85rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: all 0.15s ease;
+}
+
+.btn-remover:hover {
+  background: var(--vermelho);
+  color: #ffffff;
+}
+
+/* TOTAL DO MODAL */
+.total-modal {
+  background: var(--preto);
+  color: #ffffff;
+  border-radius: 10px;
+  padding: 16px 20px;
+  display: flex;
   align-items: center;
   justify-content: space-between;
-
-  margin-bottom: 16px;
 }
 
-.total-modal span {
-  font-size: 0.85rem;
+.total-modal-rotulo span {
+  display: block;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.92rem;
+  font-weight: 800;
+}
 
-  font-weight: 700;
-
-  color: #555;
+.total-modal-rotulo small {
+  font-size: 0.74rem;
+  color: rgba(255, 255, 255, 0.55);
 }
 
 .total-modal strong {
   font-family: 'Montserrat', sans-serif;
-
-  font-size: 1.18rem;
-
+  font-size: 1.5rem;
   font-weight: 800;
-
-  color: #111;
+  color: #22c55e;
 }
 
-
-/* ============================================================
-   AÇÕES MODAL
-============================================================ */
-
-.acoes-modal {
+.modal-rodape,
+.modal-acoes {
   display: flex;
-
-  gap: 10px;
-
-  margin-top: 4px;
+  gap: 12px;
+  justify-content: flex-end;
+  padding: 18px 28px;
+  border-top: 1px solid #f1f5f9;
+  background: #fafbfc;
+  border-bottom-left-radius: 16px;
+  border-bottom-right-radius: 16px;
 }
 
 .btn-cancelar {
-  flex: 1;
-
-  padding: 11px;
-
-  background: #f5f6f7;
-
-  border: 1px solid #dedfe2;
-
-  border-radius: 9px;
-
+  background: #f3f4f6;
+  color: #374151;
+  border: 1px solid #d1d5db;
+  padding: 10px 18px;
+  border-radius: 8px;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 700;
+  font-size: 0.85rem;
   cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.btn-cancelar:hover {
+  background: #e5e7eb;
 }
 
 .btn-salvar {
-  flex: 2;
-
-  padding: 11px;
-
-  background: linear-gradient(135deg,
-      #d31333,
-      #b20e29);
-
+  background: linear-gradient(135deg, #c8102e 0%, #a00d25 100%);
+  color: #ffffff;
   border: none;
-
-  border-radius: 9px;
-
-  color: #fff;
-
-  cursor: pointer;
-}
-
-
-/* ============================================================
-   COMPROVANTE
-============================================================ */
-
-.modal-comprovante {
-  width: min(680px, 92vw);
-
-  max-width: 680px;
-
-  padding: 0;
-
-  border-radius: 14px;
-
-  overflow: hidden;
-
-  background: #ffffff;
-
-  box-shadow:
-    0 25px 70px rgba(0, 0, 0, 0.32);
-
-  display: flex;
-
-  flex-direction: column;
-
-  max-height: 90vh;
-}
-
-
-/* CABEÇALHO */
-
-.modal-comprovante>.modal-cabecalho {
-  height: 58px;
-
-  min-height: 58px;
-
-  padding: 0 24px;
-
-  margin: 0;
-
-  display: flex;
-
-  align-items: center;
-  justify-content: space-between;
-
-  background: #ffffff;
-
-  border-bottom: 1px solid #e5e7eb;
-}
-
-.modal-comprovante>.modal-cabecalho h2 {
-  margin: 0;
-
   font-family: 'Montserrat', sans-serif;
-
-  font-size: 18px;
-
   font-weight: 800;
-
-  color: #171717;
+  font-size: 0.86rem;
+  padding: 10px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(200, 16, 46, 0.28);
+  transition: all 0.2s ease;
 }
 
-.modal-comprovante .btn-fechar-modal {
-  background: transparent;
+.btn-salvar:hover {
+  background: linear-gradient(135deg, #a00d25 0%, #800a1d 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 18px rgba(200, 16, 46, 0.38);
 }
 
-.modal-comprovante .btn-fechar-modal:hover {
-  background: #f3f4f6;
-
-  color: var(--vermelho);
-}
-
-
-/* ============================================================
-   CONTEÚDO DO COMPROVANTE
-============================================================ */
-
-#conteudoDetalhe {
-  flex: 1;
-
-  overflow-y: auto;
-
-  min-height: 0;
-}
+/* -------------------------------------------------------------
+   COMPROVANTE / CUPOM FISCAL
+   ------------------------------------------------------------- */
 
 .comprovante {
-  position: relative;
-
-  width: 100%;
-
-  padding: 28px 34px 24px;
-
   background: #ffffff;
-
-  font-family: 'Lato', sans-serif;
-
-  color: #202020;
-
-  overflow: hidden;
+  border: 1.5px dashed #cbd5e1;
+  border-radius: 12px;
+  padding: 24px;
+  font-family: 'Courier New', Courier, monospace;
 }
-
-.comprovante::before {
-  content: "AAPM SENAI";
-
-  position: absolute;
-
-  top: 46%;
-  left: 50%;
-
-  transform:
-    translate(-50%, -50%) rotate(-28deg);
-
-  font-family: 'Montserrat', sans-serif;
-
-  font-size: 52px;
-
-  font-weight: 800;
-
-  letter-spacing: 4px;
-
-  white-space: nowrap;
-
-  color: #c8102e;
-
-  opacity: 0.035;
-
-  pointer-events: none;
-
-  z-index: 0;
-}
-
-.comprovante>* {
-  position: relative;
-  z-index: 1;
-}
-
-
-/* TOPO */
 
 .comprovante-topo {
-  position: relative;
-
-  display: flex;
-
-  align-items: center;
-  justify-content: space-between;
-
-  min-height: 82px;
-
-  margin-bottom: 24px;
-
-  padding: 20px 22px;
-
-  background: linear-gradient(135deg,
-      #181818,
-      #0d0d0d);
-
-  color: #ffffff;
-
-  border-bottom: 4px solid #c8102e;
-
-  border-radius: 8px;
+  text-align: center;
+  border-bottom: 1.5px dashed #cbd5e1;
+  padding-bottom: 14px;
+  margin-bottom: 14px;
 }
 
 .comprovante-topo h3 {
   font-family: 'Montserrat', sans-serif;
-
-  font-size: 20px;
-
+  font-size: 1.1rem;
   font-weight: 800;
-
-  color: #ffffff;
+  color: #111827;
 }
 
 .comprovante-topo span {
-  display: block;
-
-  font-size: 12px;
-
-  color: #d4d4d4;
+  font-size: 0.78rem;
+  color: #6b7280;
 }
 
-.comprovante-topo>strong {
-  min-width: 62px;
-
-  padding: 10px 14px;
-
-  text-align: center;
-
-  background: #c8102e;
-
-  color: #ffffff;
+.comprovante-cupom-id {
+  font-weight: 800;
+  font-size: 0.85rem;
+  color: var(--vermelho);
+  margin-top: 4px;
 }
-
-
-/* INFORMAÇÕES */
 
 .comprovante-info {
-  display: grid;
-
-  grid-template-columns: repeat(3, 1fr);
-
-  margin-bottom: 25px;
-
-  border: 1px solid #e5e7eb;
-
-  overflow: hidden;
-}
-
-.comprovante-info>div {
-  min-height: 65px;
-
+  font-size: 0.82rem;
+  color: #374151;
   display: flex;
-
   flex-direction: column;
-  justify-content: center;
-
-  padding: 10px 15px;
-
-  border-right: 1px solid #e5e7eb;
+  gap: 4px;
+  margin-bottom: 14px;
+  border-bottom: 1px dashed #e2e8f0;
+  padding-bottom: 12px;
 }
 
-.comprovante-info>div:last-child {
-  border-right: none;
-}
-
-.comprovante-info span {
-  margin-bottom: 5px;
-
-  font-size: 10px;
-
-  font-weight: 700;
-
-  text-transform: uppercase;
-
-  color: #888;
-}
-
-.comprovante-info strong {
-  font-size: 14px;
-
-  font-weight: 700;
-
-  color: #202020;
-}
-
-
-/* ITENS */
-
-.comprovante-itens {
-  margin-top: 5px;
+.comprovante-info div {
+  display: flex;
+  justify-content: space-between;
 }
 
 .comprovante-itens h4 {
-  margin-bottom: 10px;
-
-  padding-bottom: 9px;
-
-  font-family: 'Montserrat', sans-serif;
-
-  font-size: 12px;
-
-  font-weight: 800;
-
+  font-size: 0.84rem;
   text-transform: uppercase;
-
-  border-bottom: 2px solid #202020;
+  color: #111827;
+  margin-bottom: 8px;
 }
 
 .comprovante-item {
   display: flex;
-
-  align-items: center;
   justify-content: space-between;
-
-  min-height: 58px;
-
-  padding: 10px 4px;
-
-  border-bottom: 1px solid #eeeeee;
+  align-items: center;
+  padding: 6px 0;
+  border-bottom: 1px dotted #e2e8f0;
+  font-size: 0.82rem;
 }
 
-.comprovante-item>div {
-  display: flex;
-
-  flex-direction: column;
-
-  gap: 4px;
+.comprovante-item-nome strong {
+  display: block;
+  color: #111827;
 }
 
-.comprovante-item strong {
-  font-size: 14px;
-
-  color: #222;
+.comprovante-item-nome small {
+  color: #6b7280;
 }
-
-.comprovante-item small {
-  font-size: 12px;
-
-  color: #888;
-}
-
-
-/* ============================================================
-   VALORES DO COMPROVANTE
-============================================================ */
 
 .comprovante-valores {
-  width: 100%;
-
-  max-width: 360px;
-
-  margin: 22px 0 0 auto;
-
-  border-top: 1px solid #dedede;
-}
-
-.comprovante-valores>div {
+  margin-top: 14px;
   display: flex;
-
-  align-items: center;
-  justify-content: space-between;
-
-  padding: 8px 0;
-
-  font-size: 13px;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 0.86rem;
+  border-top: 1.5px dashed #cbd5e1;
+  padding-top: 12px;
 }
 
-.comprovante-valores span {
-  color: #777;
-}
-
-.comprovante-valores strong {
-  color: #222;
-}
-
-
-/* ============================================================
-   TOTAL CORRETO + BOTÃO AO LADO
-============================================================ */
-
-.comprovante-valores .comprovante-total {
-  margin-top: 7px;
-
-  padding: 12px 16px;
-
-  background: #f5f5f5;
-
-  border-left: 4px solid #c8102e;
-
+.comprovante-valores div {
   display: flex;
-
-  align-items: center;
-
   justify-content: space-between;
-
-  gap: 12px;
 }
 
-.comprovante-total strong {
+.comprovante-total {
   font-family: 'Montserrat', sans-serif;
-
-  font-size: 22px;
-
+  font-size: 1.15rem;
   font-weight: 800;
-
-  color: #c8102e;
-
-  white-space: nowrap;
+  color: #059669;
+  border-top: 1.5px solid #111827;
+  padding-top: 8px;
+  margin-top: 4px;
 }
 
+.comprovante-observacao {
+  margin-top: 12px;
+  background: #f8fafc;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 0.78rem;
+  color: #475569;
+}
 
-/* ============================================================
-   BOTÃO BAIXAR COMPROVANTE
-============================================================ */
+.comprovante-rodape-texto {
+  text-align: center;
+  font-size: 0.72rem;
+  color: #9ca3af;
+  margin-top: 16px;
+}
 
 .btn-baixar-comprovante {
-  display: inline-flex;
-
-  align-items: center;
-  justify-content: center;
-
-  gap: 7px;
-
-  padding: 8px 12px;
-
+  background: #2563eb;
   border: none;
-
-  border-radius: 8px;
-
-  background: linear-gradient(135deg,
-      #d31333,
-      #b20e29);
-
   color: #ffffff;
-
   font-family: 'Montserrat', sans-serif;
-
-  font-size: 0.68rem;
-
+  font-size: 0.84rem;
   font-weight: 700;
-
+  padding: 10px 18px;
+  border-radius: 8px;
   cursor: pointer;
-
-  white-space: nowrap;
-
-  flex-shrink: 0;
-
-  box-shadow:
-    0 4px 10px rgba(200, 16, 46, 0.18);
-
-  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: all var(--transicao);
 }
 
 .btn-baixar-comprovante:hover:not(:disabled) {
-  background: linear-gradient(135deg,
-      #b20e29,
-      #920b20);
-
-  transform: translateY(-1px);
-
-  box-shadow:
-    0 6px 14px rgba(200, 16, 46, 0.26);
+  background: #1d4ed8;
 }
 
 .btn-baixar-comprovante:disabled {
-  opacity: 0.65;
-
+  opacity: 0.5;
   cursor: not-allowed;
-
-  box-shadow: none;
 }
 
 .btn-baixar-comprovante svg {
-  width: 13px;
-  height: 13px;
-
-  fill: none;
-
+  width: 16px;
+  height: 16px;
   stroke: currentColor;
-
-  stroke-width: 2.3;
-
-  stroke-linecap: round;
-  stroke-linejoin: round;
-
-  flex-shrink: 0;
+  stroke-width: 2;
+  fill: none;
 }
 
-
-/* OBSERVAÇÃO */
-
-.comprovante-observacao {
-  margin-top: 18px;
-
-  padding: 12px 14px;
-
-  background: #fafafa;
-
-  border-left: 3px solid #c8102e;
-
-  font-size: 12px;
-
-  line-height: 1.5;
-
-  color: #666;
-}
-
-
-/* LOADING */
-
-.comprovante-loading {
-  min-height: 250px;
-
-  display: flex;
-
-  align-items: center;
-  justify-content: center;
-
-  font-size: 13px;
-
-  color: #888;
-}
-
-
-/* TOAST */
+/* -------------------------------------------------------------
+   TOAST DE NOTIFICAÇÃO
+   ------------------------------------------------------------- */
 
 .toast {
-  display: none;
+  position: fixed;
+  bottom: 28px;
+  right: 28px;
+  background: var(--preto);
+  color: var(--branco);
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 12px 20px;
+  border-radius: 10px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  z-index: 999;
+  transform: translateY(80px);
+  opacity: 0;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+  max-width: calc(100vw - 56px);
 }
 
+.toast.visivel {
+  transform: translateY(0);
+  opacity: 1;
+}
 
-/* RODAPÉ DA PÁGINA */
+.toast-icone {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  background: #22c55e;
+}
+
+.toast.erro .toast-icone {
+  background: var(--vermelho);
+}
+
+.toast-icone svg {
+  width: 11px;
+  height: 11px;
+  fill: none;
+  stroke: white;
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* -------------------------------------------------------------
+   RODAPÉ
+   ------------------------------------------------------------- */
 
 .rodape-admin {
-  padding: 18px 32px;
-
   text-align: center;
-
-  font-size: 0.75rem;
-
-  color: #999;
+  padding: 24px 36px;
+  font-size: 0.78rem;
+  color: #888888;
+  border-top: 1px solid var(--cinza-medio);
+  background: var(--branco);
 }
 
+/* -------------------------------------------------------------
+   RESPONSIVO COMPLETO E PADRONIZADO
+   ------------------------------------------------------------- */
 
-/* ============================================================
-   RESPONSIVO
-============================================================ */
-
-@media (max-width: 900px) {
-
-  .grade-resumo {
-    grid-template-columns: 1fr;
+@media (max-width: 1100px) {
+  .grade-metricas {
+    grid-template-columns: repeat(2, 1fr);
   }
 
   .layout-inferior {
     grid-template-columns: 1fr;
   }
-
-  .painel-lateral {
-    width: 100%;
-  }
-
 }
 
-
-@media (max-width: 700px) {
-
+@media (max-width: 720px) {
   .barra-lateral {
-    display: none;
+    transform: translateX(-100%);
+  }
+
+  .barra-lateral.aberta {
+    transform: translateX(0);
+  }
+
+  .barra-fechar-mobile {
+    display: block;
+  }
+
+  .btn-menu-mobile {
+    display: flex;
   }
 
   .conteudo-principal {
@@ -1812,75 +1613,114 @@ body {
   }
 
   .cabecalho-pagina {
-    padding: 0 18px;
+    padding: 0 16px;
+  }
+
+  .cabecalho-pagina h1 {
+    font-size: 1.1rem;
+  }
+
+  .cabecalho-data {
+    display: none;
   }
 
   .area-conteudo {
     padding: 20px 16px;
   }
 
-  .form-linha {
-    grid-template-columns: 1fr;
+  .grade-metricas {
+    grid-template-columns: 1fr 1fr;
   }
 
-}
-
-
-@media (max-width: 600px) {
-
-  .modal-comprovante {
-    width: 94vw;
+  .bloco-boas-vindas {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
   }
 
-  .comprovante {
-    padding: 20px;
+  .painel-cabecalho {
+    padding: 18px 16px;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 14px;
   }
 
-  .comprovante-topo {
-    padding: 18px;
-  }
-
-  .comprovante-topo h3 {
-    font-size: 16px;
-  }
-
-  .comprovante-info {
-    grid-template-columns: 1fr;
-  }
-
-  .comprovante-info>div {
-    border-right: none;
-
-    border-bottom: 1px solid #e5e7eb;
-  }
-
-  .comprovante-info>div:last-child {
-    border-bottom: none;
-  }
-
-  .comprovante-valores {
-    max-width: 100%;
-  }
-
-  .btn-baixar-comprovante {
-    padding: 8px 10px;
-
-    font-size: 0.65rem;
-  }
-
-}
-
-
-@media (max-width: 430px) {
-
-  .comprovante-valores .comprovante-total {
-    flex-wrap: wrap;
-
-    gap: 10px;
-  }
-
-  .btn-baixar-comprovante {
+  .painel-cabecalho .btn-principal,
+  .painel-cabecalho .btn-novo {
     width: 100%;
+    justify-content: center;
   }
 
+  .filtros-vendas,
+  .filtros-armarios {
+    padding: 14px 16px;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+
+  .barra-busca,
+  .barra-busca-venda {
+    max-width: none;
+    width: 100%;
+    flex: 1 1 100%;
+  }
+
+  .grupo-chips {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .tabela-vendas th,
+  .tabela-vendas td {
+    padding: 12px 14px;
+  }
+
+  .form-linha,
+  .campo-form-grade {
+    grid-template-columns: 1fr !important;
+  }
+
+  .linha-item-modal {
+    flex-wrap: wrap;
+  }
+
+  .modal-corpo {
+    padding: 20px 16px;
+  }
+
+  .modal-cabecalho {
+    padding: 16px 20px;
+  }
+
+  .modal-acoes {
+    flex-direction: column-reverse;
+  }
+
+  .modal-acoes .btn-cancelar,
+  .modal-acoes .btn-principal {
+    width: 100%;
+    justify-content: center;
+    text-align: center;
+  }
+
+  .paginacao-servidor {
+    justify-content: center;
+    padding: 16px;
+  }
+
+  .toast {
+    left: 16px;
+    right: 16px;
+    bottom: 16px;
+    max-width: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .grade-metricas {
+    grid-template-columns: 1fr;
+  }
 }

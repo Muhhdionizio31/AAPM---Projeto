@@ -1,5 +1,4 @@
- 
-    /* ── PAGE HEADER ── */
+/* ── PAGE HEADER ── */
     .page-header {
       background: var(--light-gray);
       border-bottom: 3px solid var(--red);
@@ -252,3 +251,29 @@
       text-decoration: none;
     }
     .contact-box a:hover { text-decoration: underline; }
+
+
+/* ══════════════════════════════════════════
+   RESPONSIVO — POLÍTICA
+   ══════════════════════════════════════════ */
+@media (max-width: 900px) {
+  .policy-layout {
+    grid-template-columns: 1fr;
+    gap: 24px;
+    margin: 32px auto;
+    padding: 0 20px;
+  }
+  .sidebar { position: static; }
+  .sidebar ul { display: grid; grid-template-columns: 1fr 1fr; gap: 2px 8px; }
+  .policy-content { overflow-wrap: anywhere; }
+}
+
+@media (max-width: 520px) {
+  .page-header { padding: 32px 16px 26px; }
+  .page-header h1 { font-size: 1.55rem; }
+  .sidebar ul { grid-template-columns: 1fr; }
+  .section-title { gap: 10px; }
+  .section-title h2 { font-size: 1rem; }
+  .policy-section { margin-bottom: 36px; }
+  .contact-box, .info-box { padding: 14px 16px; }
+}

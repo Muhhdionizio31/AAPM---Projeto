@@ -24,7 +24,7 @@ def catalogo(
     usuario = Depends(get_usuario_opcional),
     db: Session = Depends(get_db)
 ):
-    query = db.query(Produto).filter(Produto.ativa == True)
+    query = db.query(Produto).filter(Produto.ativa == True).order_by(Produto.id)
 
     if busca:
         query = query.filter(Produto.nome.ilike(f"%{busca}%"))
