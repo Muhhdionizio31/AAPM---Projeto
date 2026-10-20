@@ -89,6 +89,140 @@ function atualizarDescontoECliente() {
 }
 
 /* =========================================================
+   ESTADO E GERENCIAMENTO DE FORMAS DE PAGAMENTO
+========================================================= */
+let totalLiquidoAtual = 0;
+let segundoPagamentoAtivo = false;
+
+function sincronizarPagamentos() {
+  const inputVal1 = document.getElementById('modalValorPagamento1');
+  const inputVal2 = document.getElementById('modalValorPagamento2');
+
+  if (!segundoPagamentoAtivo) {
+    if (inputVal1) {
+      inputVal1.value = totalLiquidoAtual > 0 ? totalLiquidoAtual.toFixed(2) : '0.00';
+    }
+  } else {
+    let val1 = parseFloat(inputVal1?.value) || 0;
+    if (val1 > totalLiquidoAtual) {
+      val1 = totalLiquidoAtual;
+      if (inputVal1) inputVal1.value = val1.toFixed(2);
+    }
+    const restante = Math.max(0, Math.round((totalLiquidoAtual - val1) * 100) / 100);
+    if (inputVal2) {
+      inputVal2.value = restante.toFixed(2);
+    }
+  }
+
+  atualizarResumoPagamentos();
+}
+
+function alternarSegundoPagamento() {
+  segundoPagamentoAtivo = true;
+  const linha2 = document.getElementById('linhaPagamento2');
+  const btnToggle = document.getElementById('btnTogglePagamento2');
+  const selectFp2 = document.getElementById('modalFormaPagamento2');
+  const inputVal1 = document.getElementById('modalValorPagamento1');
+  const inputVal2 = document.getElementById('modalValorPagamento2');
+
+  if (linha2) linha2.style.display = 'flex';
+  if (btnToggle) btnToggle.style.display = 'none';
+
+  let val1 = parseFloat(inputVal1?.value) || 0;
+  if (val1 >= totalLiquidoAtual && totalLiquidoAtual > 0) {
+    val1 = Math.round((totalLiquidoAtual / 2) * 100) / 100;
+    if (inputVal1) inputVal1.value = val1.toFixed(2);
+  }
+  const restante = Math.max(0, Math.round((totalLiquidoAtual - val1) * 100) / 100);
+  if (inputVal2) inputVal2.value = restante.toFixed(2);
+
+  atualizarResumoPagamentos();
+}
+
+function removerSegundoPagamento() {
+  segundoPagamentoAtivo = false;
+  const linha2 = document.getElementById('linhaPagamento2');
+  const btnToggle = document.getElementById('btnTogglePagamento2');
+  const selectFp2 = document.getElementById('modalFormaPagamento2');
+  const inputVal1 = document.getElementById('modalValorPagamento1');
+  const inputVal2 = document.getElementById('modalValorPagamento2');
+
+  if (linha2) linha2.style.display = 'none';
+  if (btnToggle) btnToggle.style.display = 'inline-flex';
+  if (selectFp2) selectFp2.value = '';
+  if (inputVal2) inputVal2.value = '';
+  if (inputVal1) inputVal1.value = totalLiquidoAtual > 0 ? totalLiquidoAtual.toFixed(2) : '0.00';
+
+  atualizarResumoPagamentos();
+}
+
+function aoDigitarValorPagamento(opcao) {
+  const inputVal1 = document.getElementById('modalValorPagamento1');
+  const inputVal2 = document.getElementById('modalValorPagamento2');
+
+  if (segundoPagamentoAtivo) {
+    if (opcao === 1) {
+      const val1 = parseFloat(inputVal1?.value) || 0;
+      if (val1 <= totalLiquidoAtual) {
+        const restante = Math.max(0, Math.round((totalLiquidoAtual - val1) * 100) / 100);
+        if (inputVal2) inputVal2.value = restante.toFixed(2);
+      }
+    }
+  }
+
+  atualizarResumoPagamentos();
+}
+
+function aoMudarFormaPagamento() {
+  atualizarResumoPagamentos();
+}
+
+function atualizarResumoPagamentos() {
+  const inputVal1 = document.getElementById('modalValorPagamento1');
+  const inputVal2 = document.getElementById('modalValorPagamento2');
+  const selectFp1 = document.getElementById('modalFormaPagamento1');
+  const selectFp2 = document.getElementById('modalFormaPagamento2');
+
+  const textoTotalPago = document.getElementById('textoTotalPago');
+  const colunaTroco = document.getElementById('colunaTroco');
+  const textoTroco = document.getElementById('textoTroco');
+  const colunaRestante = document.getElementById('colunaRestante');
+  const textoRestante = document.getElementById('textoRestante');
+
+  const val1 = parseFloat(inputVal1?.value) || 0;
+  const val2 = segundoPagamentoAtivo ? (parseFloat(inputVal2?.value) || 0) : 0;
+  const totalPago = Math.round((val1 + val2) * 100) / 100;
+
+  if (textoTotalPago) {
+    textoTotalPago.textContent = fmt(totalPago);
+  }
+
+  const diferenca = Math.round((totalPago - totalLiquidoAtual) * 100) / 100;
+
+  if (diferenca < -0.009 && totalLiquidoAtual > 0) {
+    if (colunaRestante) colunaRestante.style.display = 'flex';
+    if (textoRestante) textoRestante.textContent = fmt(Math.abs(diferenca));
+    if (colunaTroco) colunaTroco.style.display = 'none';
+  } else if (diferenca > 0.009) {
+    const fp1 = selectFp1?.value || '';
+    const fp2 = selectFp2?.value || '';
+    const aceitaTroco = (fp1 === 'Dinheiro' || (segundoPagamentoAtivo && fp2 === 'Dinheiro'));
+
+    if (aceitaTroco) {
+      if (colunaTroco) colunaTroco.style.display = 'flex';
+      if (textoTroco) textoTroco.textContent = fmt(diferenca);
+      if (colunaRestante) colunaRestante.style.display = 'none';
+    } else {
+      if (colunaTroco) colunaTroco.style.display = 'none';
+      if (colunaRestante) colunaRestante.style.display = 'none';
+    }
+  } else {
+    if (colunaRestante) colunaRestante.style.display = 'none';
+    if (colunaTroco) colunaTroco.style.display = 'none';
+  }
+}
+
+/* =========================================================
    CÁLCULO E ATUALIZAÇÃO DO CARRINHO
 ========================================================= */
 function calcularTotal() {
@@ -101,12 +235,11 @@ function calcularTotal() {
   if (!containerItens || !elementoTotal) return;
 
   let percentualDesconto = 0;
-  if (selectCliente && selectCliente.selectedIndex >= 0) {
-    const opcao = selectCliente.options[selectCliente.selectedIndex];
-    percentualDesconto = parseFloat(opcao?.getAttribute('data-desconto')) || 0;
-  }
   if (inputDesconto) {
-    inputDesconto.value = percentualDesconto.toFixed(1);
+    const val = parseFloat(inputDesconto.value);
+    if (!isNaN(val)) {
+      percentualDesconto = Math.max(0, Math.min(100, val));
+    }
   }
 
   let totalBruto = 0;
@@ -162,7 +295,19 @@ function calcularTotal() {
   const valorDesconto = totalBruto * (percentualDesconto / 100);
   const totalLiquido = Math.max(0, totalBruto - valorDesconto);
 
+  totalLiquidoAtual = Math.round(totalLiquido * 100) / 100;
   elementoTotal.textContent = fmt(totalLiquido);
+
+  const rotuloDesconto = document.getElementById('rotuloDescontoTotal');
+  if (rotuloDesconto) {
+    if (percentualDesconto > 0) {
+      rotuloDesconto.textContent = `Já calculado com ${percentualDesconto.toFixed(1)}% de desconto`;
+    } else {
+      rotuloDesconto.textContent = 'Sem desconto aplicado';
+    }
+  }
+
+  sincronizarPagamentos();
 
   if (inputCarrinhoJson) {
     inputCarrinhoJson.value = JSON.stringify(carrinho);
@@ -298,6 +443,10 @@ function abrirModalVenda() {
   if (listaItens) listaItens.innerHTML = '';
   if (carrinhoJson) carrinhoJson.value = '';
 
+  const selectFp1 = document.getElementById('modalFormaPagamento1');
+  if (selectFp1) selectFp1.value = 'PIX';
+  removerSegundoPagamento();
+
   atualizarDescontoECliente();
 
   const produtos = obterProdutosPdv();
@@ -310,6 +459,18 @@ function abrirModalVenda() {
 }
 
 function prepararEnvioVenda(event) {
+  const inputDesconto = document.getElementById('modalDesconto');
+  if (inputDesconto) {
+    let val = parseFloat(inputDesconto.value);
+    if (isNaN(val) || val < 0) {
+      inputDesconto.value = '0.0';
+    } else if (val > 100) {
+      inputDesconto.value = '100.0';
+    } else {
+      inputDesconto.value = val.toFixed(1);
+    }
+  }
+
   calcularTotal();
 
   const inputCarrinho = document.getElementById('carrinhoJson');
@@ -324,6 +485,35 @@ function prepararEnvioVenda(event) {
   if (!itensCarrinho || itensCarrinho.length === 0) {
     if (event) event.preventDefault();
     exibirToast('Selecione ao menos um produto válido para finalizar.', false);
+    return false;
+  }
+
+  // Validação de formas de pagamento
+  const inputVal1 = document.getElementById('modalValorPagamento1');
+  const inputVal2 = document.getElementById('modalValorPagamento2');
+  const selectFp2 = document.getElementById('modalFormaPagamento2');
+
+  const val1 = parseFloat(inputVal1?.value) || 0;
+  const val2 = segundoPagamentoAtivo ? (parseFloat(inputVal2?.value) || 0) : 0;
+  const totalPago = Math.round((val1 + val2) * 100) / 100;
+
+  if (segundoPagamentoAtivo) {
+    if (!selectFp2?.value) {
+      if (event) event.preventDefault();
+      exibirToast('Selecione o método da 2ª forma de pagamento.', false);
+      return false;
+    }
+    if (val2 <= 0) {
+      if (event) event.preventDefault();
+      exibirToast('Informe o valor para a 2ª forma de pagamento.', false);
+      return false;
+    }
+  }
+
+  if (totalLiquidoAtual > 0 && totalPago < totalLiquidoAtual - 0.009) {
+    if (event) event.preventDefault();
+    const faltam = fmt(totalLiquidoAtual - totalPago);
+    exibirToast(`Valor informado insuficiente! Faltam ${faltam} para cobrir a venda.`, false);
     return false;
   }
 
@@ -405,6 +595,24 @@ async function verDetalhesVenda(id) {
             <span>TOTAL PAGO:</span>
             <strong>${fmt(dados.total_liquido)}</strong>
           </div>
+        </div>
+
+        <div class="comprovante-pagamento">
+          <h4>Forma(s) de Pagamento</h4>
+          <div>
+            <span>${escapeHtml(dados.forma_pagamento_1 || 'Dinheiro')}:</span>
+            <strong>${fmt(dados.valor_pagamento_1)}</strong>
+          </div>
+          ${dados.forma_pagamento_2 ? `
+          <div>
+            <span>${escapeHtml(dados.forma_pagamento_2)}:</span>
+            <strong>${fmt(dados.valor_pagamento_2)}</strong>
+          </div>` : ''}
+          ${dados.troco && dados.troco > 0 ? `
+          <div style="color: #059669; font-weight: 700; margin-top: 4px;">
+            <span>Troco:</span>
+            <strong>${fmt(dados.troco)}</strong>
+          </div>` : ''}
         </div>
 
         ${dados.observacao ? `
@@ -532,6 +740,22 @@ document.addEventListener('DOMContentLoaded', () => {
     exibirToast(msg, false);
   }
 
+  // Formatar campo de desconto ao sair do campo
+  const inputDesconto = document.getElementById('modalDesconto');
+  if (inputDesconto) {
+    inputDesconto.addEventListener('blur', () => {
+      let val = parseFloat(inputDesconto.value);
+      if (isNaN(val) || val < 0) {
+        inputDesconto.value = '0.0';
+      } else if (val > 100) {
+        inputDesconto.value = '100.0';
+      } else {
+        inputDesconto.value = val.toFixed(1);
+      }
+      calcularTotal();
+    });
+  }
+
   // Fechar modais com ESC
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') {
@@ -558,3 +782,7 @@ window.atualizarDescontoECliente = atualizarDescontoECliente;
 window.aoMudarProduto = aoMudarProduto;
 window.aoMudarVariacao = aoMudarVariacao;
 window.prepararEnvioVenda = prepararEnvioVenda;
+window.alternarSegundoPagamento = alternarSegundoPagamento;
+window.removerSegundoPagamento = removerSegundoPagamento;
+window.aoDigitarValorPagamento = aoDigitarValorPagamento;
+window.aoMudarFormaPagamento = aoMudarFormaPagamento;

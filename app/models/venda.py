@@ -32,6 +32,15 @@ class Venda(Base):
     total_bruto  = Column(Float, nullable=False, default=0.0)
     total_liquido = Column(Float, nullable=False, default=0.0)
 
+    # Formas de pagamento
+    forma_pagamento_1 = Column(String(50), nullable=True, default="Dinheiro")
+    valor_pagamento_1 = Column(Float, nullable=True, default=0.0)
+
+    forma_pagamento_2 = Column(String(50), nullable=True)
+    valor_pagamento_2 = Column(Float, nullable=True, default=0.0)
+
+    troco = Column(Float, nullable=True, default=0.0)
+
     # Observação opcional do operador
     observacao = Column(String(255), nullable=True)
 

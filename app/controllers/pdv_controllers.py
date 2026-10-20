@@ -216,6 +216,11 @@ def finalizar_venda(
     request: Request,
     carrinho_json: str = Form(...),
     cliente_id: int = Form(0),
+    desconto_percentual: str = Form(None),
+    forma_pagamento_1: str = Form("Dinheiro"),
+    valor_pagamento_1: str = Form(None),
+    forma_pagamento_2: str = Form(None),
+    valor_pagamento_2: str = Form(None),
     observacao: str = Form(""),
     db: Session = Depends(get_db),
     usuario=Depends(get_usuario_logado)
@@ -236,7 +241,6 @@ def finalizar_venda(
         )
 
     cliente = None
-    desconto_percentual = 0.0
 
     if cliente_id:
 
@@ -249,8 +253,21 @@ def finalizar_venda(
             .first()
         )
 
-        if cliente and cliente.is_associado:
-            desconto_percentual = DESCONTO_ASSOCIADO
+    # Obter percentual de desconto (digitado pelo operador ou automático do associado)
+    desconto_val = None
+    if desconto_percentual is not None and str(desconto_percentual).strip() != "":
+        try:
+            val = float(str(desconto_percentual).strip().replace(",", "."))
+            desconto_val = max(0.0, min(100.0, val))
+        except (ValueError, TypeError):
+            desconto_val = None
+
+    if desconto_val is not None:
+        desconto_aplicado = round(desconto_val, 2)
+    elif cliente and cliente.is_associado:
+        desconto_aplicado = float(DESCONTO_ASSOCIADO)
+    else:
+        desconto_aplicado = 0.0
 
     total_bruto = 0.0
     itens_validados = []
@@ -403,13 +420,42 @@ def finalizar_venda(
 
         desconto_valor = (
             total_bruto *
-            (desconto_percentual / 100)
+            (desconto_aplicado / 100)
         )
 
         total_liquido = (
             total_bruto -
             desconto_valor
         )
+
+        # ==========================================
+        # FORMAS DE PAGAMENTO
+        # ==========================================
+
+        fp1 = (forma_pagamento_1 or "Dinheiro").strip()
+        try:
+            val1 = float(str(valor_pagamento_1 or "0").strip().replace(",", "."))
+        except (ValueError, TypeError):
+            val1 = 0.0
+
+        fp2 = (forma_pagamento_2 or "").strip()
+        if fp2 in ("", "none", "None", "0"):
+            fp2 = None
+            val2 = 0.0
+        else:
+            try:
+                val2 = float(str(valor_pagamento_2 or "0").strip().replace(",", "."))
+            except (ValueError, TypeError):
+                val2 = 0.0
+
+        # Se valor 1 não foi preenchido e não há valor 2, assume o total liquido
+        if val1 <= 0 and (not fp2 or val2 <= 0):
+            val1 = total_liquido
+
+        total_pago = val1 + val2
+        troco = 0.0
+        if total_pago > total_liquido and (fp1 == "Dinheiro" or fp2 == "Dinheiro"):
+            troco = round(total_pago - total_liquido, 2)
 
         # ==========================================
         # USUÁRIO
@@ -430,7 +476,7 @@ def finalizar_venda(
         venda = Venda(
             cliente_id=cliente_id or None,
             usuario_id=usuario_id,
-            desconto_percentual=desconto_percentual,
+            desconto_percentual=desconto_aplicado,
             total_bruto=round(
                 total_bruto,
                 2
@@ -439,6 +485,11 @@ def finalizar_venda(
                 total_liquido,
                 2
             ),
+            forma_pagamento_1=fp1,
+            valor_pagamento_1=round(val1, 2),
+            forma_pagamento_2=fp2,
+            valor_pagamento_2=round(val2, 2) if fp2 else None,
+            troco=troco,
             observacao=observacao or None
         )
 
@@ -683,6 +734,12 @@ def detalhe_venda_json(
             "total_liquido": float(
                 venda.total_liquido or 0
             ),
+
+            "forma_pagamento_1": venda.forma_pagamento_1 or "Dinheiro",
+            "valor_pagamento_1": float(venda.valor_pagamento_1) if venda.valor_pagamento_1 is not None else float(venda.total_liquido or 0),
+            "forma_pagamento_2": venda.forma_pagamento_2,
+            "valor_pagamento_2": float(venda.valor_pagamento_2) if venda.valor_pagamento_2 is not None else None,
+            "troco": float(venda.troco or 0),
 
             "itens": itens
         }

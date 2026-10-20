@@ -1776,3 +1776,165 @@ body.modal-aberto-body {
     grid-template-columns: 1fr;
   }
 }
+
+/* =========================================================
+   FORMAS DE PAGAMENTO (PDV)
+========================================================= */
+.secao-pagamento {
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  background: #f8fafc;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.secao-pagamento-topo {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.secao-pagamento-titulo {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 700;
+  font-size: 0.84rem;
+  color: #1e293b;
+}
+
+.secao-pagamento-titulo svg {
+  color: var(--vermelho);
+}
+
+.btn-toggle-segundo-pagamento {
+  background: #eff6ff;
+  color: #2563eb;
+  border: 1px dashed #93c5fd;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.74rem;
+  font-weight: 700;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.btn-toggle-segundo-pagamento:hover {
+  background: #2563eb;
+  color: #ffffff;
+  border-style: solid;
+}
+
+.linha-pagamento {
+  display: flex;
+  align-items: flex-end;
+  gap: 10px;
+  background: #ffffff;
+  padding: 10px 12px;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+}
+
+.linha-pagamento .form-group {
+  margin: 0;
+}
+
+.btn-remover-pagamento2 {
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  color: var(--vermelho);
+  width: 38px;
+  height: 38px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 800;
+  font-size: 0.85rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: all 0.15s ease;
+}
+
+.btn-remover-pagamento2:hover {
+  background: var(--vermelho);
+  color: #ffffff;
+}
+
+.resumo-pagamento {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+  padding: 10px 14px;
+  background: #f1f5f9;
+  border-radius: 8px;
+  font-size: 0.82rem;
+}
+
+.resumo-pagamento-col {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.resumo-pagamento-col span {
+  color: #64748b;
+  font-weight: 600;
+}
+
+.resumo-pagamento-col strong {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 700;
+}
+
+/* Badge de pagamento na tabela */
+.badge-pagamento {
+  display: inline-block;
+  padding: 3px 8px;
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  color: #15803d;
+  border-radius: 20px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.badge-sem-pagamento {
+  color: #94a3b8;
+  font-size: 0.8rem;
+}
+
+/* Comprovante pagamento */
+.comprovante-pagamento {
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 1px dashed #e2e8f0;
+  font-size: 0.82rem;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.comprovante-pagamento h4 {
+  font-size: 0.76rem;
+  text-transform: uppercase;
+  color: #64748b;
+  margin-bottom: 4px;
+  letter-spacing: 0.5px;
+}
+
+.comprovante-pagamento div {
+  display: flex;
+  justify-content: space-between;
+  color: #334155;
+}
+
+.comprovante-pagamento div strong {
+  color: #0f172a;
+}

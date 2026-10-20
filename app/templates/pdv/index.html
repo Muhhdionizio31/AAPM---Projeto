@@ -12,7 +12,7 @@
     href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Lato:wght@300;400;600;700;900&display=swap"
     rel="stylesheet" />
 
-  <link rel="stylesheet" href="/static/css/vendas.css?v=7" />
+  <link rel="stylesheet" href="/static/css/vendas.css?v=8" />
   <link rel="stylesheet" href="/static/css/transicoes.css?v=1" />
   <link rel="stylesheet" href="/static/css/paginacao-estoque.css?v=1" />
 
@@ -323,6 +323,7 @@
                   <th>Valor Bruto</th>
                   <th>Desconto</th>
                   <th>Valor Líquido</th>
+                  <th>Pagamento</th>
                   <th style="text-align:center">Comprovante</th>
                 </tr>
               </thead>
@@ -363,6 +364,18 @@
                     <strong class="texto-verde">R$ {{ "%.2f"|format(v.total_liquido) }}</strong>
                   </td>
 
+                  <td>
+                    {% if v.forma_pagamento_2 %}
+                    <span class="badge-pagamento" title="{{ v.forma_pagamento_1 }}: R$ {{ '%.2f'|format(v.valor_pagamento_1 or 0) }} / {{ v.forma_pagamento_2 }}: R$ {{ '%.2f'|format(v.valor_pagamento_2 or 0) }}">
+                      {{ v.forma_pagamento_1 }} + {{ v.forma_pagamento_2 }}
+                    </span>
+                    {% elif v.forma_pagamento_1 %}
+                    <span class="badge-pagamento">{{ v.forma_pagamento_1 }}</span>
+                    {% else %}
+                    <span class="badge-sem-pagamento">Dinheiro</span>
+                    {% endif %}
+                  </td>
+
                   <td style="text-align:center">
                     <button class="btn-acao-comprovante" type="button" onclick="verDetalhesVenda('{{ v.id }}')" title="Visualizar comprovante da venda">
                       <svg viewBox="0 0 24 24">
@@ -380,7 +393,7 @@
 
                 {% if not vendas %}
                 <tr class="linha-vazia">
-                  <td colspan="7">
+                  <td colspan="8">
                     <div class="icone-vazio">
                       <svg viewBox="0 0 24 24">
                         <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" />
@@ -523,8 +536,8 @@
             </div>
 
             <div class="form-group">
-              <label for="modalDesconto">Desconto Automático (%)</label>
-              <input type="number" step="0.1" id="modalDesconto" value="0.0" min="0" max="100" readonly />
+              <label for="modalDesconto">Desconto (%)</label>
+              <input type="number" step="0.1" name="desconto_percentual" id="modalDesconto" value="0.0" min="0" max="100" oninput="calcularTotal()" placeholder="0.0" />
             </div>
           </div>
 
@@ -557,9 +570,82 @@
           <div class="total-modal">
             <div class="total-modal-rotulo">
               <span>Valor Final a Pagar</span>
-              <small>Já calculado com desconto de associado</small>
+              <small id="rotuloDescontoTotal">Já calculado com desconto de associado</small>
             </div>
             <strong id="totalModal">R$ 0,00</strong>
+          </div>
+
+          <!-- FORMAS DE PAGAMENTO -->
+          <div class="secao-pagamento">
+            <div class="secao-pagamento-topo">
+              <span class="secao-pagamento-titulo">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="2" y="5" width="20" height="14" rx="2"></rect>
+                  <line x1="2" y1="10" x2="22" y2="10"></line>
+                </svg>
+                Formas de Pagamento
+              </span>
+              <button type="button" class="btn-toggle-segundo-pagamento" id="btnTogglePagamento2" onclick="alternarSegundoPagamento()">
+                + Dividir pagamento (2ª opção)
+              </button>
+            </div>
+
+            <!-- 1ª FORMA DE PAGAMENTO -->
+            <div class="linha-pagamento">
+              <div class="form-group" style="flex: 1.4;">
+                <label for="modalFormaPagamento1">1ª Opção de Pagamento</label>
+                <select name="forma_pagamento_1" id="modalFormaPagamento1" onchange="aoMudarFormaPagamento()">
+                  <option value="Dinheiro">Dinheiro</option>
+                  <option value="PIX" selected>PIX</option>
+                  <option value="Cartão de Débito">Cartão de Débito</option>
+                  <option value="Cartão de Crédito">Cartão de Crédito</option>
+                </select>
+              </div>
+
+              <div class="form-group" style="flex: 1;">
+                <label for="modalValorPagamento1">Valor (R$)</label>
+                <input type="number" step="0.01" min="0" name="valor_pagamento_1" id="modalValorPagamento1" placeholder="0,00" oninput="aoDigitarValorPagamento(1)" />
+              </div>
+            </div>
+
+            <!-- 2ª FORMA DE PAGAMENTO (OPCIONAL) -->
+            <div class="linha-pagamento" id="linhaPagamento2" style="display: none;">
+              <div class="form-group" style="flex: 1.4;">
+                <label for="modalFormaPagamento2">2ª Opção de Pagamento (Opcional)</label>
+                <select name="forma_pagamento_2" id="modalFormaPagamento2" onchange="aoMudarFormaPagamento()">
+                  <option value="">Selecione a forma...</option>
+                  <option value="Dinheiro">Dinheiro</option>
+                  <option value="PIX">PIX</option>
+                  <option value="Cartão de Débito">Cartão de Débito</option>
+                  <option value="Cartão de Crédito">Cartão de Crédito</option>
+                </select>
+              </div>
+
+              <div class="form-group" style="flex: 1;">
+                <label for="modalValorPagamento2">Valor (R$)</label>
+                <input type="number" step="0.01" min="0" name="valor_pagamento_2" id="modalValorPagamento2" placeholder="0,00" oninput="aoDigitarValorPagamento(2)" />
+              </div>
+
+              <button type="button" class="btn-remover-pagamento2" onclick="removerSegundoPagamento()" title="Remover 2ª opção">
+                ✕
+              </button>
+            </div>
+
+            <!-- RESUMO DO PAGAMENTO -->
+            <div class="resumo-pagamento" id="resumoPagamento">
+              <div class="resumo-pagamento-col">
+                <span>Total Informado:</span>
+                <strong id="textoTotalPago">R$ 0,00</strong>
+              </div>
+              <div class="resumo-pagamento-col" id="colunaTroco" style="display: none;">
+                <span>Troco:</span>
+                <strong id="textoTroco" style="color: #059669;">R$ 0,00</strong>
+              </div>
+              <div class="resumo-pagamento-col" id="colunaRestante" style="display: none;">
+                <span>Faltam:</span>
+                <strong id="textoRestante" style="color: #dc2626;">R$ 0,00</strong>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -647,7 +733,7 @@
 
   <!-- SCRIPTS -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-  <script src="/static/js/vendas.js?v=6"></script>
+  <script src="/static/js/vendas.js?v=8"></script>
   <script src="/static/js/transicoes.js?v=1"></script>
 
 </body>
