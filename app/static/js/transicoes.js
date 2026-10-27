@@ -8,6 +8,20 @@
   // Se o usuário prefere movimento reduzido, desativa animações
   const prefereReduzido = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+  // Verifica se a página atual faz parte da gestão de estoque ou painel administrativo
+  function ehAreaAdminOuEstoque() {
+    return Boolean(
+      document.querySelector('.barra-lateral') ||
+      document.querySelector('.barra-layout') ||
+      document.body.classList.contains('painel') ||
+      document.querySelector('.tabela-estoque') ||
+      document.querySelector('.estoque-container') ||
+      /^\/(produtos|painel|pdv|categorias|clientes|armarios|usuarios|auth)/i.test(window.location.pathname) ||
+      document.title.toLowerCase().includes('estoque') ||
+      document.title.toLowerCase().includes('painel')
+    );
+  }
+
   // 1. Inicializa elementos visuais de transição (Barra de Scroll, Loader e Botão Topo)
   function inicializarElementos() {
     // Barra de progresso de scroll
@@ -28,18 +42,27 @@
       document.body.prepend(loaderTela);
     }
 
-    // Botão Voltar ao Topo
+    // Botão Voltar ao Topo (apenas no site público onde o usuário visualiza)
     let btnTopo = document.getElementById('btn-voltar-topo');
-    if (!btnTopo && !prefereReduzido) {
-      btnTopo = document.createElement('button');
-      btnTopo.id = 'btn-voltar-topo';
-      btnTopo.type = 'button';
-      btnTopo.setAttribute('aria-label', 'Voltar ao topo');
-      btnTopo.setAttribute('title', 'Voltar ao topo');
-      btnTopo.innerHTML = '<svg viewBox="0 0 24 24"><line x1="12" y1="19" x2="12" y2="5"></line><polyline points="5 12 12 5 19 12"></polyline></svg>';
-      document.body.appendChild(btnTopo);
+    if (ehAreaAdminOuEstoque()) {
+      if (btnTopo) {
+        btnTopo.remove();
+        btnTopo = null;
+      }
+    } else if (!prefereReduzido) {
+      if (!btnTopo) {
+        btnTopo = document.createElement('button');
+        btnTopo.id = 'btn-voltar-topo';
+        btnTopo.className = 'btn-voltar-topo';
+        btnTopo.type = 'button';
+        btnTopo.setAttribute('aria-label', 'Voltar ao topo');
+        btnTopo.setAttribute('title', 'Voltar ao topo');
+        btnTopo.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 15l-6-6-6 6"></path></svg>';
+        document.body.appendChild(btnTopo);
+      }
 
-      btnTopo.addEventListener('click', () => {
+      btnTopo.addEventListener('click', (e) => {
+        e.preventDefault();
         window.scrollTo({ top: 0, behavior: 'smooth' });
       });
     }
@@ -61,9 +84,9 @@
         barraScroll.style.transform = `scaleX(${progresso})`;
       }
 
-      // Mostra/Oculta botão voltar ao topo (após 240px de rolagem)
-      if (btnTopo) {
-        if (scrollTop > 240) {
+      // Mostra/Oculta botão voltar ao topo (após 220px de rolagem, apenas no site público)
+      if (btnTopo && !ehAreaAdminOuEstoque()) {
+        if (scrollTop > 220) {
           btnTopo.classList.add('visivel');
         } else {
           btnTopo.classList.remove('visivel');

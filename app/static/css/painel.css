@@ -871,3 +871,13 @@ body {
     gap: 8px;
   }
 }
+
+
+/* Garante que o botão flutuante de voltar ao topo NUNCA apareça no painel */
+#btn-voltar-topo,
+.btn-voltar-topo {
+  display: none !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+  opacity: 0 !important;
+}

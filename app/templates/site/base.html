@@ -8,14 +8,14 @@
   <link
     href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Lato:wght@300;400;700&display=swap"
     rel="stylesheet" />
-  <link rel="stylesheet" href="/static/css/base-style.css?v=2" />
-  <link rel="stylesheet" href="/static/css/transicoes.css?v=1" />
+  <link rel="stylesheet" href="/static/css/base-style.css?v=3" />
+  <link rel="stylesheet" href="/static/css/transicoes.css?v=2" />
 
   {% block css %}
   {% endblock %}
 </head>
 
-<body>
+<body class="site-publico">
 
   <nav>
 
@@ -49,8 +49,15 @@
     <span class="footer-copy">Copyright 2024 © Todos os direitos reservados</span>
   </footer>
 
-  <script src="/static/js/scripts.js"></script>
-  <script src="/static/js/transicoes.js?v=1"></script>
+  <!-- Botão Flutuante Voltar ao Topo (bolinha apenas para o site do usuário) -->
+  <button id="btn-voltar-topo" class="btn-voltar-topo" type="button" aria-label="Voltar ao início da página" title="Voltar ao topo">
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M18 15l-6-6-6 6" />
+    </svg>
+  </button>
+
+  <script src="/static/js/scripts.js?v=2"></script>
+  <script src="/static/js/transicoes.js?v=2"></script>
 
   {% block scripts %}
   {% endblock %}

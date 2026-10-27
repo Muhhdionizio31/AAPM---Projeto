@@ -1705,3 +1705,13 @@ body.modal-aberto-body {
     grid-template-columns: 1fr;
   }
 }
+
+
+/* Garante que o botão flutuante de voltar ao topo NUNCA apareça no controle de estoque */
+#btn-voltar-topo,
+.btn-voltar-topo {
+  display: none !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+  opacity: 0 !important;
+}
