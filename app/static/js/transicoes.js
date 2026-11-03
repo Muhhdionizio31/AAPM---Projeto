@@ -5,6 +5,14 @@
 (function () {
   'use strict';
 
+  // Inicialização rápida do tema escuro para evitar qualquer piscar de tela
+  try {
+    const temaSalvo = localStorage.getItem('tema');
+    if (temaSalvo === 'escuro' || (!temaSalvo && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+      document.documentElement.classList.add('modo-escuro');
+    }
+  } catch (erroTema) {}
+
   // Se o usuário prefere movimento reduzido, desativa animações
   const prefereReduzido = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 

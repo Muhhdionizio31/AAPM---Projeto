@@ -1,9 +1,19 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/static/css/transicoes.css?v=1">
+    <link rel="stylesheet" href="/static/css/modo-escuro.css?v=3">
+
+    <script>
+      (function () {
+        var temaSalvo = localStorage.getItem('tema');
+        if (temaSalvo === 'escuro' || (!temaSalvo && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+          document.documentElement.classList.add('modo-escuro');
+        }
+      })();
+    </script>
     <title>Cadastro</title>
 </head>
 <body>
@@ -26,5 +36,6 @@
 
     <p>Já tem conta? <a href="/login">Entrar</a></p>
     <script src="/static/js/transicoes.js?v=1"></script>
+    <script src="/static/js/modo-escuro.js?v=3"></script>
 </body>
 </html>

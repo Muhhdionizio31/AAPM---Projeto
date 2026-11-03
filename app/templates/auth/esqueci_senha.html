@@ -1,4 +1,4 @@
-
+﻿
 <!DOCTYPE html>
 <html lang="pt-BR">
 
@@ -7,6 +7,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/static/css/esqueci_senha.css">
     <link rel="stylesheet" href="/static/css/transicoes.css?v=1">
+    <link rel="stylesheet" href="/static/css/modo-escuro.css?v=3">
+
+    <script>
+      (function () {
+        var temaSalvo = localStorage.getItem('tema');
+        if (temaSalvo === 'escuro' || (!temaSalvo && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+          document.documentElement.classList.add('modo-escuro');
+        }
+      })();
+    </script>
     <title>Esqueci minha senha - AAPM</title>
 </head>
 
@@ -79,6 +89,7 @@
     </main>
 
     <script src="/static/js/transicoes.js?v=1"></script>
+    <script src="/static/js/modo-escuro.js?v=3"></script>
 </body>
 
 </html>
