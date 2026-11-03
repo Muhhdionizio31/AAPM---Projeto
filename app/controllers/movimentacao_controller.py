@@ -38,7 +38,7 @@ def listar_movimentacoes(
         query = query.filter(Movimentacao.tipo == tipo)
 
     movimentacoes = query.limit(200).all()
-    produtos      = db.query(Produto).filter(Produto.ativo == True).all()
+    produtos      = db.query(Produto).filter(Produto.ativa == True).all()
 
     return templates.TemplateResponse(
         request,
@@ -70,7 +70,7 @@ def form_nova_movimentacao(
     Pode receber produto_id via query string para
     pré-selecionar o produto direto da página de detalhe.
     """
-    produtos = db.query(Produto).filter(Produto.ativo == True).all()
+    produtos = db.query(Produto).filter(Produto.ativa == True).all()
 
     return templates.TemplateResponse(
         request,
@@ -100,7 +100,7 @@ def registrar_movimentacao(
     Registra a movimentação e atualiza o estoque do produto
     em uma única transação — garante consistência.
     """
-    produtos = db.query(Produto).filter(Produto.ativo == True).all()
+    produtos = db.query(Produto).filter(Produto.ativa == True).all()
 
     # Valida se o tipo enviado é válido
     if tipo not in (tipo_de_movimentacao.ENTRADA, tipo_de_movimentacao.SAIDA):

@@ -7,6 +7,7 @@ from fastapi.testclient import TestClient
 from app.main import app
 from app.database import Base, get_db 
 from app.auth import get_admin, get_usuario_logado, get_usuario_opcional
+from app.controllers.variacao_controller import get_db as get_db_variacoes
 
 @pytest.fixture()
 def db_session_test():
@@ -33,12 +34,13 @@ def cliente(db_session_test):
             yield db_session_test
 
     def usurio_falso():
-        return {"sub": "teste@admin.com", "nome": "admin teste", "role": "admin"}
+        return {"id": 999, "sub": "teste@admin.com", "nome": "admin teste", "role": "admin"}
 
     app.dependency_overrides[get_db] = get_db_teste
     app.dependency_overrides[get_usuario_logado] = usurio_falso 
     app.dependency_overrides[get_admin] = usurio_falso
     app.dependency_overrides[get_usuario_opcional] = usurio_falso
+    app.dependency_overrides[get_db_variacoes] = get_db_teste
 
     with TestClient(app) as teste_cliente:
         teste_cliente.cookies.set("access_token", "token-de-teste")

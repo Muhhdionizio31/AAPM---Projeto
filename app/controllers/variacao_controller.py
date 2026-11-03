@@ -176,6 +176,7 @@ def atualizar_variacao(
     if ativa is not None:
         variacao.ativa = ativa
 
+    db.flush()
     recalcular_estoque_produto(
         db,
         variacao.produto_id
@@ -210,6 +211,7 @@ def entrada_estoque(
 
     variacao.estoque_atual += quantidade
 
+    db.flush()
     recalcular_estoque_produto(
         db,
         variacao.produto_id
@@ -252,6 +254,7 @@ def saida_estoque(
 
     variacao.estoque_atual -= quantidade
 
+    db.flush()
     recalcular_estoque_produto(
         db,
         variacao.produto_id
