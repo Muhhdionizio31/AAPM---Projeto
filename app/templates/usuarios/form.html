@@ -250,7 +250,11 @@
           </div>
 
         </form>
-
+          {% if erro %}
+            <div class="alerta-aviso">
+                {{ erro }}
+            </div>
+         {% endif %}
       </div>
 
     </main>

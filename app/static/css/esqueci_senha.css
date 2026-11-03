@@ -1,0 +1,161 @@
+/* ==========================================================================
+   Modal — Esqueci minha senha
+   (classes batem com o markup em login.html: .modal / .modal-content / .modal-close)
+   ========================================================================== */
+
+.modal {
+  border: none;
+  border-radius: 16px;
+  padding: 0;
+  width: 100%;
+  max-width: 420px;
+  box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.12), 0 8px 16px -8px rgba(0, 0, 0, 0.08);
+  background: #FFFFFF;
+
+  /* Centralização explícita — não depende do comportamento padrão
+     de <dialog>, que pode ser sobrescrito por outras regras (position,
+     margin, etc.) herdadas do restante do CSS do projeto */
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  margin: 0;
+  transform: translate(-50%, -50%);
+  max-height: calc(100vh - 48px);
+  overflow-y: auto;
+}
+
+/* Dialog nativo precisa disso pra centralizar sozinho quando aberto via showModal() */
+.modal[open] {
+  animation: modal-in 180ms ease-out;
+}
+
+.modal::backdrop {
+  background: rgba(18, 18, 18, 0.55);
+  backdrop-filter: blur(2px);
+}
+
+@keyframes modal-in {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -50%) translateY(8px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%) translateY(0) scale(1);
+  }
+}
+
+.modal-content {
+  position: relative;
+  padding: 40px 36px;
+}
+
+.modal-content h2 {
+  margin: 0 0 8px;
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: #1A1A1A;
+}
+
+.modal-close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  border-radius: 8px;
+  font-size: 20px;
+  line-height: 1;
+  color: #6B7280;
+  cursor: pointer;
+  transition: background-color 150ms ease, color 150ms ease;
+}
+
+.modal-close:hover {
+  background: #F4F4F5;
+  color: #1A1A1A;
+}
+
+.modal-close:focus-visible {
+  outline: 2px solid #E2121B;
+  outline-offset: 2px;
+}
+
+.modal .auth-description {
+  margin: 0 0 24px;
+  font-size: 14.5px;
+  line-height: 1.55;
+  color: #6B7280;
+}
+
+/* O input do modal não usa .input-wrap (sem ícone) — precisa de estilo próprio,
+   já que o login.css provavelmente só estiliza ".form-group .input-wrap input" */
+.modal .form-group input {
+  width: 100%;
+  padding: 12px 14px;
+  font-size: 14.5px;
+  font-family: inherit;
+  color: #1A1A1A;
+  background: #FFFFFF;
+  border: 1px solid #E5E7EB;
+  border-radius: 8px;
+  transition: border-color 150ms ease, box-shadow 150ms ease;
+}
+
+.modal .form-group input:focus {
+  outline: none;
+  border-color: #E2121B;
+  box-shadow: 0 0 0 3px rgba(226, 18, 27, 0.12);
+}
+
+/* Reaproveita a cor de marca para o botão do modal.
+   Se preferir, troque a classe do botão no HTML para "btn-login" e remova este bloco. */
+.modal .btn-primary {
+  width: 100%;
+  padding: 13px 16px;
+  margin-top: 4px;
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 700;
+  color: #FFFFFF;
+  background: #E2121B;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 150ms ease;
+}
+
+.modal .btn-primary:hover {
+  background: #B80E16;
+}
+
+.modal .btn-primary:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(226, 18, 27, 0.28);
+}
+
+/* Variante de sucesso para o alerta dentro do modal
+   (o padrão .form-error do projeto já cobre o estado de erro) */
+.form-error--success {
+  background: #F0FDF4;
+  border-color: #86EFAC;
+  color: #166534;
+}
+
+@media (max-width: 480px) {
+  .modal-content {
+    padding: 32px 24px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .modal[open] {
+    animation: none;
+  }
+}
