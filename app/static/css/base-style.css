@@ -333,3 +333,94 @@ img { max-width: 100%; height: auto; }
   .nav-logo { max-width: 110px; }
   .nav-links .btn-admin { padding: 7px 10px; font-size: 0.8rem; }
 }
+
+
+/* ── BOTÃO FLUTUANTE VOLTAR AO TOPO (BOLINHA) ── */
+#btn-voltar-topo,
+.btn-voltar-topo {
+  position: fixed;
+  bottom: 28px;
+  right: 28px;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: var(--red, #c8102e);
+  color: #ffffff;
+  border: none;
+  box-shadow: 0 4px 18px rgba(200, 16, 46, 0.38), 0 2px 6px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 999;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: translateY(16px) scale(0.85);
+  transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+              visibility 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+              background 0.2s ease,
+              box-shadow 0.25s ease;
+  outline: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+#btn-voltar-topo svg,
+.btn-voltar-topo svg {
+  width: 22px;
+  height: 22px;
+  stroke: #ffffff;
+  stroke-width: 2.6;
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+#btn-voltar-topo.visivel,
+.btn-voltar-topo.visivel {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: translateY(0) scale(1);
+}
+
+#btn-voltar-topo:hover,
+.btn-voltar-topo:hover {
+  background: var(--dark-red, #a00d25);
+  box-shadow: 0 8px 24px rgba(200, 16, 46, 0.5), 0 3px 8px rgba(0, 0, 0, 0.15);
+  transform: translateY(-4px) scale(1.08);
+}
+
+#btn-voltar-topo:hover svg,
+.btn-voltar-topo:hover svg {
+  transform: translateY(-3px);
+}
+
+#btn-voltar-topo:active,
+.btn-voltar-topo:active {
+  transform: translateY(-1px) scale(0.96);
+  box-shadow: 0 3px 10px rgba(200, 16, 46, 0.35);
+}
+
+/* Não exibir na tela de login de administradores */
+.login-wrapper ~ #btn-voltar-topo,
+body:has(.login-wrapper) #btn-voltar-topo {
+  display: none !important;
+}
+
+@media (max-width: 768px) {
+  #btn-voltar-topo,
+  .btn-voltar-topo {
+    bottom: 20px;
+    right: 20px;
+    width: 44px;
+    height: 44px;
+  }
+  #btn-voltar-topo svg,
+  .btn-voltar-topo svg {
+    width: 20px;
+    height: 20px;
+  }
+}
