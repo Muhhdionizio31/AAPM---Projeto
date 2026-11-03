@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="pt-BR">
 
 <head>
@@ -13,6 +13,16 @@
 
   <link rel="stylesheet" href="/static/css/estoque.css?v=26" />
   <link rel="stylesheet" href="/static/css/transicoes.css?v=1" />
+  <link rel="stylesheet" href="/static/css/modo-escuro.css?v=3" />
+
+  <script>
+    (function () {
+      var temaSalvo = localStorage.getItem('tema');
+      if (temaSalvo === 'escuro' || (!temaSalvo && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        document.documentElement.classList.add('modo-escuro');
+      }
+    })();
+  </script>
 </head>
 
 <body>
@@ -816,6 +826,7 @@
 
   <script src="/static/js/produtos.js?v=20"></script>
   <script src="/static/js/transicoes.js?v=1"></script>
+  <script src="/static/js/modo-escuro.js?v=3"></script>
 
 </body>
 

@@ -1,0 +1,1382 @@
+/* ==========================================================================
+   AAPM · SENAI — Folha de Estilos do Modo Escuro
+   Desenvolvido de forma simples, direta e artesanal para todo o site.
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. Variáveis Gerais do Modo Escuro
+   -------------------------------------------------------------------------- */
+:root.modo-escuro,
+body.modo-escuro {
+  /* Cores de fundo principais */
+  --fundo-pagina: #111115;
+  --fundo-cartao: #181820;
+  --fundo-cartao-destaque: #1e1e28;
+  --fundo-campo: #22222c;
+  --fundo-hover: #262632;
+
+  /* Cores de texto */
+  --texto-principal: #f3f4f6;
+  --texto-suave: #9ca3af;
+  --texto-fraco: #6b7280;
+
+  /* Bordas e linhas */
+  --borda-cor: #2c2d38;
+  --borda-suave: #22222c;
+
+  /* Sobrescrevendo variáveis antigas do site público (base-style.css) */
+  --white: #181820;
+  --black: #f3f4f6;
+  --light-gray: #111115;
+  --mid-gray: #2c2d38;
+  --text-gray: #9ca3af;
+  --gray-light: #2c2d38;
+  --gray: #9ca3af;
+  --dark: #f3f4f6;
+  --light-red: #2d1418;
+
+  /* Sobrescrevendo variáveis do painel, estoque e pdv (painel.css, estoque.css, etc.) */
+  --branco: #181820;
+  --preto: #f3f4f6;
+  --cinza-claro: #111115;
+  --cinza-medio: #2c2d38;
+  --cinza-texto: #9ca3af;
+  --sombra: 0 10px 30px -5px rgba(0, 0, 0, 0.55), 0 4px 10px -2px rgba(0, 0, 0, 0.4);
+
+  /* Variáveis para telas de autenticação e redefinição de senha */
+  --cor-primaria: #c8102e;
+  --cor-primaria-hover: #e11d48;
+  --cor-fundo: #111115;
+  --cor-card: #181820;
+  --cor-texto: #f3f4f6;
+  --cor-texto-secundario: #9ca3af;
+  --cor-borda: #2c2d38;
+}
+
+/* --------------------------------------------------------------------------
+   2. Ajustes Globais da Página
+   -------------------------------------------------------------------------- */
+body.modo-escuro,
+html.modo-escuro body {
+  background-color: var(--fundo-pagina, #111115) !important;
+  color: var(--texto-principal, #f3f4f6) !important;
+}
+
+/* Seleção de texto no modo escuro */
+.modo-escuro ::selection {
+  background: #7f1d1d;
+  color: #ffffff;
+}
+
+/* Barra de rolagem no modo escuro */
+.modo-escuro ::-webkit-scrollbar-track {
+  background: #141418;
+}
+
+.modo-escuro ::-webkit-scrollbar-thumb {
+  background: #343542;
+  border: 2px solid #141418;
+}
+
+.modo-escuro ::-webkit-scrollbar-thumb:hover {
+  background: #c8102e;
+}
+
+/* --------------------------------------------------------------------------
+   3. Botão de Alternar o Tema (Sol e Lua)
+   -------------------------------------------------------------------------- */
+.botao-tema {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  border: 1px solid #e2e8f0;
+  background: #ffffff;
+  color: #475569;
+  cursor: pointer;
+  transition: all 0.22s ease;
+  padding: 0;
+  outline: none;
+  flex-shrink: 0;
+  user-select: none;
+}
+
+.botao-tema:hover {
+  color: #c8102e;
+  border-color: #c8102e;
+  transform: scale(1.06);
+  box-shadow: 0 4px 14px rgba(200, 16, 46, 0.22);
+}
+
+.botao-tema svg {
+  width: 19px;
+  height: 19px;
+  transition: transform 0.22s ease;
+  pointer-events: none;
+}
+
+.botao-tema svg * {
+  pointer-events: none;
+}
+
+.botao-tema:hover svg {
+  transform: rotate(15deg);
+}
+
+/* Ícones: No claro mostra a Lua; No escuro mostra o Sol */
+.botao-tema .icone-sol {
+  display: none !important;
+}
+
+.botao-tema .icone-lua {
+  display: block !important;
+}
+
+.modo-escuro .botao-tema,
+:root.modo-escuro .botao-tema {
+  display: inline-flex !important;
+  background: #22222c !important;
+  border-color: #383948 !important;
+  color: #f3f4f6 !important;
+}
+
+.modo-escuro .botao-tema .icone-sol,
+:root.modo-escuro .botao-tema .icone-sol {
+  display: block !important;
+}
+
+.modo-escuro .botao-tema .icone-lua,
+:root.modo-escuro .botao-tema .icone-lua {
+  display: none !important;
+}
+
+.modo-escuro .botao-tema:hover,
+:root.modo-escuro .botao-tema:hover {
+  color: #ff4d67 !important;
+  border-color: #ff4d67 !important;
+  box-shadow: 0 4px 14px rgba(255, 77, 103, 0.28) !important;
+}
+
+/* Item da lista de navegação no site público */
+.nav-links .item-botao-tema {
+  display: flex;
+  align-items: center;
+}
+
+/* --------------------------------------------------------------------------
+   4. Barra Superior (Navbar) do Site Público
+   -------------------------------------------------------------------------- */
+.modo-escuro nav {
+  background: rgba(20, 20, 26, 0.95) !important;
+  border-bottom: 1px solid #2c2d38 !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5) !important;
+}
+
+.modo-escuro .nav-links a {
+  color: #b0b3b8 !important;
+}
+
+.modo-escuro .nav-links a:hover {
+  color: #ffffff !important;
+  background: #2d1418 !important;
+}
+
+.modo-escuro .nav-links .btn-admin {
+  background: linear-gradient(135deg, #c8102e 0%, #b30d27 100%) !important;
+  color: #ffffff !important;
+  box-shadow: 0 4px 14px rgba(200, 16, 46, 0.35) !important;
+}
+
+.modo-escuro .nav-links .btn-admin:hover {
+  background: linear-gradient(135deg, #b30d27 0%, #900a1e 100%) !important;
+  box-shadow: 0 6px 20px rgba(200, 16, 46, 0.45) !important;
+}
+
+.modo-escuro .nav-toggle span {
+  background: #f3f4f6 !important;
+}
+
+@media (max-width: 768px) {
+  .nav-links .item-botao-tema {
+    order: 2;
+    margin-left: 6px;
+  }
+
+  .modo-escuro .nav-links.open li:not(:has(.btn-admin)):not(.item-botao-tema) {
+    border-bottom: 1px solid #2c2d38 !important;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   5. Rodapé do Site Público
+   -------------------------------------------------------------------------- */
+.modo-escuro .footer-nav {
+  background: #0d0d11 !important;
+  border-top: 1px solid #202028 !important;
+}
+
+.modo-escuro .footer-nav a {
+  color: #8b8f98 !important;
+}
+
+.modo-escuro .footer-nav a:hover {
+  color: #ffffff !important;
+}
+
+.modo-escuro .footer-nav span {
+  color: #2c2d38 !important;
+}
+
+.modo-escuro footer {
+  background: linear-gradient(135deg, #9b0b23 0%, #6d0718 100%) !important;
+}
+
+/* --------------------------------------------------------------------------
+   6. Página Inicial (Hero, Ticker e Carrossel de Produtos)
+   -------------------------------------------------------------------------- */
+.modo-escuro .hero {
+  background: #181820 !important;
+  border-color: #2c2d38 !important;
+  box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.55) !important;
+}
+
+.modo-escuro .hero::after {
+  background: radial-gradient(circle, rgba(200, 16, 46, 0.12) 0%, transparent 70%) !important;
+}
+
+.modo-escuro .hero-content h1 {
+  color: #f3f4f6 !important;
+}
+
+.modo-escuro .hero-content p {
+  color: #9ca3af !important;
+}
+
+.modo-escuro .products-section {
+  background: #111115 !important;
+}
+
+.modo-escuro .section-header h2 {
+  color: #f3f4f6 !important;
+}
+
+.modo-escuro .section-header p {
+  color: #9ca3af !important;
+}
+
+.modo-escuro .product-card {
+  background: #181820 !important;
+  border: 1px solid #2c2d38 !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35) !important;
+}
+
+.modo-escuro .product-card:hover {
+  border-color: rgba(200, 16, 46, 0.5) !important;
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.55) !important;
+}
+
+.modo-escuro .product-card .card-img {
+  background: #141418 !important;
+  border-bottom: 1px solid #2c2d38 !important;
+}
+
+.modo-escuro .product-card .card-body h3 {
+  color: #f3f4f6 !important;
+}
+
+.modo-escuro .product-card .card-body p {
+  color: #9ca3af !important;
+}
+
+.modo-escuro .product-card .card-price {
+  color: #ffffff !important;
+}
+
+.modo-escuro .product-card .card-price small {
+  color: #7b7f88 !important;
+}
+
+.modo-escuro .carousel-btn {
+  background: rgba(26, 26, 34, 0.94) !important;
+  border-color: #383948 !important;
+  color: #f3f4f6 !important;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.45) !important;
+}
+
+.modo-escuro .carousel-btn:hover {
+  background: #c8102e !important;
+  border-color: #c8102e !important;
+  color: #ffffff !important;
+}
+
+.modo-escuro .dot {
+  background: #383948 !important;
+}
+
+.modo-escuro .dot.active {
+  background: #c8102e !important;
+}
+
+.modo-escuro .card-badge {
+  background: #2d1418 !important;
+  color: #ff4d67 !important;
+}
+
+.modo-escuro .card-badge.esgotado {
+  background: #262632 !important;
+  color: #9ca3af !important;
+}
+
+.modo-escuro .card-badge.novo {
+  background: #192738 !important;
+  color: #60a5fa !important;
+}
+
+/* --------------------------------------------------------------------------
+   7. Catálogo de Produtos (/catalogo)
+   -------------------------------------------------------------------------- */
+.modo-escuro .page-header {
+  background: #181820 !important;
+  border-bottom: 1px solid #2c2d38 !important;
+}
+
+.modo-escuro .page-header h1 {
+  color: #f3f4f6 !important;
+}
+
+.modo-escuro .page-header p {
+  color: #9ca3af !important;
+}
+
+.modo-escuro .dropdown-btn {
+  background-color: #22222c !important;
+  border-color: #383948 !important;
+  color: #f3f4f6 !important;
+}
+
+.modo-escuro .dropdown-btn option {
+  background-color: #181820 !important;
+  color: #f3f4f6 !important;
+}
+
+.modo-escuro .filter-btn {
+  background: #22222c !important;
+  border-color: #383948 !important;
+  color: #9ca3af !important;
+}
+
+.modo-escuro .filter-btn:hover {
+  border-color: #c8102e !important;
+  color: #ff4d67 !important;
+}
+
+.modo-escuro .filter-btn.active {
+  background: linear-gradient(135deg, #c8102e 0%, #b30d27 100%) !important;
+  border-color: #c8102e !important;
+  color: #ffffff !important;
+}
+
+.modo-escuro .search-input {
+  background: #22222c !important;
+  border-color: #383948 !important;
+  color: #f3f4f6 !important;
+}
+
+.modo-escuro .search-input::placeholder {
+  color: #6b7280 !important;
+}
+
+.modo-escuro .search-icon {
+  stroke: #7b7f88 !important;
+}
+
+.modo-escuro .section-title {
+  border-bottom-color: #2c2d38 !important;
+}
+
+/* --------------------------------------------------------------------------
+   8. Horário de Atendimento (/horario)
+   -------------------------------------------------------------------------- */
+.modo-escuro .schedule-card {
+  background: #181820 !important;
+  border-color: #2c2d38 !important;
+}
+
+.modo-escuro .card-header {
+  border-bottom-color: #2c2d38 !important;
+}
+
+.modo-escuro .card-header h2 {
+  color: #f3f4f6 !important;
+}
+
+.modo-escuro .card-header p {
+  color: #7b7f88 !important;
+}
+
+.modo-escuro .card-header-icon {
+  background: #2d1418 !important;
+}
+
+.modo-escuro .day-row {
+  border-bottom-color: #22222c !important;
+}
+
+.modo-escuro .day-row:hover {
+  background: #202028 !important;
+}
+
+.modo-escuro .day-row.today {
+  background: #2d1418 !important;
+  border-left-color: #c8102e !important;
+}
+
+.modo-escuro .day-name {
+  color: #f3f4f6 !important;
+}
+
+.modo-escuro .day-hours {
+  color: #9ca3af !important;
+}
+
+.modo-escuro .status-badge {
+  background: #0f291e !important;
+  border-color: #1b533a !important;
+  color: #34d399 !important;
+}
+
+.modo-escuro .status-badge.fechado {
+  background: #2d1418 !important;
+  border-color: #5c1b25 !important;
+  color: #f87171 !important;
+}
+
+.modo-escuro .info-card {
+  background: #181820 !important;
+  border-color: #2c2d38 !important;
+}
+
+.modo-escuro .info-item h3 {
+  color: #f3f4f6 !important;
+}
+
+.modo-escuro .info-item p {
+  color: #9ca3af !important;
+}
+
+/* --------------------------------------------------------------------------
+   9. Termos e Política de Privacidade (/politica)
+   -------------------------------------------------------------------------- */
+.modo-escuro .sidebar {
+  background: #181820 !important;
+  border: 1px solid #2c2d38 !important;
+  box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.45) !important;
+}
+
+.modo-escuro .sidebar h3 {
+  border-bottom-color: #2c2d38 !important;
+}
+
+.modo-escuro .sidebar ul li a {
+  color: #9ca3af !important;
+}
+
+.modo-escuro .sidebar ul li a:hover {
+  background: #2d1418 !important;
+  color: #ff4d67 !important;
+}
+
+.modo-escuro .policy-section {
+  background: #181820 !important;
+  border: 1px solid #2c2d38 !important;
+  box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.45) !important;
+}
+
+.modo-escuro .policy-section p,
+.modo-escuro .policy-section ul li {
+  color: #d1d5db !important;
+}
+
+/* --------------------------------------------------------------------------
+   10. Autenticação e Login (/login, /auth/esqueci-senha, etc.)
+       Correção completa de contraste nos painéis esquerdo e direito
+   -------------------------------------------------------------------------- */
+
+/* Painel Esquerdo do Login (Mantenha sempre escuro para o texto branco contrastar) */
+.modo-escuro .login-panel-left {
+  background: #0d0d11 !important;
+  border-right: 1px solid #23232c !important;
+}
+
+.modo-escuro .left-badge {
+  background: #c8102e !important;
+  color: #ffffff !important;
+  box-shadow: 0 4px 16px rgba(200, 16, 46, 0.45) !important;
+}
+
+.modo-escuro .left-title {
+  color: #ffffff !important;
+}
+
+.modo-escuro .left-title span {
+  color: #ff4d67 !important;
+}
+
+.modo-escuro .left-desc {
+  color: #cbd5e1 !important;
+}
+
+.modo-escuro .left-feature span {
+  color: #f1f5f9 !important;
+}
+
+.modo-escuro .left-feature .feature-dot {
+  background: #ff4d67 !important;
+  box-shadow: 0 0 10px rgba(255, 77, 103, 0.5) !important;
+}
+
+/* Painel Direito do Login */
+.modo-escuro .login-panel-right {
+  background: #111115 !important;
+}
+
+.modo-escuro .login-card {
+  background: #181820 !important;
+  border: 1px solid #2c2d38 !important;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.55) !important;
+}
+
+.modo-escuro .login-card-header h2 {
+  color: #ffffff !important;
+}
+
+.modo-escuro .login-card-header p {
+  color: #9ca3af !important;
+}
+
+.modo-escuro .form-group label {
+  color: #e2e8f0 !important;
+}
+
+.modo-escuro .input-wrap input {
+  background: #22222c !important;
+  border: 1.5px solid #363746 !important;
+  color: #ffffff !important;
+}
+
+.modo-escuro .input-wrap input:focus {
+  background: #272733 !important;
+  border-color: #ff4d67 !important;
+  box-shadow: 0 0 0 3px rgba(255, 77, 103, 0.18) !important;
+}
+
+.modo-escuro .input-wrap input::placeholder {
+  color: #71717a !important;
+}
+
+.modo-escuro .input-icon {
+  stroke: #8e94a4 !important;
+}
+
+.modo-escuro .input-wrap:focus-within .input-icon {
+  stroke: #ff4d67 !important;
+}
+
+.modo-escuro .toggle-pw svg {
+  stroke: #8e94a4 !important;
+}
+
+.modo-escuro .toggle-pw:hover svg {
+  stroke: #ff4d67 !important;
+}
+
+.modo-escuro .checkbox-label {
+  color: #9ca3af !important;
+}
+
+.modo-escuro .checkbox-label input[type="checkbox"] {
+  accent-color: #c8102e;
+}
+
+.modo-escuro .forgot-pw {
+  color: #ff4d67 !important;
+}
+
+.modo-escuro .forgot-pw:hover {
+  color: #ff758c !important;
+}
+
+.modo-escuro .login-btn {
+  background: linear-gradient(135deg, #c8102e 0%, #b30d27 100%) !important;
+  color: #ffffff !important;
+  box-shadow: 0 4px 14px rgba(200, 16, 46, 0.35) !important;
+}
+
+.modo-escuro .login-btn:hover {
+  background: linear-gradient(135deg, #b30d27 0%, #900a1e 100%) !important;
+}
+
+.modo-escuro .back-link a {
+  color: #9ca3af !important;
+}
+
+.modo-escuro .back-link a:hover {
+  color: #ffffff !important;
+}
+
+/* Demais Telas de Recuperação e Cadastro (/auth/esqueci-senha, etc.) */
+.modo-escuro .auth-container {
+  background: #111115 !important;
+}
+
+.modo-escuro .auth-card {
+  background: #181820 !important;
+  border: 1px solid #2c2d38 !important;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.55) !important;
+}
+
+.modo-escuro .auth-card h1 {
+  color: #ffffff !important;
+}
+
+.modo-escuro .auth-description {
+  color: #9ca3af !important;
+}
+
+.modo-escuro .auth-footer {
+  color: #9ca3af !important;
+}
+
+.modo-escuro .auth-footer a {
+  color: #ff4d67 !important;
+}
+
+/* --------------------------------------------------------------------------
+   11. Painel Geral e Cabeçalhos (/painel)
+       Correção de contraste no cabeçalho, hero e cards de métricas (KPIs)
+   -------------------------------------------------------------------------- */
+.modo-escuro .conteudo-principal {
+  background: #111115 !important;
+}
+
+.modo-escuro .cabecalho-pagina {
+  background: rgba(24, 24, 30, 0.94) !important;
+  border-bottom: 1px solid #2c2d38 !important;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.35) !important;
+}
+
+.modo-escuro .cabecalho-pagina h1,
+.modo-escuro .cabecalho-titulo h1 {
+  color: #ffffff !important;
+}
+
+/* Pílula de data no cabeçalho */
+.modo-escuro .cabecalho-data {
+  background: #22222c !important;
+  color: #9ca3af !important;
+  border: 1px solid #353644 !important;
+}
+
+.modo-escuro .btn-menu-mobile svg {
+  stroke: #f3f4f6 !important;
+}
+
+/* Hero de Boas-Vindas */
+.modo-escuro .bloco-boas-vindas {
+  background: linear-gradient(135deg, #1d1d26 0%, #15151c 100%) !important;
+  border: 1px solid #2d2e3c !important;
+}
+
+.modo-escuro .bv-texto h2 {
+  color: #ffffff !important;
+}
+
+.modo-escuro .bv-texto p {
+  color: #9ca3af !important;
+}
+
+.modo-escuro .bv-badge {
+  background: #c8102e !important;
+  color: #ffffff !important;
+  border: none !important;
+}
+
+/* Cards de Métricas / KPIs */
+.modo-escuro .card-metrica {
+  background: #181820 !important;
+  border: 1px solid #2c2d38 !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3) !important;
+}
+
+.modo-escuro .card-metrica:hover {
+  border-color: rgba(200, 16, 46, 0.45) !important;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.45) !important;
+}
+
+.modo-escuro .cm-label {
+  color: #9ca3af !important;
+}
+
+.modo-escuro .cm-valor {
+  color: #ffffff !important;
+}
+
+.modo-escuro .cm-variacao {
+  color: #9ca3af !important;
+}
+
+.modo-escuro .cm-variacao.positivo,
+.modo-escuro .cm-variacao.disponivel {
+  color: #34d399 !important;
+}
+
+.modo-escuro .cm-variacao.negativo,
+.modo-escuro .cm-variacao.critico {
+  color: #f87171 !important;
+}
+
+.modo-escuro .cm-variacao.alerta {
+  color: #fb923c !important;
+}
+
+/* Ícones dos Cards de Métrica com fundos translúcidos elegantes */
+.modo-escuro .cm-icone.azul {
+  background: rgba(37, 99, 235, 0.18) !important;
+  color: #60a5fa !important;
+}
+
+.modo-escuro .cm-icone.verde {
+  background: rgba(16, 185, 129, 0.18) !important;
+  color: #34d399 !important;
+}
+
+.modo-escuro .cm-icone.laranja {
+  background: rgba(234, 88, 12, 0.18) !important;
+  color: #fb923c !important;
+}
+
+.modo-escuro .cm-icone.roxo {
+  background: rgba(139, 92, 246, 0.18) !important;
+  color: #a78bfa !important;
+}
+
+.modo-escuro .cm-icone.vermelho {
+  background: rgba(200, 16, 46, 0.18) !important;
+  color: #f87171 !important;
+}
+
+.modo-escuro .cm-icone.cinza {
+  background: rgba(100, 116, 139, 0.18) !important;
+  color: #cbd5e1 !important;
+}
+
+/* --------------------------------------------------------------------------
+   12. Gráficos e Tabelas do Painel
+       Correção dos subtítulos, badges, legendas e tabela recente
+   -------------------------------------------------------------------------- */
+.modo-escuro .card-grafico {
+  background: #181820 !important;
+  border: 1px solid #2c2d38 !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3) !important;
+}
+
+.modo-escuro .card-grafico-cabecalho {
+  border-bottom: 1px solid #262632 !important;
+}
+
+.modo-escuro .card-grafico-cabecalho h3 {
+  color: #ffffff !important;
+}
+
+/* Subtítulos dos gráficos (ex: "Evolução por mês", "Distribuição de itens") */
+.modo-escuro .card-grafico-cabecalho span {
+  background: #23232e !important;
+  color: #9ca3af !important;
+  border: 1px solid #353644 !important;
+}
+
+.modo-escuro .legenda-grafico {
+  color: #9ca3af !important;
+}
+
+/* Legenda de Categorias (Rosca do Painel) */
+.modo-escuro .legenda-categorias li {
+  background: #20202a !important;
+  border: 1px solid #2e2f3c !important;
+}
+
+.modo-escuro .lc-nome {
+  color: #e2e8f0 !important;
+}
+
+.modo-escuro .lc-nome .texto {
+  color: #e2e8f0 !important;
+}
+
+.modo-escuro .lc-valor {
+  color: #ffffff !important;
+}
+
+.modo-escuro .lc-valor small {
+  color: #9ca3af !important;
+}
+
+/* Tabela Recente do Painel */
+.modo-escuro .tabela-recente th {
+  background: #20202a !important;
+  color: #9ca3af !important;
+  border-bottom: 1px solid #2c2d38 !important;
+}
+
+.modo-escuro .tabela-recente td {
+  border-bottom: 1px solid #242430 !important;
+  color: #d1d5db !important;
+}
+
+.modo-escuro .tabela-recente tr:hover td {
+  background: #22222e !important;
+}
+
+.modo-escuro .tabela-recente td strong,
+.modo-escuro .tabela-recente td strong span,
+.modo-escuro .item-venda-nome,
+.modo-escuro .item-venda-valor,
+.modo-escuro .tabela-recente td span[style*="color: #111827"],
+.modo-escuro .tabela-recente [style*="color: #111827"] {
+  color: #ffffff !important;
+}
+
+/* Tags de Tipo (Concluída, Ativo, etc.) */
+.modo-escuro .tag-tipo.verde {
+  background: rgba(16, 185, 129, 0.16) !important;
+  color: #34d399 !important;
+  border: 1px solid rgba(16, 185, 129, 0.35) !important;
+}
+
+.modo-escuro .tag-tipo.azul {
+  background: rgba(37, 99, 235, 0.16) !important;
+  color: #60a5fa !important;
+  border: 1px solid rgba(37, 99, 235, 0.35) !important;
+}
+
+.modo-escuro .rodape-admin {
+  background: #141418 !important;
+  color: #6b7280 !important;
+  border-top: 1px solid #2c2d38 !important;
+}
+
+/* --------------------------------------------------------------------------
+   13. Telas Administrativas (Estoque, Armários, PDV, Clientes, Usuários)
+   -------------------------------------------------------------------------- */
+
+/* Cartões Principais */
+.modo-escuro .armarios-card,
+.modo-escuro .clientes-card,
+.modo-escuro .vendas-card,
+.modo-escuro .painel,
+.modo-escuro .card-formulario,
+.modo-escuro .formulario-card,
+.modo-escuro .tabela-container,
+.modo-escuro .tabela-container-painel {
+  background: #181820 !important;
+  border: 1px solid #2c2d38 !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3) !important;
+}
+
+.modo-escuro .card-cabecalho,
+.modo-escuro .painel-cabecalho,
+.modo-escuro .card-formulario-cabecalho {
+  background: #181820 !important;
+  border-bottom: 1px solid #2c2d38 !important;
+}
+
+.modo-escuro .card-cabecalho h3,
+.modo-escuro .painel-titulo {
+  color: #ffffff !important;
+}
+
+.modo-escuro .card-cabecalho span,
+.modo-escuro .painel-subtitulo {
+  color: #9ca3af !important;
+}
+
+/* Barra de Filtros e Busca */
+.modo-escuro .filtros-armarios,
+.modo-escuro .filtros-clientes,
+.modo-escuro .barra-filtros {
+  background: #14141a !important;
+  border-bottom: 1px solid #2c2d38 !important;
+}
+
+.modo-escuro .barra-busca-armario,
+.modo-escuro .barra-busca-cliente,
+.modo-escuro .barra-busca-tabela {
+  background: #20202a !important;
+  border: 1.5px solid #363746 !important;
+}
+
+.modo-escuro .barra-busca-armario input,
+.modo-escuro .barra-busca-cliente input,
+.modo-escuro .barra-busca-tabela input {
+  background: transparent !important;
+  color: #ffffff !important;
+}
+
+.modo-escuro .barra-busca-armario input::placeholder,
+.modo-escuro .barra-busca-cliente input::placeholder,
+.modo-escuro .barra-busca-tabela input::placeholder {
+  color: #71717a !important;
+}
+
+.modo-escuro .barra-busca-armario svg,
+.modo-escuro .barra-busca-cliente svg,
+.modo-escuro .barra-busca-tabela svg {
+  stroke: #8e94a4 !important;
+}
+
+/* Selects de Filtro */
+.modo-escuro .select-filtro-categoria,
+.modo-escuro .filtro-select,
+.modo-escuro .select-filtro-armario {
+  background: #20202a !important;
+  border: 1.5px solid #363746 !important;
+  color: #e2e8f0 !important;
+}
+
+.modo-escuro .select-filtro-categoria:focus,
+.modo-escuro .filtro-select:focus,
+.modo-escuro .select-filtro-armario:focus {
+  border-color: #c8102e !important;
+}
+
+/* Botões de Filtro / Chips */
+.modo-escuro .btn-filtro {
+  background: #20202a !important;
+  border: 1px solid #363746 !important;
+  color: #9ca3af !important;
+}
+
+.modo-escuro .btn-filtro:hover {
+  background: #282834 !important;
+  color: #ffffff !important;
+  border-color: #4b4c5c !important;
+}
+
+.modo-escuro .btn-filtro.ativo {
+  background: #c8102e !important;
+  color: #ffffff !important;
+  border-color: #c8102e !important;
+  box-shadow: 0 2px 10px rgba(200, 16, 46, 0.4) !important;
+}
+
+.modo-escuro .chip-contador {
+  background: rgba(255, 255, 255, 0.14) !important;
+  color: #ffffff !important;
+}
+
+.modo-escuro .chip-status,
+.modo-escuro .chip-associado {
+  background: #22222c !important;
+  border: 1px solid #363746 !important;
+  color: #cbd5e1 !important;
+}
+
+/* Tabelas Administrativas */
+.modo-escuro .tabela-armarios,
+.modo-escuro .tabela-clientes,
+.modo-escuro .tabela-vendas,
+.modo-escuro table {
+  background: transparent !important;
+}
+
+.modo-escuro .tabela-armarios th,
+.modo-escuro .tabela-clientes th,
+.modo-escuro .tabela-vendas th,
+.modo-escuro table th {
+  background: #20202a !important;
+  color: #9ca3af !important;
+  border-bottom: 1px solid #2c2d38 !important;
+}
+
+.modo-escuro .tabela-armarios td,
+.modo-escuro .tabela-clientes td,
+.modo-escuro .tabela-vendas td,
+.modo-escuro table td {
+  border-bottom: 1px solid #22222a !important;
+  color: #d1d5db !important;
+}
+
+.modo-escuro .tabela-armarios tr:hover td,
+.modo-escuro .tabela-clientes tr:hover td,
+.modo-escuro .tabela-vendas tr:hover td,
+.modo-escuro table tr:hover td {
+  background: #22222e !important;
+}
+
+.modo-escuro .produto-celula strong,
+.modo-escuro .produto-info-titulo,
+.modo-escuro .cliente-nome-texto,
+.modo-escuro .celula-nome,
+.modo-escuro .usuario-info-nome {
+  color: #ffffff !important;
+}
+
+.modo-escuro .produto-thumb {
+  background: #22222a !important;
+  border: 1px solid #363746 !important;
+}
+
+.modo-escuro .cliente-avatar-mini,
+.modo-escuro .usuario-avatar {
+  background: #2d161a !important;
+  color: #ff6b81 !important;
+  border: 1px solid #5a1e26 !important;
+}
+
+.modo-escuro .cliente-matricula-badge,
+.modo-escuro .armario-numero-badge,
+.modo-escuro .codigo-badge {
+  background: #22222c !important;
+  border: 1px solid #363746 !important;
+  color: #9ca3af !important;
+}
+
+/* Badges de Status (Disponível, Alugado, Crítico, Ativo, Inativo) */
+.modo-escuro .badge-status.disponivel,
+.modo-escuro .badge-status.ativo {
+  background: rgba(16, 185, 129, 0.16) !important;
+  color: #34d399 !important;
+  border: 1px solid rgba(16, 185, 129, 0.35) !important;
+}
+
+.modo-escuro .badge-status.alugado,
+.modo-escuro .badge-status.critico,
+.modo-escuro .badge-status.inativo {
+  background: rgba(220, 38, 38, 0.16) !important;
+  color: #f87171 !important;
+  border: 1px solid rgba(220, 38, 38, 0.35) !important;
+}
+
+.modo-escuro .badge-status.manutencao,
+.modo-escuro .badge-status.alerta {
+  background: rgba(234, 88, 12, 0.16) !important;
+  color: #fb923c !important;
+  border: 1px solid rgba(234, 88, 12, 0.35) !important;
+}
+
+.modo-escuro .badge-desconto {
+  background: rgba(16, 185, 129, 0.16) !important;
+  color: #34d399 !important;
+  border: 1px solid rgba(16, 185, 129, 0.35) !important;
+}
+
+.modo-escuro .badge-sem-desconto,
+.modo-escuro .badge-sem-pagamento {
+  background: #22222c !important;
+  color: #71717a !important;
+  border: 1px solid #363746 !important;
+}
+
+.modo-escuro .badge-pagamento {
+  background: rgba(37, 99, 235, 0.16) !important;
+  color: #60a5fa !important;
+  border: 1px solid rgba(37, 99, 235, 0.35) !important;
+}
+
+/* Botões de Ação na Tabela (Editar, Excluir, Ver) */
+.modo-escuro .btn-acao,
+.modo-escuro .btn-editar {
+  background: #22222c !important;
+  border: 1px solid #363746 !important;
+  color: #d1d5db !important;
+}
+
+.modo-escuro .btn-acao:hover,
+.modo-escuro .btn-editar:hover {
+  background: #2d2e3c !important;
+  color: #ffffff !important;
+  border-color: #4f5064 !important;
+}
+
+.modo-escuro .btn-excluir {
+  background: #22222c !important;
+  border: 1px solid #363746 !important;
+  color: #f87171 !important;
+}
+
+.modo-escuro .btn-excluir:hover {
+  background: #3a151b !important;
+  border-color: #6b1e28 !important;
+  color: #ff8093 !important;
+}
+
+/* Filtros de Data */
+.modo-escuro .filtro-data {
+  background: #22222c !important;
+  border: 1px solid #363746 !important;
+}
+
+.modo-escuro .filtro-data input {
+  background: transparent !important;
+  color: #ffffff !important;
+  color-scheme: dark;
+}
+
+.modo-escuro .filtro-data svg {
+  stroke: #8e94a4 !important;
+}
+
+.modo-escuro .btn-limpar-busca,
+.modo-escuro .btn-limpar {
+  background: #24242e !important;
+  border-color: #383948 !important;
+  color: #9ca3af !important;
+}
+
+.modo-escuro .btn-limpar-busca:hover,
+.modo-escuro .btn-limpar:hover {
+  background: #2d1418 !important;
+  color: #ff4d67 !important;
+}
+
+/* --------------------------------------------------------------------------
+   14. Modais, Caixas de Diálogo e Detalhes
+   -------------------------------------------------------------------------- */
+.modo-escuro .modal-caixa,
+.modo-escuro .modal-box,
+.modo-escuro .modal-conteudo,
+.modo-escuro .modal-card {
+  background: #181820 !important;
+  border: 1px solid #2c2d38 !important;
+  color: #f3f4f6 !important;
+  box-shadow: 0 25px 65px rgba(0, 0, 0, 0.75) !important;
+}
+
+.modo-escuro .modal-cabecalho,
+.modo-escuro .modal-header,
+.modo-escuro .cat-modal-cabecalho {
+  background: #14141a !important;
+  border-bottom: 1px solid #2c2d38 !important;
+}
+
+.modo-escuro .modal-cabecalho h3,
+.modo-escuro .modal-cabecalho h2,
+.modo-escuro .modal-header h2,
+.modo-escuro .cat-modal-cabecalho h3 {
+  color: #ffffff !important;
+}
+
+.modo-escuro .modal-cabecalho span,
+.modo-escuro .cat-modal-dica {
+  color: #9ca3af !important;
+}
+
+.modo-escuro .modal-fechar,
+.modo-escuro .btn-fechar-modal {
+  background: #22222c !important;
+  border: 1px solid #363746 !important;
+  color: #9ca3af !important;
+}
+
+.modo-escuro .modal-fechar:hover,
+.modo-escuro .btn-fechar-modal:hover {
+  background: #2d2e3c !important;
+  color: #ffffff !important;
+}
+
+.modo-escuro .modal-acoes,
+.modo-escuro .modal-rodape,
+.modo-escuro .modal-footer {
+  background: #14141a !important;
+  border-top: 1px solid #2c2d38 !important;
+}
+
+.modo-escuro .modal-acoes .btn-cancelar,
+.modo-escuro .cat-btn-cancelar {
+  background: #22222c !important;
+  color: #d1d5db !important;
+  border: 1px solid #363746 !important;
+}
+
+.modo-escuro .modal-acoes .btn-cancelar:hover,
+.modo-escuro .cat-btn-cancelar:hover {
+  background: #2c2d38 !important;
+  color: #ffffff !important;
+}
+
+.modo-escuro .grade-variacoes-box {
+  background: #14141a !important;
+  border: 1px solid #363746 !important;
+}
+
+.modo-escuro .grade-variacoes-box h4 {
+  color: #ffffff !important;
+}
+
+.modo-escuro .campo-dica {
+  color: #71717a !important;
+}
+
+/* Categorias no Modal */
+.modo-escuro .cat-item-produto {
+  background: #1e1e28 !important;
+  border: 1px solid #2f303e !important;
+  color: #e2e8f0 !important;
+}
+
+.modo-escuro .cat-bloco-produtos {
+  background: #15151c !important;
+  border: 1px solid #2c2d38 !important;
+}
+
+.modo-escuro .cat-bloco-produtos-titulo {
+  color: #ffffff !important;
+}
+
+/* Detalhes de Item */
+.modo-escuro .detalhe-item {
+  background: #20202a !important;
+  border: 1px solid #2e2f3c !important;
+}
+
+.modo-escuro .detalhe-label {
+  color: #9ca3af !important;
+}
+
+.modo-escuro .detalhe-valor {
+  color: #ffffff !important;
+}
+
+/* Comprovante / Recibo PDV */
+.modo-escuro .secao-itens,
+.modo-escuro .secao-pagamento,
+.modo-escuro .resumo-pagamento {
+  background: #15151c !important;
+  border: 1px solid #2c2d38 !important;
+}
+
+.modo-escuro .comprovante {
+  background: #181820 !important;
+  border: 1px solid #2c2d38 !important;
+  color: #f3f4f6 !important;
+}
+
+.modo-escuro .comprovante-topo,
+.modo-escuro .comprovante-item,
+.modo-escuro .comprovante-total {
+  border-color: #2c2d38 !important;
+}
+
+/* --------------------------------------------------------------------------
+   15. Inputs, Seletores, Paginação e Alertas Globais
+   -------------------------------------------------------------------------- */
+.modo-escuro input[type="text"],
+.modo-escuro input[type="number"],
+.modo-escuro input[type="email"],
+.modo-escuro input[type="password"],
+.modo-escuro input[type="search"],
+.modo-escuro input[type="date"],
+.modo-escuro select,
+.modo-escuro textarea,
+.modo-escuro .form-control {
+  background-color: #22222c !important;
+  border: 1.5px solid #363746 !important;
+  color: #ffffff !important;
+}
+
+.modo-escuro input:focus,
+.modo-escuro select:focus,
+.modo-escuro textarea:focus,
+.modo-escuro .form-control:focus {
+  border-color: #ff4d67 !important;
+  background-color: #272733 !important;
+  box-shadow: 0 0 0 3px rgba(255, 77, 103, 0.18) !important;
+}
+
+.modo-escuro input::placeholder,
+.modo-escuro textarea::placeholder {
+  color: #71717a !important;
+}
+
+.modo-escuro select option {
+  background-color: #181820 !important;
+  color: #ffffff !important;
+}
+
+.modo-escuro label,
+.modo-escuro .form-label,
+.modo-escuro .campo-label {
+  color: #e2e8f0 !important;
+}
+
+/* Paginação das tabelas */
+.modo-escuro .paginacao-btn,
+.modo-escuro .paginacao a,
+.modo-escuro .btn-pagina,
+.modo-escuro .paginacao span:not(.paginacao-info) {
+  background: #22222c !important;
+  border: 1px solid #363746 !important;
+  color: #d1d5db !important;
+}
+
+.modo-escuro .paginacao a:hover,
+.modo-escuro .btn-pagina:hover {
+  background: #2d1418 !important;
+  border-color: #c8102e !important;
+  color: #ffffff !important;
+}
+
+.modo-escuro .paginacao .ativo,
+.modo-escuro .paginacao .atual,
+.modo-escuro .btn-pagina.ativo {
+  background: #c8102e !important;
+  border-color: #c8102e !important;
+  color: #ffffff !important;
+}
+
+.modo-escuro .paginacao-info {
+  color: #9ca3af !important;
+}
+
+/* Alertas de Sucesso e Erro */
+.modo-escuro .alerta-sucesso,
+.modo-escuro .alert-success {
+  background: rgba(16, 185, 129, 0.15) !important;
+  border: 1px solid rgba(16, 185, 129, 0.35) !important;
+  color: #34d399 !important;
+}
+
+.modo-escuro .alerta-erro,
+.modo-escuro .alert-error,
+.modo-escuro .alert-danger {
+  background: rgba(220, 38, 38, 0.15) !important;
+  border: 1px solid rgba(220, 38, 38, 0.35) !important;
+  color: #f87171 !important;
+}
+
+/* Botão flutuante voltar ao topo */
+.modo-escuro #btn-voltar-topo,
+.modo-escuro .btn-voltar-topo {
+  background: #c8102e !important;
+  box-shadow: 0 4px 18px rgba(200, 16, 46, 0.45), 0 2px 6px rgba(0, 0, 0, 0.4) !important;
+}
+
+/* --------------------------------------------------------------------------
+   16. Regras de Alto Contraste para Estilos Embutidos (Inline Styles)
+       Garante que textos e títulos com cor preta inline fiquem brancos
+   -------------------------------------------------------------------------- */
+.modo-escuro [style*="color: #111827"],
+.modo-escuro [style*="color:#111827"],
+.modo-escuro [style*="color: #0f172a"],
+.modo-escuro [style*="color:#0f172a"] {
+  color: #ffffff !important;
+}
+
+.modo-escuro [style*="color: #374151"],
+.modo-escuro [style*="color:#374151"],
+.modo-escuro [style*="color: #4b5563"],
+.modo-escuro [style*="color:#4b5563"] {
+  color: #e2e8f0 !important;
+}

@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="pt-br">
 
 <head>
@@ -10,6 +10,16 @@
     rel="stylesheet" />
   <link rel="stylesheet" href="/static/css/base-style.css?v=3" />
   <link rel="stylesheet" href="/static/css/transicoes.css?v=2" />
+  <link rel="stylesheet" href="/static/css/modo-escuro.css?v=3" />
+
+  <script>
+    (function () {
+      var temaSalvo = localStorage.getItem('tema');
+      if (temaSalvo === 'escuro' || (!temaSalvo && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        document.documentElement.classList.add('modo-escuro');
+      }
+    })();
+  </script>
 
   {% block css %}
   {% endblock %}
@@ -26,6 +36,24 @@
       <li><a href="/">Início</a></li>
       <li><a href="/horario">Horário de Atendimento</a></li>
       <li><a href="/login" class="btn-admin">Sou Administrador</a></li>
+      <li class="item-botao-tema">
+        <button id="botao-tema" class="botao-tema" type="button" onclick="alternarTema()" aria-label="Mudar para modo escuro" title="Mudar para modo escuro">
+          <svg class="icone-sol" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="5"></circle>
+            <line x1="12" y1="1" x2="12" y2="3"></line>
+            <line x1="12" y1="21" x2="12" y2="23"></line>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+            <line x1="1" y1="12" x2="3" y2="12"></line>
+            <line x1="21" y1="12" x2="23" y2="12"></line>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+          </svg>
+          <svg class="icone-lua" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+          </svg>
+        </button>
+      </li>
     </ul>
   </nav>
 
@@ -58,6 +86,7 @@
 
   <script src="/static/js/scripts.js?v=2"></script>
   <script src="/static/js/transicoes.js?v=2"></script>
+  <script src="/static/js/modo-escuro.js?v=3"></script>
 
   {% block scripts %}
   {% endblock %}

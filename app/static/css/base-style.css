@@ -290,6 +290,11 @@ img { max-width: 100%; height: auto; }
     margin-left: auto;
     display: block;
   }
+  .nav-links .item-botao-tema {
+    order: 2;
+    display: flex;
+    align-items: center;
+  }
   .nav-links .btn-admin {
     display: inline-block;
     margin: 0;
@@ -300,17 +305,17 @@ img { max-width: 100%; height: auto; }
   }
 
   /* demais links: escondidos até abrir o menu, ocupando a linha toda embaixo */
-  .nav-links li:not(:has(.btn-admin)) {
+  .nav-links li:not(:has(.btn-admin)):not(.item-botao-tema) {
     display: none;
     order: 4;
     flex: 0 0 100%;
   }
-  .nav-links.open li:not(:has(.btn-admin)) {
+  .nav-links.open li:not(:has(.btn-admin)):not(.item-botao-tema) {
     display: block;
     border-bottom: 1px solid var(--gray-light);
   }
-  .nav-links.open li:not(:has(.btn-admin)):last-child { border-bottom: 0; margin-bottom: 8px; }
-  .nav-links li:not(:has(.btn-admin)) a {
+  .nav-links.open li:not(:has(.btn-admin)):not(.item-botao-tema):last-child { border-bottom: 0; margin-bottom: 8px; }
+  .nav-links li:not(:has(.btn-admin)):not(.item-botao-tema) a {
     display: block;
     padding: 12px 14px;
     font-size: 0.95rem;

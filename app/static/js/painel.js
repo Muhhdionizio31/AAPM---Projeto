@@ -40,6 +40,11 @@ document.addEventListener("DOMContentLoaded", function () {
   let receitaLabels = [];
   let receitaValores = [];
 
+  // Variáveis para guardar as instâncias dos gráficos e atualizar suas cores
+  let graficoCategoriasInstancia = null;
+  let graficoVendasInstancia = null;
+  let graficoReceitaInstancia = null;
+
   try {
     if (divCategorias) {
       categoriasLabels = JSON.parse(divCategorias.getAttribute("data-labels") || "[]");
@@ -78,7 +83,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const totalItens = categoriasValores.reduce((a, b) => a + Number(b), 0);
 
-    new Chart(ctxCategorias, {
+    graficoCategoriasInstancia = new Chart(ctxCategorias, {
       type: 'doughnut',
       data: {
         labels: categoriasLabels,
@@ -145,7 +150,7 @@ document.addEventListener("DOMContentLoaded", function () {
     gradienteBarras.addColorStop(0, '#c8102e');
     gradienteBarras.addColorStop(1, '#e11d48');
 
-    new Chart(ctxVendas, {
+    graficoVendasInstancia = new Chart(ctxVendas, {
       type: 'bar',
       data: {
         labels: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
@@ -210,7 +215,7 @@ document.addEventListener("DOMContentLoaded", function () {
     gradienteArea.addColorStop(0, 'rgba(200, 16, 46, 0.28)');
     gradienteArea.addColorStop(1, 'rgba(200, 16, 46, 0.00)');
 
-    new Chart(ctxReceita, {
+    graficoReceitaInstancia = new Chart(ctxReceita, {
       type: 'line',
       data: {
         labels: receitaLabels,
@@ -265,4 +270,56 @@ document.addEventListener("DOMContentLoaded", function () {
       }
     });
   }
+
+  // 6. ADAPTAÇÃO DINÂMICA DAS CORES DOS GRÁFICOS NO MODO ESCURO
+  function atualizarCoresDosGraficos(modoEscuroAtivo) {
+    const corGrade = modoEscuroAtivo ? 'rgba(255, 255, 255, 0.08)' : '#f1f5f9';
+    const corTexto = modoEscuroAtivo ? '#9ca3af' : '#64748b';
+    const corBordaRosca = modoEscuroAtivo ? '#181820' : '#ffffff';
+
+    if (graficoCategoriasInstancia && graficoCategoriasInstancia.data && graficoCategoriasInstancia.data.datasets[0]) {
+      graficoCategoriasInstancia.data.datasets[0].borderColor = corBordaRosca;
+      graficoCategoriasInstancia.update();
+    }
+
+    if (graficoVendasInstancia && graficoVendasInstancia.options && graficoVendasInstancia.options.scales) {
+      if (graficoVendasInstancia.options.scales.x && graficoVendasInstancia.options.scales.x.ticks) {
+        graficoVendasInstancia.options.scales.x.ticks.color = corTexto;
+      }
+      if (graficoVendasInstancia.options.scales.y) {
+        if (graficoVendasInstancia.options.scales.y.grid) {
+          graficoVendasInstancia.options.scales.y.grid.color = corGrade;
+        }
+        if (graficoVendasInstancia.options.scales.y.ticks) {
+          graficoVendasInstancia.options.scales.y.ticks.color = corTexto;
+        }
+      }
+      graficoVendasInstancia.update();
+    }
+
+    if (graficoReceitaInstancia && graficoReceitaInstancia.options && graficoReceitaInstancia.options.scales) {
+      if (graficoReceitaInstancia.options.scales.x && graficoReceitaInstancia.options.scales.x.ticks) {
+        graficoReceitaInstancia.options.scales.x.ticks.color = corTexto;
+      }
+      if (graficoReceitaInstancia.options.scales.y) {
+        if (graficoReceitaInstancia.options.scales.y.grid) {
+          graficoReceitaInstancia.options.scales.y.grid.color = corGrade;
+        }
+        if (graficoReceitaInstancia.options.scales.y.ticks) {
+          graficoReceitaInstancia.options.scales.y.ticks.color = corTexto;
+        }
+      }
+      graficoReceitaInstancia.update();
+    }
+  }
+
+  // Ajusta imediatamente com o tema atual
+  const estaNoModoEscuro = document.documentElement.classList.contains('modo-escuro');
+  atualizarCoresDosGraficos(estaNoModoEscuro);
+
+  // Escuta o evento disparado quando o usuário clica no botão de tema
+  window.addEventListener('temaAlterado', function (evento) {
+    const escuro = evento.detail && evento.detail.tema === 'escuro';
+    atualizarCoresDosGraficos(escuro);
+  });
 });
