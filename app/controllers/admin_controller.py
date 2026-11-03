@@ -158,6 +158,21 @@ def editar_usuario(
     if not editando:
         return RedirectResponse(url="/usuarios", status_code=302)
 
+    if editando.id == admin.get("id"):
+        usuarios = db.query(Usuario).all()
+
+        return templates.TemplateResponse(
+            request,
+            "/usuarios",
+            {
+                "request": request,
+                "usuario": admin,
+                "usuarios": usuarios,
+                "erro": "Atenção! Você não pode editar sua própria conta."
+            },
+            status_code=400
+        )
+
     # Verifica se o novo email já pertence a outro usuário
     conflito = db.query(Usuario).filter(
         Usuario.email == email,
