@@ -40,7 +40,8 @@ def cliente(db_session_test):
     app.dependency_overrides[get_admin] = usurio_falso
     app.dependency_overrides[get_usuario_opcional] = usurio_falso
 
-    with TestClient(app) as teste_cliente:   
+    with TestClient(app) as teste_cliente:
+        teste_cliente.cookies.set("access_token", "token-de-teste")
         yield teste_cliente 
 
     app.dependency_overrides.clear()

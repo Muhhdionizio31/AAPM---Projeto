@@ -36,12 +36,15 @@ def test_categoria_criada_aparece_no_html(cliente, db_session_test):
 
 # Filtrar os dados dos produtos
 def test_listar_produtos_com_filtro_de_busca(cliente, db_session_test):
-   
+    categoria = Categoria(nome="Vestuário")
+    db_session_test.add(categoria)
+    db_session_test.commit()
+
     db_session_test.add_all(
         [
-            Produto(nome="Camisa Senai", preco=49.90, estoque_atual=10, categoria_id=1),
-            Produto(nome="Calça", preco=79.90, estoque_atual=5, categoria_id=1),
-            Produto(nome="Tênis", preco=149.90, estoque_atual=8, categoria_id=1)
+            Produto(nome="Camisa Senai", preco=49.90, estoque_atual=10, categoria_id=categoria.id),
+            Produto(nome="Calça", preco=79.90, estoque_atual=5, categoria_id=categoria.id),
+            Produto(nome="Tênis", preco=149.90, estoque_atual=8, categoria_id=categoria.id)
         ]
     )
     db_session_test.commit()
@@ -55,18 +58,25 @@ def test_listar_produtos_com_filtro_de_busca(cliente, db_session_test):
 
 # Criar um produto
 def test_criar_produto_com_sucesso(cliente):
-   
+    resposta_categoria = cliente.post(
+        "/categorias/nova",
+        data={"nome": "Acessórios"},
+        follow_redirects=False
+    )
+    assert resposta_categoria.status_code == 302
+
     resposta = cliente.post(
-        "/produtos/",
+            "/produtos/novo",
         data={
             "nome": "Relógio",
+            "categoria_id": "1",
             "preco": "299.90",
             "estoque_atual": "5"},
             follow_redirects=False
             )
 
-    assert resposta.status_code == 302
-    assert resposta.headers["location"] == "/produtos/?criado=ok"
+    assert resposta.status_code == 201
+    assert resposta.json()["status"] == "sucesso"
 
     resposta_lista = cliente.get("/produtos")
     assert "Relógio" in resposta_lista.text
