@@ -1,0 +1,260 @@
+/* ==========================================================================
+   AAPM · SENAI — Sistema Global de Transições (Scroll & Troca de Tela)
+   ========================================================================== */
+
+/* 1. Suporte Nativo a View Transitions (Chrome 126+, Edge, Opera) */
+@view-transition {
+  navigation: auto;
+}
+
+::view-transition-old(root) {
+  animation: 0.18s cubic-bezier(0.4, 0, 0.2, 1) both vt-fade-out;
+}
+
+::view-transition-new(root) {
+  animation: 0.22s cubic-bezier(0.16, 1, 0.3, 1) both vt-fade-in;
+}
+
+@keyframes vt-fade-out {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+}
+
+@keyframes vt-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* 2. Scroll Suave Global e Barra de Rolagem Moderna */
+html {
+  scroll-behavior: smooth !important;
+}
+
+/* Barra de rolagem padronizada e moderna */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 999px;
+  border: 2px solid #f1f5f9;
+  transition: background 0.2s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* 3. Barra de Progresso de Scroll no Topo */
+#transicao-scroll-progresso {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background: linear-gradient(90deg, #c8102e 0%, #e11d48 50%, #f43f5e 100%);
+  transform-origin: 0 50%;
+  transform: scaleX(0);
+  z-index: 99999;
+  pointer-events: none;
+  transition: transform 0.08s ease-out;
+  box-shadow: 0 1px 6px rgba(200, 16, 46, 0.35);
+}
+
+/* 4. Barra de Carregamento para Troca de Tela (Page Navigation Loader) */
+#transicao-pagina-loader {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 3px;
+  width: 0%;
+  background: linear-gradient(90deg, #c8102e, #ff2d55);
+  box-shadow: 0 0 10px rgba(200, 16, 46, 0.7), 0 0 5px rgba(255, 45, 85, 0.5);
+  z-index: 999999;
+  pointer-events: none;
+  opacity: 0;
+  transition: width 0.22s cubic-bezier(0.1, 0.9, 0.2, 1), opacity 0.15s ease;
+}
+
+#transicao-pagina-loader.ativo {
+  opacity: 1;
+}
+
+/* 5. Transições de Entrada e Saída de Tela */
+body {
+  transition: opacity 0.18s cubic-bezier(0.4, 0, 0.2, 1), transform 0.18s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Entrada suave da página ao carregar */
+body.pagina-entrando {
+  animation: paginaEntradaSuave 0.24s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes paginaEntradaSuave {
+  from {
+    opacity: 0;
+    transform: translateY(5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Saída suave da página ao clicar em links */
+body.pagina-saindo {
+  opacity: 0.65;
+  transform: translateY(-4px);
+  pointer-events: none;
+}
+
+/* 6. Animações Suaves ao Rolar (Scroll Reveal) */
+.scroll-revelar {
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity 0.45s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
+}
+
+.scroll-revelar.scroll-revelado {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* 7. Botão Flutuante de Voltar ao Topo (Bolinha - apenas no site público) */
+#btn-voltar-topo,
+.btn-voltar-topo {
+  position: fixed;
+  bottom: 28px;
+  right: 28px;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: #c8102e;
+  color: #ffffff;
+  border: none;
+  box-shadow: 0 4px 18px rgba(200, 16, 46, 0.38), 0 2px 6px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 999;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: translateY(16px) scale(0.85);
+  transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+              visibility 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+              background 0.2s ease,
+              box-shadow 0.25s ease;
+  outline: none;
+}
+
+#btn-voltar-topo svg,
+.btn-voltar-topo svg {
+  width: 22px;
+  height: 22px;
+  stroke: #ffffff;
+  stroke-width: 2.6;
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+#btn-voltar-topo:hover,
+.btn-voltar-topo:hover {
+  background: #a00d25;
+  box-shadow: 0 8px 24px rgba(200, 16, 46, 0.5), 0 3px 8px rgba(0, 0, 0, 0.15);
+  transform: translateY(-4px) scale(1.08);
+}
+
+#btn-voltar-topo:hover svg,
+.btn-voltar-topo:hover svg {
+  transform: translateY(-3px);
+}
+
+#btn-voltar-topo:active,
+.btn-voltar-topo:active {
+  transform: translateY(-1px) scale(0.96);
+  box-shadow: 0 3px 10px rgba(200, 16, 46, 0.35);
+}
+
+#btn-voltar-topo.visivel,
+.btn-voltar-topo.visivel {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: translateY(0) scale(1);
+}
+
+/* Bloqueio explícito e absoluto: NUNCA exibir no controle de estoque ou no painel administrativo */
+.barra-lateral ~ #btn-voltar-topo,
+body:has(.barra-lateral) #btn-voltar-topo,
+.barra-lateral ~ .btn-voltar-topo,
+body:has(.barra-lateral) .btn-voltar-topo,
+.barra-layout #btn-voltar-topo,
+.tabela-estoque ~ #btn-voltar-topo,
+.estoque-container #btn-voltar-topo,
+.login-wrapper ~ #btn-voltar-topo,
+body:has(.login-wrapper) #btn-voltar-topo {
+  display: none !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+  opacity: 0 !important;
+}
+
+@media (max-width: 768px) {
+  #btn-voltar-topo,
+  .btn-voltar-topo {
+    bottom: 20px;
+    right: 20px;
+    width: 44px;
+    height: 44px;
+  }
+  #btn-voltar-topo svg,
+  .btn-voltar-topo svg {
+    width: 20px;
+    height: 20px;
+  }
+}
+
+/* 8. Respeito a Preferência de Movimento Reduzido (Acessibilidade) */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto !important;
+  }
+  body,
+  body.pagina-entrando,
+  body.pagina-saindo,
+  .scroll-revelar {
+    animation: none !important;
+    transition: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+  #transicao-scroll-progresso,
+  #transicao-pagina-loader {
+    display: none !important;
+  }
+}
