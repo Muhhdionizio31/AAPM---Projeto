@@ -347,8 +347,6 @@ Projeto desenvolvido por alunos da **Escola SENAI Francisco Matarazzo** como ini
 
 <br/>
 
-> 💬 *"Código não é só lógica — é também criatividade."* — Iago
-
 ---
 
 ## 📄 Licença
@@ -359,7 +357,7 @@ Este projeto foi desenvolvido para fins educacionais no contexto do curso técni
 
 <div align="center">
 
-**Desenvolvido com ❤️ por alunos do SENAI Francisco Matarazzo**
+**Desenvolvido por alunos do SENAI Francisco Matarazzo**
 
 <img src="https://img.shields.io/badge/SENAI-Escola%20Francisco%20Matarazzo-c8102e?style=for-the-badge&labelColor=111111" />
 
