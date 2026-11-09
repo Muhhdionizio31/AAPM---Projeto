@@ -499,6 +499,10 @@ html.modo-escuro body {
   color: #d1d5db !important;
 }
 
+.modo-escuro .info-box{
+  background-color: #ff000057;
+}
+
 /* --------------------------------------------------------------------------
    10. Autenticação e Login (/login, /auth/esqueci-senha, etc.)
        Correção completa de contraste nos painéis esquerdo e direito
@@ -556,13 +560,26 @@ html.modo-escuro body {
   color: #9ca3af !important;
 }
 
+.modo-escuro .modal-content{
+  background-color: #181820 ;
+}
+
+.modo-escuro .modal-content h2{
+  color: #afafaf ;
+}
+
+.modo-escuro .modal .btn-primary{
+  color: #282e47;
+  background-color: #c8102fe8;
+}
+
 .modo-escuro .form-group label {
-  color: #e2e8f0 !important;
+  color: #afafaf !important;
 }
 
 .modo-escuro .input-wrap input {
-  background: #22222c !important;
-  border: 1.5px solid #363746 !important;
+  background: #b3b3b3 !important;
+  border: 1.5px solid #ffffff !important;
   color: #ffffff !important;
 }
 
@@ -983,6 +1000,12 @@ html.modo-escuro body {
   color: #cbd5e1 !important;
 }
 
+.modo-escuro .chip-estoque.em-estoque{
+  background: #11345945;
+  color: #059669;
+  border: 1px solid #113459a2;
+}
+
 /* Tabelas Administrativas */
 .modo-escuro .tabela-armarios,
 .modo-escuro .tabela-clientes,
@@ -1154,6 +1177,13 @@ html.modo-escuro body {
   box-shadow: 0 25px 65px rgba(0, 0, 0, 0.75) !important;
 }
 
+.modo-escuro .modal-caixa,.btn-adicionar-grade {
+  background: #181820 !important;
+  border: 1px solid #2c2d38 !important;
+  color: #f3f4f6 !important;
+  box-shadow: 0 25px 65px rgba(0, 0, 0, 0.75) !important;
+}
+
 .modo-escuro .modal-cabecalho,
 .modo-escuro .modal-header,
 .modo-escuro .cat-modal-cabecalho {
@@ -1235,6 +1265,37 @@ html.modo-escuro body {
   color: #ffffff !important;
 }
 
+.modo-escuro .nome-cat-titulo{
+    font-weight: 700;
+    color: #ffffff ;
+    font-size: 0.92rem;
+}
+
+.modo-escuro .badge-contagem-produtos{
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    background: #191a25;
+    color: #a0aab8;
+
+}
+
+.modo-escuro .icone-categoria-pasta{
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    background: #191a25;
+    color: #a0aab8;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
 /* Detalhes de Item */
 .modo-escuro .detalhe-item {
   background: #20202a !important;
@@ -1283,7 +1344,34 @@ html.modo-escuro body {
 .modo-escuro .form-control {
   background-color: #22222c !important;
   border: 1.5px solid #363746 !important;
-  color: #ffffff !important;
+  color: #ffffffa3 !important;
+}
+
+.modo-escuro .campo-form input{
+    width: 100%;
+    padding: 11px 14px;
+    border: 1.5px solid #373c42;
+    border-radius: 8px;
+    font-family: 'Lato', sans-serif;
+    font-size: 0.92rem;
+    color: #767980;
+    outline: none;
+    background: #2f2e3f3f;
+    transition: all 0.2s ease;
+}
+
+.modo-escuro .btn-remover-grade{
+      background: #352222;
+    color: #dc2626;
+    border: none;
+    width: 32px;
+    height: 32px;
+    border-radius: 6px;
+    font-weight: 800;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .modo-escuro input:focus,
